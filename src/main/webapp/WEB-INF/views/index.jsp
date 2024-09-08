@@ -1,12 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <link href="style.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
     <title>Aston REST</title>
 </head>
-<body>
+<body style = 'height: 100vh;background: #0d1b2a;color:white;display: flex;flex-flow: column;justify-content: center;align-items: center;' >
     <h1>Welcome!</h1>
-    <form action="./insertData" method="post">
+    <form action="./users/insert" method="post">
         <p>Login:</p>
         <input type="text" name="login"/>
         <br/>

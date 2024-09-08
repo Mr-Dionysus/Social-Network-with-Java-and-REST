@@ -22,4 +22,15 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.read(login);
         return user;
     }
+
+    @Override
+    public User updateUserByLogin(String oldLogin, String newLogin, String newPassword) throws SQLException {
+        User user = userRepository.update(oldLogin, newLogin, newPassword);
+        return user;
+    }
+
+    @Override
+    public void deleteUserByLogin(String login) throws SQLException {
+        userRepository.delete(login);
+    }
 }
