@@ -15,8 +15,8 @@ public class DataSource {
     private static final HikariDataSource DS;
 
     static {
-        String dbUser = null;
-        String dbPassword = null;
+        String dbUser;
+        String dbPassword;
 
         try (FileInputStream fileInputStream = new FileInputStream("C:/Denis/Projects/Java" + "/Aston_REST/src/main/resources/config.properties");) {
             Properties props = new Properties();
