@@ -6,14 +6,9 @@ public class Role {
     private int id;
     private String roleName;
     private String description;
-    private User user;
-    private ArrayList<User> users = new ArrayList<>();
+    private ArrayList<User> users;
 
     public Role() {
-    }
-
-    public Role(int id) {
-        this.id = id;
     }
 
     public Role(int id, String roleName) {
@@ -25,6 +20,13 @@ public class Role {
         this.id = id;
         this.roleName = roleName;
         this.description = description;
+    }
+
+    public Role(int id, String roleName, String description, ArrayList<User> users) {
+        this.id = id;
+        this.roleName = roleName;
+        this.description = description;
+        this.users = users;
     }
 
     public int getId() {
@@ -51,8 +53,16 @@ public class Role {
         this.description = description;
     }
 
+    public ArrayList<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(ArrayList<User> users) {
+        this.users = users;
+    }
+
     @Override
     public String toString() {
-        return "Role{" + "id=" + id + ", roleName='" + roleName + '\'' + ", description='" + description + '\'' + '}';
+        return "Role{" + "id=" + id + ", roleName='" + roleName + '\'' + ", description='" + description + '\'' + ", users=" + users + '}';
     }
 }

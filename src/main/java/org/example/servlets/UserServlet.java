@@ -41,7 +41,8 @@ public class UserServlet extends HttpServlet {
 
                 out.println("<html>");
                 out.println("<head><title>Post User</title>" + cssTag + "</head>");
-                out.println("<body><b>" + userDTO.getLogin() + ", your accout was " + "created!</b></body>");
+                out.println("<body><b>" + userDTO.getLogin() + ", your account was " + "created" +
+                        "!</b></body>");
                 out.println("</html>");
                 resp.setStatus(HttpServletResponse.SC_CREATED);
             } catch (IOException e) {
@@ -101,7 +102,6 @@ public class UserServlet extends HttpServlet {
                 User foundUser = userService.getUserById(id);
                 UserDTO userDTO = userMapper.userToUserDTO(foundUser);
                 Gson gson = new Gson();
-                String userAsJSON = gson.toJson(userDTO);
 
                 out.println("<html>");
                 out.println("<head><title>Get User</title>" + cssTag + "</head>");
@@ -109,7 +109,8 @@ public class UserServlet extends HttpServlet {
                 out.println("<p><b>Login:</b>" + foundUser.getLogin() + "</p>");
                 out.println("</body>");
                 out.println("</html>");
-                out.println(userAsJSON);
+                out.println(gson.toJson(userDTO));
+                out.println(gson.toJson(userDTO.getRoles()));
 
                 resp.setStatus(HttpServletResponse.SC_OK);
             } catch (SQLException e) {
@@ -129,6 +130,7 @@ public class UserServlet extends HttpServlet {
         String path = req.getPathInfo();
         int id = -1;
 
+        System.out.println("TEST");
         try {
             id = Integer.parseInt(path.split("/")[1]);
         } catch (NumberFormatException e) {

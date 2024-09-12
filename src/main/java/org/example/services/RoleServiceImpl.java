@@ -25,6 +25,12 @@ public class RoleServiceImpl implements RoleService {
         return role;
     }
 
+
+    public Role getRoleByIdWithoutArr(int id) {
+        Role role = ROLE_REPOSITORY.readRoleWithoutArray(id);
+        return role;
+    }
+
     @Override
     public ArrayList<Role> getAllRoles() throws SQLException {
         ArrayList<Role> listRoles = ROLE_REPOSITORY.readAllRoles();

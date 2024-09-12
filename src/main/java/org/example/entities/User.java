@@ -7,14 +7,9 @@ public class User implements Serializable {
     private int id;
     private String login;
     private String password;
-    private Role role;
-    private ArrayList<Role> roles = new ArrayList<>();
+    private ArrayList<Role> roles;
 
     public User() {
-    }
-
-    public User(String login) {
-        this.login = login;
     }
 
     public User(String login, String password) {
@@ -26,6 +21,13 @@ public class User implements Serializable {
         this.id = id;
         this.login = login;
         this.password = password;
+    }
+
+    public User(int id, String login, String password, ArrayList<Role> roles) {
+        this.id = id;
+        this.login = login;
+        this.password = password;
+        this.roles = roles;
     }
 
     public long getId() {
@@ -52,8 +54,16 @@ public class User implements Serializable {
         this.password = password;
     }
 
+    public ArrayList<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(ArrayList<Role> roles) {
+        this.roles = roles;
+    }
+
     @Override
     public String toString() {
-        return "User{" + "id=" + id + ", login='" + login + '\'' + ", password='" + password + '\'' + '}';
+        return "User{" + "id=" + id + ", login='" + login + '\'' + ", password='" + password + '\'' + ", roles=" + roles + '}';
     }
 }

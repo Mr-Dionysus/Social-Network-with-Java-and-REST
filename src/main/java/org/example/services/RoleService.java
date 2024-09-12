@@ -10,6 +10,8 @@ public interface RoleService {
 
     Role getRoleById(int id);
 
+    Role getRoleByIdWithoutArr(int id);
+
     ArrayList<Role> getAllRoles() throws SQLException;
 
     Role updateRoleById(int id, String newRoleName, String newDescription) throws SQLException;

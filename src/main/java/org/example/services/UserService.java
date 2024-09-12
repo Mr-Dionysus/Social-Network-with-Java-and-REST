@@ -9,6 +9,8 @@ public interface UserService {
 
     User getUserById(int id) throws SQLException, ClassNotFoundException;
 
+    User getUserByIdWithoutArr(int id) throws SQLException;
+
     User updateUserById(int id, String newLogin, String newPassword) throws SQLException;
 
     void deleteUserById(int id) throws SQLException;

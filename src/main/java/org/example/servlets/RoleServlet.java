@@ -76,8 +76,8 @@ public class RoleServlet extends HttpServlet {
         } else {
             try (PrintWriter out = resp.getWriter()) {
                 int id = Integer.parseInt(path.split("/")[1]);
-                Role role = roleService.getRoleById(id);
-                RoleDTO roleDTO = roleMapper.roleToRoleDTO(role);
+                Role foundUser = roleService.getRoleById(id);
+                RoleDTO roleDTO = roleMapper.roleToRoleDTO(foundUser);
                 Gson gson = new Gson();
 
                 out.println(gson.toJson(roleDTO));

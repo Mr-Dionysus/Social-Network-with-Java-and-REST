@@ -1,8 +1,10 @@
 package org.example.repositories;
 
-import org.example.entities.Role;
 import org.example.DataSource;
+import org.example.entities.Role;
+import org.example.entities.User;
 import org.example.services.RoleServiceImpl;
+import org.example.services.UserServiceImpl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -36,21 +38,59 @@ public class RoleRepository {
         }
     }
 
-    public Role readRole(int id) {
+    public Role readRole(int roleId) {
         try (Connection connection = DataSource.connect();
              PreparedStatement prepStmt = connection.prepareStatement("SELECT * FROM roles WHERE " + "id " + "= ?");
         ) {
-            prepStmt.setInt(1, id);
-            ResultSet rs = prepStmt.executeQuery();
+            prepStmt.setInt(1, roleId);
+            ResultSet rsAllFromRoles = prepStmt.executeQuery();
             String roleName = null;
             String description = null;
 
-            while (rs.next()) {
-                roleName = rs.getString("role");
-                description = rs.getString("description");
+            while (rsAllFromRoles.next()) {
+                roleName = rsAllFromRoles.getString("role");
+                description = rsAllFromRoles.getString("description");
             }
 
-            Role role = new Role(id, roleName, description);
+            ArrayList<User> listUsers = new ArrayList<>();
+
+            try (PreparedStatement prepStmtFindUsers = connection.prepareStatement("SELECT " + "user_id FROM users_roles WHERE role_id = ?")) {
+                prepStmtFindUsers.setInt(1, roleId);
+                UserRepository userRepository = new UserRepository();
+                UserServiceImpl userService = new UserServiceImpl(userRepository);
+
+                try (ResultSet rsFoundUsers = prepStmtFindUsers.executeQuery()) {
+                    while (rsFoundUsers.next()) {
+                        int userId = rsFoundUsers.getInt("user_id");
+                        User user = userService.getUserByIdWithoutArr(userId);
+                        listUsers.add(user);
+                    }
+                }
+            }
+
+            Role role = new Role(roleId, roleName, description, listUsers);
+            return role;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Role readRoleWithoutArray(int roleId) {
+        try (Connection connection = DataSource.connect();
+             PreparedStatement prepStmt = connection.prepareStatement("SELECT * FROM roles WHERE " + "id " + "= ?");
+        ) {
+            prepStmt.setInt(1, roleId);
+            ResultSet rsAllFromRoles = prepStmt.executeQuery();
+            String roleName = null;
+            String description = null;
+
+            while (rsAllFromRoles.next()) {
+                roleName = rsAllFromRoles.getString("role");
+                description = rsAllFromRoles.getString("description");
+            }
+
+
+            Role role = new Role(roleId, roleName, description);
             return role;
         } catch (SQLException e) {
             throw new RuntimeException(e);
