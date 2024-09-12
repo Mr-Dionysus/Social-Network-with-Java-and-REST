@@ -1,8 +1,10 @@
 package org.example.repositories;
 
 import org.example.DataSource;
+import org.example.entities.Post;
 import org.example.entities.Role;
 import org.example.entities.User;
+import org.example.services.PostServiceImpl;
 import org.example.services.RoleServiceImpl;
 
 import java.sql.Connection;
@@ -12,32 +14,33 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class UserRepository {
-    private final RoleRepository roleRepository = new RoleRepository();
+    private final RoleRepository ROLE_REPOSITORY = new RoleRepository();
 
-    private final RoleServiceImpl roleService = new RoleServiceImpl(roleRepository);
+    private final RoleServiceImpl ROLE_SERVICE = new RoleServiceImpl(ROLE_REPOSITORY);
+
+
 
     public User create(String login, String password) throws SQLException {
         try (Connection connection = DataSource.connect();
-             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO users " + "(login, password) values(?,?)");
+             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO users" + " " + "(login, password) VALUES(?,?)");
         ) {
             preparedStatement.setString(1, login);
             preparedStatement.setString(2, password);
             preparedStatement.executeUpdate();
-            int id = -1;
+            int userId = -1;
 
             try (PreparedStatement prepStmt = connection.prepareStatement("SELECT id FROM users " + "WHERE login = ?");) {
                 prepStmt.setString(1, login);
                 ResultSet resultSet = prepStmt.executeQuery();
 
                 if (resultSet.next()) {
-                    id = resultSet.getInt("id");
+                    userId = resultSet.getInt("id");
                 }
 
                 resultSet.close();
             }
 
-
-            User user = new User(id, login, password);
+            User user = new User(userId, login, password);
             return user;
         }
     }
@@ -61,21 +64,38 @@ public class UserRepository {
             try (PreparedStatement prepStmtFindRoles = connection.prepareStatement("SELECT " + "role_id FROM users_roles WHERE user_id = ?")) {
                 prepStmtFindRoles.setInt(1, userId);
 
-                try (ResultSet rsAllRoleId = prepStmtFindRoles.executeQuery()) {
-                    while (rsAllRoleId.next()) {
-                        int roleId = rsAllRoleId.getInt("role_id");
-                        Role role = roleService.getRoleByIdWithoutArr(roleId);
+                try (ResultSet rsAllRolesId = prepStmtFindRoles.executeQuery()) {
+                    while (rsAllRolesId.next()) {
+                        int roleId = rsAllRolesId.getInt("role_id");
+                        Role role = ROLE_SERVICE.getRoleByIdWithoutArr(roleId);
                         listRoles.add(role);
                     }
                 }
             }
 
-            User user = new User(userId, login, password, listRoles);
+            ArrayList<Post> listPosts = new ArrayList<>();
+
+            try (PreparedStatement prepStmtFindPosts = connection.prepareStatement("SELECT id " + "FROM posts WHERE user_id = ?")) {
+                prepStmtFindPosts.setInt(1, userId);
+
+                try (ResultSet rsAllPostsId = prepStmtFindPosts.executeQuery()) {
+                    PostRepository POST_REPOSITORY = new PostRepository();
+                    PostServiceImpl POST_SERVICE = new PostServiceImpl(POST_REPOSITORY);
+
+                    while (rsAllPostsId.next()) {
+                        int postId = rsAllPostsId.getInt("id");
+                        Post post = POST_SERVICE.getPostByIdWithoutUser(postId);
+                        listPosts.add(post);
+                    }
+                }
+            }
+
+            User user = new User(userId, login, password, listRoles, listPosts);
             return user;
         }
     }
 
-    public User readUserWithoutArr(int userId) throws SQLException {
+    public User readUserWithoutRoles(int userId) throws SQLException {
         try (Connection connection = DataSource.connect();
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM " + "users " + "WHERE id = ?");
         ) {

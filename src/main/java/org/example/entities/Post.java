@@ -7,6 +7,15 @@ public class Post {
     private int dislikes;
     private User user;
 
+    public Post() {
+    }
+
+    public Post(int id, String text, User user) {
+        this.id = id;
+        this.text = text;
+        this.user = user;
+    }
+
     public Post(String text, int likes, int dislikes) {
         this.text = text;
         this.likes = likes;
@@ -18,6 +27,13 @@ public class Post {
         this.likes = likes;
         this.dislikes = dislikes;
         this.user = user;
+    }
+
+    public Post(int id, String text, int likes, int dislikes) {
+        this.id = id;
+        this.text = text;
+        this.likes = likes;
+        this.dislikes = dislikes;
     }
 
     public Post(int id, String text, int likes, int dislikes, User user) {

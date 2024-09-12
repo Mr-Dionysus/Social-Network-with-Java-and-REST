@@ -11,6 +11,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.dtos.UserCredentialsDTO;
 import org.example.dtos.UserDTO;
+import org.example.entities.Post;
+import org.example.entities.Role;
 import org.example.entities.User;
 import org.example.mappers.UserMapper;
 import org.example.mappers.UserMapperImpl;
@@ -23,9 +25,9 @@ import java.sql.SQLException;
 
 @WebServlet(name = "UserServlet", urlPatterns = "/users/*")
 public class UserServlet extends HttpServlet {
-    private final transient UserRepository userRepository = new UserRepository();
-    private final transient UserServiceImpl userService = new UserServiceImpl(userRepository);
-    private final transient UserMapper userMapper = new UserMapperImpl();
+    private final transient UserRepository USER_REPOSITORY = new UserRepository();
+    private final transient UserServiceImpl USER_SERVICE = new UserServiceImpl(USER_REPOSITORY);
+    private final transient UserMapper USER_MAPPER = new UserMapperImpl();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
@@ -36,13 +38,12 @@ public class UserServlet extends HttpServlet {
             try (PrintWriter out = resp.getWriter();) {
                 String login = req.getParameter("login");
                 String password = req.getParameter("password");
-                User newUser = userService.createUser(login, password);
-                UserDTO userDTO = userMapper.userToUserDTO(newUser);
+                User newUser = USER_SERVICE.createUser(login, password);
+                UserDTO userDTO = USER_MAPPER.userToUserDTO(newUser);
 
                 out.println("<html>");
                 out.println("<head><title>Post User</title>" + cssTag + "</head>");
-                out.println("<body><b>" + userDTO.getLogin() + ", your account was " + "created" +
-                        "!</b></body>");
+                out.println("<body><b>" + userDTO.getLogin() + ", your account was " + "created" + "!</b></body>");
                 out.println("</html>");
                 resp.setStatus(HttpServletResponse.SC_CREATED);
             } catch (IOException e) {
@@ -60,10 +61,11 @@ public class UserServlet extends HttpServlet {
             ) {
                 Gson gson = new Gson();
                 UserCredentialsDTO userCredentialsDTO = gson.fromJson(req.getReader(), UserCredentialsDTO.class);
-                User newUser = userService.createUser(userCredentialsDTO.getLogin(), userCredentialsDTO.getPassword());
-                UserDTO userDTO = userMapper.userToUserDTO(newUser);
+                User newUser = USER_SERVICE.createUser(userCredentialsDTO.getLogin(), userCredentialsDTO.getPassword());
+                UserDTO userDTO = USER_MAPPER.userToUserDTO(newUser);
 
                 out.println(gson.toJson(userDTO));
+                resp.setStatus(HttpServletResponse.SC_CREATED);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             } catch (SQLException e) {
@@ -99,18 +101,31 @@ public class UserServlet extends HttpServlet {
         } else {
             try (PrintWriter out = resp.getWriter();) {
                 int id = Integer.parseInt(path.split("/")[1]);
-                User foundUser = userService.getUserById(id);
-                UserDTO userDTO = userMapper.userToUserDTO(foundUser);
+                User foundUser = USER_SERVICE.getUserById(id);
+                UserDTO userDTO = USER_MAPPER.userToUserDTO(foundUser);
                 Gson gson = new Gson();
 
                 out.println("<html>");
                 out.println("<head><title>Get User</title>" + cssTag + "</head>");
                 out.println("<body>");
                 out.println("<p><b>Login:</b>" + foundUser.getLogin() + "</p>");
+                out.println("<p>Your Roles:</p>");
+
+                for (Role role : userDTO.getRoles()) {
+                    out.println("<p>" + role + "</p>");
+                }
+
+                out.println("<p>Your Posts:</p>");
+
+                for (Post post : userDTO.getPosts()) {
+                    out.println("<p>" + post + "</p>");
+                }
+
                 out.println("</body>");
                 out.println("</html>");
                 out.println(gson.toJson(userDTO));
                 out.println(gson.toJson(userDTO.getRoles()));
+                out.println(gson.toJson(userDTO.getPosts()));
 
                 resp.setStatus(HttpServletResponse.SC_OK);
             } catch (SQLException e) {
@@ -142,8 +157,8 @@ public class UserServlet extends HttpServlet {
             String cssTag = "<link href='" + req.getContextPath() + "/css/style.css' " + "rel='stylesheet'" + " type='text/css'>";
 
             try (PrintWriter out = resp.getWriter();) {
-                User updatedUser = userService.updateUserById(id, newLogin, newPassword);
-                UserDTO userDTO = userMapper.userToUserDTO(updatedUser);
+                User updatedUser = USER_SERVICE.updateUserById(id, newLogin, newPassword);
+                UserDTO userDTO = USER_MAPPER.userToUserDTO(updatedUser);
                 Gson gson = new Gson();
 
                 out.println("<html>");
@@ -165,8 +180,8 @@ public class UserServlet extends HttpServlet {
             try (PrintWriter out = resp.getWriter()) {
                 Gson gson = new Gson();
                 UserCredentialsDTO userCredentialsDTO = gson.fromJson(req.getReader(), UserCredentialsDTO.class);
-                User updatedUser = userService.updateUserById(id, userCredentialsDTO.getLogin(), userCredentialsDTO.getPassword());
-                UserDTO userDTO = userMapper.userToUserDTO(updatedUser);
+                User updatedUser = USER_SERVICE.updateUserById(id, userCredentialsDTO.getLogin(), userCredentialsDTO.getPassword());
+                UserDTO userDTO = USER_MAPPER.userToUserDTO(updatedUser);
 
                 out.println(gson.toJson(userDTO));
             } catch (IOException e) {
@@ -191,9 +206,9 @@ public class UserServlet extends HttpServlet {
         try (PrintWriter out = resp.getWriter();) {
             String path = req.getPathInfo();
             int id = Integer.parseInt(path.split("/")[1]);
-            String login = userService.getUserById(id)
-                                      .getLogin();
-            userService.deleteUserById(id);
+            String login = USER_SERVICE.getUserById(id)
+                                       .getLogin();
+            USER_SERVICE.deleteUserById(id);
 
             out.println("<html>");
             out.println("<head><title>Delete User</title>" + cssTag + "</head>");

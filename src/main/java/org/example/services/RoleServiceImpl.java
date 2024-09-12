@@ -15,32 +15,32 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role createRole(String roleName, String description) {
-        Role role = ROLE_REPOSITORY.createRole(roleName, description);
-        return role;
+        Role createdRole = ROLE_REPOSITORY.createRole(roleName, description);
+        return createdRole;
     }
 
     @Override
     public Role getRoleById(int id) {
-        Role role = ROLE_REPOSITORY.readRole(id);
-        return role;
+        Role foundRole = ROLE_REPOSITORY.readRole(id);
+        return foundRole;
     }
 
-
+    @Override
     public Role getRoleByIdWithoutArr(int id) {
-        Role role = ROLE_REPOSITORY.readRoleWithoutArray(id);
-        return role;
+        Role foundRole = ROLE_REPOSITORY.readRoleWithoutArray(id);
+        return foundRole;
     }
 
     @Override
     public ArrayList<Role> getAllRoles() throws SQLException {
-        ArrayList<Role> listRoles = ROLE_REPOSITORY.readAllRoles();
-        return listRoles;
+        ArrayList<Role> listFoundRoles = ROLE_REPOSITORY.readAllRoles();
+        return listFoundRoles;
     }
 
     @Override
     public Role updateRoleById(int id, String newRoleName, String newDescription) throws SQLException {
-        Role role = ROLE_REPOSITORY.updateRole(id, newRoleName, newDescription);
-        return role;
+        Role updatedRole = ROLE_REPOSITORY.updateRole(id, newRoleName, newDescription);
+        return updatedRole;
     }
 
     @Override

@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserByIdWithoutArr(int id) throws SQLException {
-        User user = USER_REPOSITORY.readUserWithoutArr(id);
+        User user = USER_REPOSITORY.readUserWithoutRoles(id);
         return user;
     }
 

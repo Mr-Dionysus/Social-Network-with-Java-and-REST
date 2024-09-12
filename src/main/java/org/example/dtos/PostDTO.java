@@ -8,6 +8,9 @@ public class PostDTO {
     private int dislikes;
     private User user;
 
+    public PostDTO() {
+    }
+
     public PostDTO(String text, int likes, int dislikes) {
         this.text = text;
         this.likes = likes;

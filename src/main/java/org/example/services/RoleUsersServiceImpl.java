@@ -5,8 +5,8 @@ import org.example.repositories.RoleUsersRepository;
 public class RoleUsersServiceImpl implements RoleUsersService {
     private final RoleUsersRepository ROLE_USERS_REPOSITORY;
 
-    public RoleUsersServiceImpl(RoleUsersRepository roleUsersRepository) {
-        ROLE_USERS_REPOSITORY = roleUsersRepository;
+    public RoleUsersServiceImpl(RoleUsersRepository ROLE_USERS_REPOSITORY) {
+        this.ROLE_USERS_REPOSITORY = ROLE_USERS_REPOSITORY;
     }
 
     @Override
