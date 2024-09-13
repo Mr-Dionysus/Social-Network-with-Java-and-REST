@@ -61,48 +61,58 @@ public class RoleServlet extends HttpServlet {
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
         String path = req.getPathInfo();
-        Gson gson = new Gson();
 
         if (path == null) {
-            try {
-                PrintWriter out = resp.getWriter();
-                ArrayList<Role> listRoles = ROLE_SERVICE.getAllRoles();
-                ArrayList<RoleDTO> listRolesDTO = new ArrayList<>();
-
-                for (Role role : listRoles) {
-                    listRolesDTO.add(ROLE_MAPPER.roleToRoleDTO(role));
-                }
-
-                out.println(gson.toJson(listRolesDTO));
-                out.flush();
-                resp.setStatus(HttpServletResponse.SC_OK);
-            } catch (SQLException e) {
-                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                throw new RuntimeException(e);
-            } catch (IOException e) {
-                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                throw new RuntimeException(e);
-            }
+            this.getAllRoles(resp);
         } else {
-            try {
-                PrintWriter out = resp.getWriter();
-                int id = Integer.parseInt(path.split("/")[1]);
-                Role foundUser = ROLE_SERVICE.getRoleById(id);
-                RoleDTO foundRoleDTO = ROLE_MAPPER.roleToRoleDTO(foundUser);
+            this.getRole(resp, path);
+        }
+    }
 
-                out.println(gson.toJson(foundRoleDTO));
-                out.flush();
-                resp.setStatus(HttpServletResponse.SC_OK);
-            } catch (NumberFormatException e) {
-                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                throw new RuntimeException(e);
-            } catch (IOException e) {
-                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                throw new RuntimeException(e);
-            } catch (SQLException e) {
-                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                throw new RuntimeException(e);
+    private void getAllRoles(HttpServletResponse resp) {
+        Gson gson = new Gson();
+
+        try {
+            PrintWriter out = resp.getWriter();
+            ArrayList<Role> listRoles = ROLE_SERVICE.getAllRoles();
+            ArrayList<RoleDTO> listRolesDTO = new ArrayList<>();
+
+            for (Role role : listRoles) {
+                listRolesDTO.add(ROLE_MAPPER.roleToRoleDTO(role));
             }
+
+            out.println(gson.toJson(listRolesDTO));
+            out.flush();
+            resp.setStatus(HttpServletResponse.SC_OK);
+        } catch (SQLException e) {
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void getRole(HttpServletResponse resp, String path) {
+        try {
+            Gson gson = new Gson();
+            PrintWriter out = resp.getWriter();
+            int id = Integer.parseInt(path.split("/")[1]);
+            Role foundUser = ROLE_SERVICE.getRoleById(id);
+            RoleDTO foundRoleDTO = ROLE_MAPPER.roleToRoleDTO(foundUser);
+
+            out.println(gson.toJson(foundRoleDTO));
+            out.flush();
+            resp.setStatus(HttpServletResponse.SC_OK);
+        } catch (NumberFormatException e) {
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            throw new RuntimeException(e);
+        } catch (SQLException e) {
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            throw new RuntimeException(e);
         }
     }
 
