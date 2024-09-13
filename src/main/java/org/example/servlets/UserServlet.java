@@ -25,56 +25,67 @@ import java.sql.SQLException;
 
 @WebServlet(name = "UserServlet", urlPatterns = "/users/*")
 public class UserServlet extends HttpServlet {
-    private final transient UserRepository USER_REPOSITORY = new UserRepository();
-    private final transient UserServiceImpl USER_SERVICE = new UserServiceImpl(USER_REPOSITORY);
-    private final transient UserMapper USER_MAPPER = new UserMapperImpl();
+    private static final UserRepository USER_REPOSITORY = new UserRepository();
+    private static final UserServiceImpl USER_SERVICE = new UserServiceImpl(USER_REPOSITORY);
+    private static final UserMapper USER_MAPPER = new UserMapperImpl();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
-        if (req.getParameter("login") != null && req.getParameter("password") != null) {
+        String login = req.getParameter("login");
+        String password = req.getParameter("password");
+
+        if (login != null && password != null) {
             resp.setContentType("text/html");
-            String cssTag = "<link href='" + req.getContextPath() + "/css/style.css' " + "rel='stylesheet'" + " type='text/css'>";
+            String cssTag = "<link href='" + req.getContextPath() + "/css/style.css' rel='stylesheet' type='text/css'>";
 
             try (PrintWriter out = resp.getWriter();) {
-                String login = req.getParameter("login");
-                String password = req.getParameter("password");
-                User newUser = USER_SERVICE.createUser(login, password);
-                UserDTO userDTO = USER_MAPPER.userToUserDTO(newUser);
+                User createdUser = USER_SERVICE.createUser(login, password);
+                UserDTO createdUserDTO = USER_MAPPER.userToUserDTO(createdUser);
 
                 out.println("<html>");
                 out.println("<head><title>Post User</title>" + cssTag + "</head>");
-                out.println("<body><b>" + userDTO.getLogin() + ", your account was " + "created" + "!</b></body>");
+                out.println("<body><b>" + createdUserDTO.getLogin() + ", your account was created!</b></body>");
                 out.println("</html>");
+                out.flush();
                 resp.setStatus(HttpServletResponse.SC_CREATED);
             } catch (IOException e) {
+                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 throw new RuntimeException(e);
             } catch (SQLException e) {
+                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 throw new RuntimeException(e);
             } catch (ClassNotFoundException e) {
+                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 throw new RuntimeException(e);
             }
         } else {
             resp.setContentType("application/json");
             resp.setCharacterEncoding("UTF-8");
+            Gson gson = new Gson();
 
-            try (PrintWriter out = resp.getWriter();
-            ) {
-                Gson gson = new Gson();
+            try {
+                PrintWriter out = resp.getWriter();
                 UserCredentialsDTO userCredentialsDTO = gson.fromJson(req.getReader(), UserCredentialsDTO.class);
-                User newUser = USER_SERVICE.createUser(userCredentialsDTO.getLogin(), userCredentialsDTO.getPassword());
-                UserDTO userDTO = USER_MAPPER.userToUserDTO(newUser);
+                User createdUser = USER_SERVICE.createUser(userCredentialsDTO.getLogin(), userCredentialsDTO.getPassword());
+                UserDTO createdUserDTO = USER_MAPPER.userToUserDTO(createdUser);
 
-                out.println(gson.toJson(userDTO));
+                out.println(gson.toJson(createdUserDTO));
+                out.flush();
                 resp.setStatus(HttpServletResponse.SC_CREATED);
             } catch (IOException e) {
+                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 throw new RuntimeException(e);
             } catch (SQLException e) {
+                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 throw new RuntimeException(e);
             } catch (ClassNotFoundException e) {
+                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 throw new RuntimeException(e);
             } catch (JsonSyntaxException e) {
+                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 throw new RuntimeException(e);
             } catch (JsonIOException e) {
+                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 throw new RuntimeException(e);
             }
         }
@@ -83,7 +94,7 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         resp.setContentType("text/html");
-        String cssTag = "<link href='" + req.getContextPath() + "/css/style.css' " + "rel='stylesheet'" + " type='text/css'>";
+        String cssTag = "<link href='" + req.getContextPath() + "/css/style.css' rel='stylesheet' type='text/css'>";
         String path = req.getPathInfo();
 
         if (path == null) {
@@ -91,19 +102,23 @@ public class UserServlet extends HttpServlet {
 
             try {
                 dispatcher.forward(req, resp);
+
+                resp.setStatus(HttpServletResponse.SC_OK);
             } catch (ServletException e) {
+                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 throw new RuntimeException(e);
             } catch (IOException e) {
+                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 throw new RuntimeException(e);
             }
-
-            resp.setStatus(HttpServletResponse.SC_OK);
         } else {
-            try (PrintWriter out = resp.getWriter();) {
+            Gson gson = new Gson();
+
+            try {
+                PrintWriter out = resp.getWriter();
                 int id = Integer.parseInt(path.split("/")[1]);
                 User foundUser = USER_SERVICE.getUserById(id);
-                UserDTO userDTO = USER_MAPPER.userToUserDTO(foundUser);
-                Gson gson = new Gson();
+                UserDTO foundUserDTO = USER_MAPPER.userToUserDTO(foundUser);
 
                 out.println("<html>");
                 out.println("<head><title>Get User</title>" + cssTag + "</head>");
@@ -111,28 +126,32 @@ public class UserServlet extends HttpServlet {
                 out.println("<p><b>Login:</b>" + foundUser.getLogin() + "</p>");
                 out.println("<p>Your Roles:</p>");
 
-                for (Role role : userDTO.getRoles()) {
+                for (Role role : foundUserDTO.getRoles()) {
                     out.println("<p>" + role + "</p>");
                 }
 
                 out.println("<p>Your Posts:</p>");
 
-                for (Post post : userDTO.getPosts()) {
+                for (Post post : foundUserDTO.getPosts()) {
                     out.println("<p>" + post + "</p>");
                 }
 
                 out.println("</body>");
                 out.println("</html>");
-                out.println(gson.toJson(userDTO));
-                out.println(gson.toJson(userDTO.getRoles()));
-                out.println(gson.toJson(userDTO.getPosts()));
+                out.println(gson.toJson(foundUserDTO));
+                out.println(gson.toJson(foundUserDTO.getRoles()));
+                out.println(gson.toJson(foundUserDTO.getPosts()));
+                out.flush();
 
                 resp.setStatus(HttpServletResponse.SC_OK);
             } catch (SQLException e) {
+                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 throw new RuntimeException(e);
             } catch (NumberFormatException e) {
+                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 throw new RuntimeException(e);
             } catch (IOException e) {
+                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 throw new RuntimeException(e);
             }
         }
@@ -143,23 +162,17 @@ public class UserServlet extends HttpServlet {
         String newLogin = req.getParameter("newLogin");
         String newPassword = req.getParameter("newPassword");
         String path = req.getPathInfo();
-        int id = -1;
-
-        System.out.println("TEST");
-        try {
-            id = Integer.parseInt(path.split("/")[1]);
-        } catch (NumberFormatException e) {
-            throw new RuntimeException(e);
-        }
+        Gson gson = new Gson();
 
         if (newLogin != null && newPassword != null) {
             resp.setContentType("text/html");
             String cssTag = "<link href='" + req.getContextPath() + "/css/style.css' " + "rel='stylesheet'" + " type='text/css'>";
 
-            try (PrintWriter out = resp.getWriter();) {
+            try {
+                PrintWriter out = resp.getWriter();
+                int id = Integer.parseInt(path.split("/")[1]);
                 User updatedUser = USER_SERVICE.updateUserById(id, newLogin, newPassword);
-                UserDTO userDTO = USER_MAPPER.userToUserDTO(updatedUser);
-                Gson gson = new Gson();
+                UserDTO updatedUserDTO = USER_MAPPER.userToUserDTO(updatedUser);
 
                 out.println("<html>");
                 out.println("<head><title>Put User</title>" + cssTag + "</head>");
@@ -167,44 +180,60 @@ public class UserServlet extends HttpServlet {
                 out.println("<p><b>New Login:</b> " + newLogin + "</p>");
                 out.println("</body>");
                 out.println("</html>");
-                out.println(gson.toJson(userDTO));
+                out.println(gson.toJson(updatedUserDTO));
+                out.flush();
+                resp.setStatus(HttpServletResponse.SC_OK);
             } catch (SQLException e) {
+                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 throw new RuntimeException(e);
             } catch (IOException e) {
+                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                throw new RuntimeException(e);
+            } catch (NumberFormatException e) {
+                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 throw new RuntimeException(e);
             }
         } else {
             resp.setContentType("application/json");
             resp.setCharacterEncoding("UTF-8");
 
-            try (PrintWriter out = resp.getWriter()) {
-                Gson gson = new Gson();
+            try {
+                PrintWriter out = resp.getWriter();
+                int id = Integer.parseInt(path.split("/")[1]);
                 UserCredentialsDTO userCredentialsDTO = gson.fromJson(req.getReader(), UserCredentialsDTO.class);
                 User updatedUser = USER_SERVICE.updateUserById(id, userCredentialsDTO.getLogin(), userCredentialsDTO.getPassword());
-                UserDTO userDTO = USER_MAPPER.userToUserDTO(updatedUser);
+                UserDTO updatedUserDTO = USER_MAPPER.userToUserDTO(updatedUser);
 
-                out.println(gson.toJson(userDTO));
+                out.println(gson.toJson(updatedUserDTO));
+                out.flush();
+                resp.setStatus(HttpServletResponse.SC_OK);
             } catch (IOException e) {
+                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 throw new RuntimeException(e);
             } catch (SQLException e) {
+                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 throw new RuntimeException(e);
             } catch (JsonSyntaxException e) {
+                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 throw new RuntimeException(e);
             } catch (JsonIOException e) {
+                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                throw new RuntimeException(e);
+            } catch (NumberFormatException e) {
+                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 throw new RuntimeException(e);
             }
         }
-
-        resp.setStatus(HttpServletResponse.SC_OK);
     }
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
         resp.setContentType("text/html");
         String cssTag = "<link href='" + req.getContextPath() + "/css/style.css' " + "rel='stylesheet'" + " type='text/css'>";
+        String path = req.getPathInfo();
 
-        try (PrintWriter out = resp.getWriter();) {
-            String path = req.getPathInfo();
+        try {
+            PrintWriter out = resp.getWriter();
             int id = Integer.parseInt(path.split("/")[1]);
             String login = USER_SERVICE.getUserById(id)
                                        .getLogin();
@@ -216,14 +245,17 @@ public class UserServlet extends HttpServlet {
             out.println("<p><b>" + login + "</b>, your account was deleted.</p>");
             out.println("</body>");
             out.println("</html>");
+            out.flush();
+            resp.setStatus(HttpServletResponse.SC_OK);
         } catch (IOException e) {
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             throw new RuntimeException(e);
         } catch (SQLException e) {
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             throw new RuntimeException(e);
         } catch (NumberFormatException e) {
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             throw new RuntimeException(e);
         }
-
-        resp.setStatus(HttpServletResponse.SC_OK);
     }
 }

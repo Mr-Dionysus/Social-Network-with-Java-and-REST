@@ -26,18 +26,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserByIdWithoutRoles(int id) throws SQLException {
-        User foundUser = userRepository.readUserWithoutRoles(id);
+        User foundUser = userRepository.findUserWithoutHisRoles(id);
         return foundUser;
     }
 
     @Override
     public User updateUserById(int id, String newLogin, String newPassword) throws SQLException {
-        User updatedUser = userRepository.update(id, newLogin, newPassword);
+        User updatedUser = userRepository.updateUser(id, newLogin, newPassword);
         return updatedUser;
     }
 
     @Override
     public void deleteUserById(int id) throws SQLException {
-        userRepository.delete(id);
+        userRepository.deleteUser(id);
     }
 }

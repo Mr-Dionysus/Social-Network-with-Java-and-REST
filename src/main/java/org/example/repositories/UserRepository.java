@@ -20,6 +20,8 @@ public class UserRepository {
     private static final String SQL_INSERT_USER = "INSERT INTO users (login, password) VALUES(?,?)";
     private static final String SQL_SELECT_USER_ID_BY_LOGIN = "SELECT id FROM users WHERE login = ?";
     private static final String SQL_SELECT_USER_BY_ID = "SELECT * FROM users WHERE id = ?";
+    private static final String SQL_UPDATE_USER_BY_ID = "UPDATE users SET login = ?, password = ? WHERE id = ?";
+    private static final String SQL_DELETE_USER_BY_ID = "DELETE FROM users WHERE id = ?";
 
     private static final String SQL_SELECT_ALL_ROLE_IDS_BY_USER_ID = "SELECT role_id FROM users_roles WHERE user_id = ?";
 
@@ -102,45 +104,46 @@ public class UserRepository {
         return null;
     }
 
-    public User readUserWithoutRoles(int userId) throws SQLException {
+    public User findUserWithoutHisRoles(int userId) throws SQLException {
         try (Connection connection = DataSource.connect();
-             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM " + "users " + "WHERE id = ?");
+             PreparedStatement prepStmtSelectUserById = connection.prepareStatement(SQL_SELECT_USER_BY_ID);
         ) {
-            preparedStatement.setInt(1, userId);
-            ResultSet rsAllFromUsers = preparedStatement.executeQuery();
-            String login = null;
-            String password = null;
+            prepStmtSelectUserById.setInt(1, userId);
 
-            while (rsAllFromUsers.next()) {
-                login = rsAllFromUsers.getString("login");
-                password = rsAllFromUsers.getString("password");
+            try (ResultSet rsFoundUser = prepStmtSelectUserById.executeQuery()) {
+                if (rsFoundUser.next()) {
+                    String login = rsFoundUser.getString("login");
+                    String password = rsFoundUser.getString("password");
+                    User foundUser = new User(userId, login, password);
+
+                    return foundUser;
+                }
             }
+        }
 
-            User user = new User(userId, login, password);
-            return user;
+        return null;
+    }
+
+    public User updateUser(int id, String newLogin, String newPassword) throws SQLException {
+        try (Connection connection = DataSource.connect();
+             PreparedStatement prepStmtUpdateUserById = connection.prepareStatement(SQL_UPDATE_USER_BY_ID);
+        ) {
+            prepStmtUpdateUserById.setString(1, newLogin);
+            prepStmtUpdateUserById.setString(2, newPassword);
+            prepStmtUpdateUserById.setInt(3, id);
+            prepStmtUpdateUserById.executeUpdate();
+
+            User foundUser = new User(id, newLogin, newPassword);
+            return foundUser;
         }
     }
 
-    public User update(int id, String newLogin, String newPassword) throws SQLException {
+    public void deleteUser(int id) throws SQLException {
         try (Connection connection = DataSource.connect();
-             PreparedStatement prepStmt = connection.prepareStatement("UPDATE users SET " + "login = ?, password = ? WHERE id = ?");
+             PreparedStatement prepStmtDeleteUserById = connection.prepareStatement(SQL_DELETE_USER_BY_ID)
         ) {
-            prepStmt.setString(1, newLogin);
-            prepStmt.setString(2, newPassword);
-            prepStmt.setInt(3, id);
-            prepStmt.executeUpdate();
-
-            User user = new User(id, newLogin, newPassword);
-            return user;
-        }
-    }
-
-    public void delete(int id) throws SQLException {
-        try (Connection connection = DataSource.connect();
-             PreparedStatement prepStmt = connection.prepareStatement("DELETE from users WHERE " + "id = ?")
-        ) {
-            prepStmt.setInt(1, id);
-            prepStmt.executeUpdate();
+            prepStmtDeleteUserById.setInt(1, id);
+            prepStmtDeleteUserById.executeUpdate();
         }
     }
 }
