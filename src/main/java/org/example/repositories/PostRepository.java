@@ -11,6 +11,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class PostRepository {
+    private final DataSource dataSource;
+
+    public PostRepository() {
+        this.dataSource = new DataSource();
+    }
+
+    public PostRepository(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
     private static final String SQL_INSERT_POST = "INSERT INTO posts (text, likes, dislikes, user_id) VALUES(?, ?, ?, ?)";
     private static final String SQL_SELECT_POST_ID_BY_FIELDS = "SELECT id FROM posts WHERE text = ? AND likes = ? AND dislikes = ? AND user_id = ?";
     private static final String SQL_SELECT_POST_BY_ID = "SELECT * FROM posts WHERE id = ?";
@@ -18,7 +28,7 @@ public class PostRepository {
     private static final String SQL_DELETE_POST_BY_ID = "DELETE FROM posts WHERE id = ?";
 
     public Post createPost(String text, int user_id) throws SQLException {
-        try (Connection connection = DataSource.connect();
+        try (Connection connection = dataSource.connect();
              PreparedStatement prepStmtCreatePost = connection.prepareStatement(SQL_INSERT_POST)
         ) {
             prepStmtCreatePost.setString(1, text);
@@ -44,7 +54,7 @@ public class PostRepository {
                 if (rsFoundPostId.next()) {
                     int postId = rsFoundPostId.getInt("id");
 
-                    UserRepository userRepository = new UserRepository();
+                    UserRepository userRepository = new UserRepository(dataSource);
                     UserServiceImpl userService = new UserServiceImpl(userRepository);
                     User userOfPost = userService.getUserById(user_id);
                     Post foundPost = new Post(postId, text, userOfPost);
@@ -58,7 +68,7 @@ public class PostRepository {
     }
 
     public Post findPostById(int postId) throws SQLException {
-        try (Connection connection = DataSource.connect();
+        try (Connection connection = dataSource.connect();
              PreparedStatement prepStmtSelectPostById = connection.prepareStatement(SQL_SELECT_POST_BY_ID)
         ) {
             prepStmtSelectPostById.setInt(1, postId);
@@ -70,7 +80,7 @@ public class PostRepository {
                     int dislikes = rsFoundPost.getInt("dislikes");
                     int userId = rsFoundPost.getInt("user_id");
 
-                    UserRepository userRepository = new UserRepository();
+                    UserRepository userRepository = new UserRepository(dataSource);
                     UserServiceImpl userService = new UserServiceImpl(userRepository);
                     User userOfPost = userService.getUserById(userId);
                     Post foundPost = new Post(postId, text, likes, dislikes, userOfPost);
@@ -84,7 +94,7 @@ public class PostRepository {
     }
 
     public Post findPostByIdWithoutUser(int postId) throws SQLException {
-        try (Connection connection = DataSource.connect();
+        try (Connection connection = dataSource.connect();
              PreparedStatement prepStmtSelectPostById = connection.prepareStatement(SQL_SELECT_POST_BY_ID)
         ) {
             prepStmtSelectPostById.setInt(1, postId);
@@ -105,7 +115,7 @@ public class PostRepository {
     }
 
     public Post updatePostById(int postId, String newText) throws SQLException {
-        try (Connection connection = DataSource.connect();
+        try (Connection connection = dataSource.connect();
              PreparedStatement prepStmtUpdatePostById = connection.prepareStatement(SQL_UPDATE_POST_BY_ID)
         ) {
             prepStmtUpdatePostById.setString(1, newText);
@@ -118,7 +128,7 @@ public class PostRepository {
     }
 
     public void deletePostById(int postId) throws SQLException {
-        try (Connection connection = DataSource.connect();
+        try (Connection connection = dataSource.connect();
              PreparedStatement prepStmtDeletePostById = connection.prepareStatement(SQL_DELETE_POST_BY_ID)
         ) {
             prepStmtDeletePostById.setInt(1, postId);

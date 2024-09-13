@@ -14,8 +14,18 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class UserRepository {
-    private static final RoleRepository ROLE_REPOSITORY = new RoleRepository();
-    private static final RoleServiceImpl ROLE_SERVICE = new RoleServiceImpl(ROLE_REPOSITORY);
+    private DataSource dataSource;
+
+    public UserRepository() {
+        this.dataSource = new DataSource();
+    }
+
+    public UserRepository(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    private final RoleRepository roleRepository = new RoleRepository(dataSource);
+    private final RoleServiceImpl roleService = new RoleServiceImpl(roleRepository);
 
     private static final String SQL_INSERT_USER = "INSERT INTO users (login, password) VALUES(?,?)";
     private static final String SQL_SELECT_USER_ID_BY_LOGIN = "SELECT id FROM users WHERE login = ?";
@@ -28,7 +38,7 @@ public class UserRepository {
     private static final String SQL_SELECT_POST_ID_BY_USER_ID = "SELECT id FROM posts WHERE user_id = ?";
 
     public User createUser(String login, String password) throws SQLException {
-        try (Connection connection = DataSource.connect();
+        try (Connection connection = dataSource.connect();
              PreparedStatement prepStmtInsertUser = connection.prepareStatement(SQL_INSERT_USER);
         ) {
             prepStmtInsertUser.setString(1, login);
@@ -53,7 +63,7 @@ public class UserRepository {
     }
 
     public User findUserById(int userId) throws SQLException {
-        try (Connection connection = DataSource.connect();
+        try (Connection connection = dataSource.connect();
              PreparedStatement prepStmtSelectUserById = connection.prepareStatement(SQL_SELECT_USER_BY_ID);
         ) {
             prepStmtSelectUserById.setInt(1, userId);
@@ -85,7 +95,7 @@ public class UserRepository {
 
                 while (rsFoundAllRoleIds.next()) {
                     int roleId = rsFoundAllRoleIds.getInt("role_id");
-                    Role foundRole = ROLE_SERVICE.getRoleByIdWithoutArr(roleId);
+                    Role foundRole = roleService.getRoleByIdWithoutArr(roleId);
                     listFoundRoles.add(foundRole);
                 }
 
@@ -99,7 +109,7 @@ public class UserRepository {
             prepStmtSelectPostIdByUserId.setInt(1, userId);
 
             try (ResultSet rsFoundAllPostIds = prepStmtSelectPostIdByUserId.executeQuery()) {
-                PostRepository postRepository = new PostRepository();
+                PostRepository postRepository = new PostRepository(dataSource);
                 PostServiceImpl postService = new PostServiceImpl(postRepository);
                 ArrayList<Post> listFoundPosts = new ArrayList<>();
 
@@ -115,7 +125,7 @@ public class UserRepository {
     }
 
     public User findUserWithoutHisRoles(int userId) throws SQLException {
-        try (Connection connection = DataSource.connect();
+        try (Connection connection = dataSource.connect();
              PreparedStatement prepStmtSelectUserById = connection.prepareStatement(SQL_SELECT_USER_BY_ID);
         ) {
             prepStmtSelectUserById.setInt(1, userId);
@@ -135,7 +145,7 @@ public class UserRepository {
     }
 
     public User updateUser(int id, String newLogin, String newPassword) throws SQLException {
-        try (Connection connection = DataSource.connect();
+        try (Connection connection = dataSource.connect();
              PreparedStatement prepStmtUpdateUserById = connection.prepareStatement(SQL_UPDATE_USER_BY_ID);
         ) {
             prepStmtUpdateUserById.setString(1, newLogin);
@@ -149,7 +159,7 @@ public class UserRepository {
     }
 
     public void deleteUser(int id) throws SQLException {
-        try (Connection connection = DataSource.connect();
+        try (Connection connection = dataSource.connect();
              PreparedStatement prepStmtDeleteUserById = connection.prepareStatement(SQL_DELETE_USER_BY_ID)
         ) {
             prepStmtDeleteUserById.setInt(1, id);

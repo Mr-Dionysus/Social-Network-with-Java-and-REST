@@ -13,6 +13,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class RoleRepository {
+    private final DataSource dataSource;
+
+    public RoleRepository() {
+        this.dataSource = new DataSource();
+    }
+
+    public RoleRepository(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
     private static final String SQL_INSERT_ROLE = "INSERT INTO roles (role, description) VALUES (?, ?)";
     private static final String SQL_SELECT_ROLE_ID_BY_ROLE = "SELECT id FROM roles WHERE role = ?";
     private static final String SQL_SELECT_ROLE_BY_ID = "SELECT * FROM roles WHERE id = ?";
@@ -23,7 +33,7 @@ public class RoleRepository {
     private static final String SQL_SELECT_ALL_USER_IDS_BY_ROLE_ID = "SELECT user_id FROM users_roles WHERE role_id = ?";
 
     public Role createRole(String roleName, String description) throws SQLException {
-        try (Connection connection = DataSource.connect();
+        try (Connection connection = dataSource.connect();
              PreparedStatement prepStmtInsertRole = connection.prepareStatement(SQL_INSERT_ROLE)
         ) {
             prepStmtInsertRole.setString(1, roleName);
@@ -54,7 +64,7 @@ public class RoleRepository {
     }
 
     public Role readRole(int roleId) throws SQLException {
-        try (Connection connection = DataSource.connect();
+        try (Connection connection = dataSource.connect();
              PreparedStatement prepStmtSelectRoleById = connection.prepareStatement(SQL_SELECT_ROLE_BY_ID)
         ) {
             prepStmtSelectRoleById.setInt(1, roleId);
@@ -78,7 +88,7 @@ public class RoleRepository {
 
         try (PreparedStatement prepStmtSelectAllUserIdsByRoleId = connection.prepareStatement(SQL_SELECT_ALL_USER_IDS_BY_ROLE_ID)) {
             prepStmtSelectAllUserIdsByRoleId.setInt(1, roleId);
-            UserRepository userRepository = new UserRepository();
+            UserRepository userRepository = new UserRepository(dataSource);
             UserServiceImpl userService = new UserServiceImpl(userRepository);
 
             try (ResultSet rsFoundUserIds = prepStmtSelectAllUserIdsByRoleId.executeQuery()) {
@@ -96,7 +106,7 @@ public class RoleRepository {
     }
 
     public Role readRoleWithoutArray(int roleId) throws SQLException {
-        try (Connection connection = DataSource.connect();
+        try (Connection connection = dataSource.connect();
              PreparedStatement prepStmtSelectRoleById = connection.prepareStatement(SQL_SELECT_ROLE_BY_ID);
         ) {
             prepStmtSelectRoleById.setInt(1, roleId);
@@ -115,7 +125,7 @@ public class RoleRepository {
     }
 
     public ArrayList<Role> readAllRoles() throws SQLException {
-        try (Connection connection = DataSource.connect();
+        try (Connection connection = dataSource.connect();
              PreparedStatement prepStmtSelectRoles = connection.prepareStatement(SQL_SELECT_ROLES);
              ResultSet rsFoundRoles = prepStmtSelectRoles.executeQuery()
         ) {
@@ -134,7 +144,7 @@ public class RoleRepository {
     }
 
     public Role updateRole(int id, String newRoleName, String newDescription) throws SQLException {
-        try (Connection connection = DataSource.connect();
+        try (Connection connection = dataSource.connect();
              PreparedStatement prepStmtUpdateRoleById = connection.prepareStatement(SQL_UPDATE_ROLE_BY_ID);
         ) {
             prepStmtUpdateRoleById.setString(1, newRoleName);
@@ -151,7 +161,7 @@ public class RoleRepository {
     }
 
     public void deleteRoleById(int id) throws SQLException {
-        try (Connection connection = DataSource.connect();
+        try (Connection connection = dataSource.connect();
              PreparedStatement prepStmtDeleteRoleById = connection.prepareStatement(SQL_DELETE_ROLE_BY_ID);
         ) {
             prepStmtDeleteRoleById.setInt(1, id);

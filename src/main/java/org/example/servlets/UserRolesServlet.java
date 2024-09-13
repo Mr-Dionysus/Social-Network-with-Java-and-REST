@@ -22,8 +22,9 @@ import java.sql.SQLException;
 public class UserRolesServlet extends HttpServlet {
     private static final UserRepository USER_REPOSITORY = new UserRepository();
     private static final UserServiceImpl USER_SERVICE = new UserServiceImpl(USER_REPOSITORY);
-    private static final UserRolesRepository USER_ROLE_REPOSITORY = new UserRolesRepository();
-    private static final UserRolesServiceImpl USER_ROLES_SERVICE = new UserRolesServiceImpl(USER_ROLE_REPOSITORY);
+
+    private static final UserRolesRepository USER_ROLES_REPOSITORY = new UserRolesRepository();
+    private static final UserRolesServiceImpl USER_ROLES_SERVICE = new UserRolesServiceImpl(USER_ROLES_REPOSITORY);
     private static final UserMapper USER_MAPPER = new UserMapperImpl();
 
     @Override

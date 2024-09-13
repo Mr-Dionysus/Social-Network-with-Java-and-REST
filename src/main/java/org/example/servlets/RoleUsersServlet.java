@@ -22,6 +22,7 @@ import java.sql.SQLException;
 public class RoleUsersServlet extends HttpServlet {
     private static final RoleRepository ROLE_REPOSITORY = new RoleRepository();
     private static final RoleServiceImpl ROLE_SERVICE = new RoleServiceImpl(ROLE_REPOSITORY);
+
     private static final RoleUsersRepository ROLE_USERS_REPOSITORY = new RoleUsersRepository();
     private static final RoleUsersServiceImpl ROLE_USERS_SERVICE = new RoleUsersServiceImpl(ROLE_USERS_REPOSITORY);
     private static final RoleMapper ROLE_MAPPER = new RoleMapperImpl();
