@@ -24,22 +24,28 @@ public class RoleRepository {
 
     public Role createRole(String roleName, String description) throws SQLException {
         try (Connection connection = DataSource.connect();
-             PreparedStatement prepStmt = connection.prepareStatement(SQL_INSERT_ROLE)
+             PreparedStatement prepStmtInsertRole = connection.prepareStatement(SQL_INSERT_ROLE)
         ) {
-            prepStmt.setString(1, roleName);
-            prepStmt.setString(2, description);
-            prepStmt.executeUpdate();
+            prepStmtInsertRole.setString(1, roleName);
+            prepStmtInsertRole.setString(2, description);
+            prepStmtInsertRole.executeUpdate();
 
-            try (PreparedStatement prepStmtFindId = connection.prepareStatement(SQL_SELECT_ROLE_ID_BY_ROLE);) {
-                prepStmtFindId.setString(1, roleName);
+            Role createdRole = this.findRoleId(connection, roleName, description);
 
-                try (ResultSet rs = prepStmtFindId.executeQuery()) {
-                    if (rs.next()) {
-                        int id = rs.getInt("id");
-                        Role createdRole = new Role(id, roleName, description);
+            return createdRole;
+        }
+    }
 
-                        return createdRole;
-                    }
+    private Role findRoleId(Connection connection, String roleName, String description) throws SQLException {
+        try (PreparedStatement prepStmtFindId = connection.prepareStatement(SQL_SELECT_ROLE_ID_BY_ROLE);) {
+            prepStmtFindId.setString(1, roleName);
+
+            try (ResultSet rsFoundRoleId = prepStmtFindId.executeQuery()) {
+                if (rsFoundRoleId.next()) {
+                    int id = rsFoundRoleId.getInt("id");
+                    Role foundRole = new Role(id, roleName, description);
+
+                    return foundRole;
                 }
             }
         }
@@ -57,31 +63,36 @@ public class RoleRepository {
                 if (rsFoundRole.next()) {
                     String roleName = rsFoundRole.getString("role");
                     String description = rsFoundRole.getString("description");
+                    Role foundRole = this.findRoleWithAllUsers(connection, roleId, roleName, description);
 
-                    ArrayList<User> listUsers = new ArrayList<>();
-
-                    try (PreparedStatement prepStmtSelectAllUserIdsByRoleId = connection.prepareStatement(SQL_SELECT_ALL_USER_IDS_BY_ROLE_ID)) {
-                        prepStmtSelectAllUserIdsByRoleId.setInt(1, roleId);
-                        UserRepository userRepository = new UserRepository();
-                        UserServiceImpl userService = new UserServiceImpl(userRepository);
-
-                        try (ResultSet rsFoundUserIds = prepStmtSelectAllUserIdsByRoleId.executeQuery()) {
-                            while (rsFoundUserIds.next()) {
-                                int userId = rsFoundUserIds.getInt("user_id");
-                                User user = userService.getUserByIdWithoutRoles(userId);
-                                listUsers.add(user);
-                            }
-
-                            Role foundRole = new Role(roleId, roleName, description, listUsers);
-
-                            return foundRole;
-                        }
-                    }
+                    return foundRole;
                 }
             }
         }
 
         return null;
+    }
+
+    private Role findRoleWithAllUsers(Connection connection, int roleId, String roleName, String description) throws SQLException {
+        ArrayList<User> listUsers = new ArrayList<>();
+
+        try (PreparedStatement prepStmtSelectAllUserIdsByRoleId = connection.prepareStatement(SQL_SELECT_ALL_USER_IDS_BY_ROLE_ID)) {
+            prepStmtSelectAllUserIdsByRoleId.setInt(1, roleId);
+            UserRepository userRepository = new UserRepository();
+            UserServiceImpl userService = new UserServiceImpl(userRepository);
+
+            try (ResultSet rsFoundUserIds = prepStmtSelectAllUserIdsByRoleId.executeQuery()) {
+                while (rsFoundUserIds.next()) {
+                    int userId = rsFoundUserIds.getInt("user_id");
+                    User user = userService.getUserByIdWithoutRoles(userId);
+                    listUsers.add(user);
+                }
+
+                Role foundRole = new Role(roleId, roleName, description, listUsers);
+
+                return foundRole;
+            }
+        }
     }
 
     public Role readRoleWithoutArray(int roleId) throws SQLException {

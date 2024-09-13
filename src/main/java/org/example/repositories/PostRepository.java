@@ -27,23 +27,29 @@ public class PostRepository {
             prepStmtCreatePost.setInt(4, user_id);
             prepStmtCreatePost.executeUpdate();
 
-            try (PreparedStatement prepStmtSelectCreatedPostId = connection.prepareStatement(SQL_SELECT_POST_ID_BY_FIELDS)) {
-                prepStmtSelectCreatedPostId.setString(1, text);
-                prepStmtSelectCreatedPostId.setInt(2, 0);
-                prepStmtSelectCreatedPostId.setInt(3, 0);
-                prepStmtSelectCreatedPostId.setInt(4, user_id);
+            Post createdPost = this.findPostId(connection, text, user_id);
 
-                try (ResultSet rsFoundPostId = prepStmtSelectCreatedPostId.executeQuery()) {
-                    if (rsFoundPostId.next()) {
-                        int postId = rsFoundPostId.getInt("id");
+            return createdPost;
+        }
+    }
 
-                        UserRepository userRepository = new UserRepository();
-                        UserServiceImpl userService = new UserServiceImpl(userRepository);
-                        User userOfPost = userService.getUserById(user_id);
-                        Post createdPost = new Post(postId, text, userOfPost);
+    private Post findPostId(Connection connection, String text, int user_id) throws SQLException {
+        try (PreparedStatement prepStmtSelectCreatedPostId = connection.prepareStatement(SQL_SELECT_POST_ID_BY_FIELDS)) {
+            prepStmtSelectCreatedPostId.setString(1, text);
+            prepStmtSelectCreatedPostId.setInt(2, 0);
+            prepStmtSelectCreatedPostId.setInt(3, 0);
+            prepStmtSelectCreatedPostId.setInt(4, user_id);
 
-                        return createdPost;
-                    }
+            try (ResultSet rsFoundPostId = prepStmtSelectCreatedPostId.executeQuery()) {
+                if (rsFoundPostId.next()) {
+                    int postId = rsFoundPostId.getInt("id");
+
+                    UserRepository userRepository = new UserRepository();
+                    UserServiceImpl userService = new UserServiceImpl(userRepository);
+                    User userOfPost = userService.getUserById(user_id);
+                    Post foundPost = new Post(postId, text, userOfPost);
+
+                    return foundPost;
                 }
             }
         }

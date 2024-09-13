@@ -63,36 +63,8 @@ public class UserRepository {
                     String login = rsFoundUser.getString("login");
                     String password = rsFoundUser.getString("password");
 
-                    ArrayList<Role> listFoundRoles = new ArrayList<>();
-
-                    try (PreparedStatement prepStmtSelectAllRoleIdsByUserId = connection.prepareStatement(SQL_SELECT_ALL_ROLE_IDS_BY_USER_ID)) {
-                        prepStmtSelectAllRoleIdsByUserId.setInt(1, userId);
-
-                        try (ResultSet rsFoundAllRoleIds = prepStmtSelectAllRoleIdsByUserId.executeQuery()) {
-                            while (rsFoundAllRoleIds.next()) {
-                                int roleId = rsFoundAllRoleIds.getInt("role_id");
-                                Role foundRole = ROLE_SERVICE.getRoleByIdWithoutArr(roleId);
-                                listFoundRoles.add(foundRole);
-                            }
-                        }
-                    }
-
-                    ArrayList<Post> listFoundPosts = new ArrayList<>();
-
-                    try (PreparedStatement prepStmtSelectPostIdByUserId = connection.prepareStatement(SQL_SELECT_POST_ID_BY_USER_ID)) {
-                        prepStmtSelectPostIdByUserId.setInt(1, userId);
-
-                        try (ResultSet rsFoundAllPostIds = prepStmtSelectPostIdByUserId.executeQuery()) {
-                            PostRepository postRepository = new PostRepository();
-                            PostServiceImpl postService = new PostServiceImpl(postRepository);
-
-                            while (rsFoundAllPostIds.next()) {
-                                int postId = rsFoundAllPostIds.getInt("id");
-                                Post foundPost = postService.getPostByIdWithoutUser(postId);
-                                listFoundPosts.add(foundPost);
-                            }
-                        }
-                    }
+                    ArrayList<Role> listFoundRoles = this.findListOfRoles(connection, userId);
+                    ArrayList<Post> listFoundPosts = this.findListOfPosts(connection, userId);
 
                     User foundUser = new User(userId, login, password, listFoundRoles, listFoundPosts);
 
@@ -102,6 +74,44 @@ public class UserRepository {
         }
 
         return null;
+    }
+
+    private ArrayList<Role> findListOfRoles(Connection connection, int userId) throws SQLException {
+        try (PreparedStatement prepStmtSelectAllRoleIdsByUserId = connection.prepareStatement(SQL_SELECT_ALL_ROLE_IDS_BY_USER_ID)) {
+            prepStmtSelectAllRoleIdsByUserId.setInt(1, userId);
+
+            try (ResultSet rsFoundAllRoleIds = prepStmtSelectAllRoleIdsByUserId.executeQuery()) {
+                ArrayList<Role> listFoundRoles = new ArrayList<>();
+
+                while (rsFoundAllRoleIds.next()) {
+                    int roleId = rsFoundAllRoleIds.getInt("role_id");
+                    Role foundRole = ROLE_SERVICE.getRoleByIdWithoutArr(roleId);
+                    listFoundRoles.add(foundRole);
+                }
+
+                return listFoundRoles;
+            }
+        }
+    }
+
+    private ArrayList<Post> findListOfPosts(Connection connection, int userId) throws SQLException {
+        try (PreparedStatement prepStmtSelectPostIdByUserId = connection.prepareStatement(SQL_SELECT_POST_ID_BY_USER_ID)) {
+            prepStmtSelectPostIdByUserId.setInt(1, userId);
+
+            try (ResultSet rsFoundAllPostIds = prepStmtSelectPostIdByUserId.executeQuery()) {
+                PostRepository postRepository = new PostRepository();
+                PostServiceImpl postService = new PostServiceImpl(postRepository);
+                ArrayList<Post> listFoundPosts = new ArrayList<>();
+
+                while (rsFoundAllPostIds.next()) {
+                    int postId = rsFoundAllPostIds.getInt("id");
+                    Post foundPost = postService.getPostByIdWithoutUser(postId);
+                    listFoundPosts.add(foundPost);
+                }
+
+                return listFoundPosts;
+            }
+        }
     }
 
     public User findUserWithoutHisRoles(int userId) throws SQLException {
