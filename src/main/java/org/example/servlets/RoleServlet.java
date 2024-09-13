@@ -45,6 +45,8 @@ public class RoleServlet extends HttpServlet {
             throw new RuntimeException(e);
         } catch (JsonIOException e) {
             throw new RuntimeException(e);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
 
         resp.setStatus(HttpServletResponse.SC_CREATED);
@@ -85,6 +87,8 @@ public class RoleServlet extends HttpServlet {
             } catch (NumberFormatException e) {
                 throw new RuntimeException(e);
             } catch (IOException e) {
+                throw new RuntimeException(e);
+            } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
         }

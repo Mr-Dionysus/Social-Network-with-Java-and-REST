@@ -14,85 +14,92 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class UserRepository {
-    private final RoleRepository ROLE_REPOSITORY = new RoleRepository();
+    private static final RoleRepository ROLE_REPOSITORY = new RoleRepository();
+    private static final RoleServiceImpl ROLE_SERVICE = new RoleServiceImpl(ROLE_REPOSITORY);
 
-    private final RoleServiceImpl ROLE_SERVICE = new RoleServiceImpl(ROLE_REPOSITORY);
+    private static final String SQL_INSERT_USER = "INSERT INTO users (login, password) VALUES(?,?)";
+    private static final String SQL_SELECT_USER_ID_BY_LOGIN = "SELECT id FROM users WHERE login = ?";
+    private static final String SQL_SELECT_USER_BY_ID = "SELECT * FROM users WHERE id = ?";
 
+    private static final String SQL_SELECT_ALL_ROLE_IDS_BY_USER_ID = "SELECT role_id FROM users_roles WHERE user_id = ?";
 
+    private static final String SQL_SELECT_POST_ID_BY_USER_ID = "SELECT id FROM posts WHERE user_id = ?";
 
-    public User create(String login, String password) throws SQLException {
+    public User createUser(String login, String password) throws SQLException {
         try (Connection connection = DataSource.connect();
-             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO users" + " " + "(login, password) VALUES(?,?)");
+             PreparedStatement prepStmtInsertUser = connection.prepareStatement(SQL_INSERT_USER);
         ) {
-            preparedStatement.setString(1, login);
-            preparedStatement.setString(2, password);
-            preparedStatement.executeUpdate();
-            int userId = -1;
+            prepStmtInsertUser.setString(1, login);
+            prepStmtInsertUser.setString(2, password);
+            prepStmtInsertUser.executeUpdate();
 
-            try (PreparedStatement prepStmt = connection.prepareStatement("SELECT id FROM users " + "WHERE login = ?");) {
-                prepStmt.setString(1, login);
-                ResultSet resultSet = prepStmt.executeQuery();
+            try (PreparedStatement prepStmtSelectUserIdByLogin = connection.prepareStatement(SQL_SELECT_USER_ID_BY_LOGIN);) {
+                prepStmtSelectUserIdByLogin.setString(1, login);
 
-                if (resultSet.next()) {
-                    userId = resultSet.getInt("id");
+                try (ResultSet rsFoundUser = prepStmtSelectUserIdByLogin.executeQuery()) {
+                    if (rsFoundUser.next()) {
+                        int userId = rsFoundUser.getInt("id");
+                        User foundUser = new User(userId, login, password);
+
+                        return foundUser;
+                    }
                 }
-
-                resultSet.close();
             }
-
-            User user = new User(userId, login, password);
-            return user;
         }
+
+        return null;
     }
 
-    public User readUser(int userId) throws SQLException {
+    public User findUserById(int userId) throws SQLException {
         try (Connection connection = DataSource.connect();
-             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM " + "users " + "WHERE id = ?");
+             PreparedStatement prepStmtSelectUserById = connection.prepareStatement(SQL_SELECT_USER_BY_ID);
         ) {
-            preparedStatement.setInt(1, userId);
-            ResultSet rsAllFromUsers = preparedStatement.executeQuery();
-            String login = null;
-            String password = null;
+            prepStmtSelectUserById.setInt(1, userId);
 
-            while (rsAllFromUsers.next()) {
-                login = rsAllFromUsers.getString("login");
-                password = rsAllFromUsers.getString("password");
-            }
+            try (ResultSet rsFoundUser = prepStmtSelectUserById.executeQuery()) {
+                if (rsFoundUser.next()) {
+                    String login = rsFoundUser.getString("login");
+                    String password = rsFoundUser.getString("password");
 
-            ArrayList<Role> listRoles = new ArrayList<>();
+                    ArrayList<Role> listFoundRoles = new ArrayList<>();
 
-            try (PreparedStatement prepStmtFindRoles = connection.prepareStatement("SELECT " + "role_id FROM users_roles WHERE user_id = ?")) {
-                prepStmtFindRoles.setInt(1, userId);
+                    try (PreparedStatement prepStmtSelectAllRoleIdsByUserId = connection.prepareStatement(SQL_SELECT_ALL_ROLE_IDS_BY_USER_ID)) {
+                        prepStmtSelectAllRoleIdsByUserId.setInt(1, userId);
 
-                try (ResultSet rsAllRolesId = prepStmtFindRoles.executeQuery()) {
-                    while (rsAllRolesId.next()) {
-                        int roleId = rsAllRolesId.getInt("role_id");
-                        Role role = ROLE_SERVICE.getRoleByIdWithoutArr(roleId);
-                        listRoles.add(role);
+                        try (ResultSet rsFoundAllRoleIds = prepStmtSelectAllRoleIdsByUserId.executeQuery()) {
+                            while (rsFoundAllRoleIds.next()) {
+                                int roleId = rsFoundAllRoleIds.getInt("role_id");
+                                Role foundRole = ROLE_SERVICE.getRoleByIdWithoutArr(roleId);
+                                listFoundRoles.add(foundRole);
+                            }
+                        }
                     }
+
+                    ArrayList<Post> listFoundPosts = new ArrayList<>();
+
+                    try (PreparedStatement prepStmtSelectPostIdByUserId = connection.prepareStatement(SQL_SELECT_POST_ID_BY_USER_ID)) {
+                        prepStmtSelectPostIdByUserId.setInt(1, userId);
+
+                        try (ResultSet rsFoundAllPostIds = prepStmtSelectPostIdByUserId.executeQuery()) {
+                            PostRepository postRepository = new PostRepository();
+                            PostServiceImpl postService = new PostServiceImpl(postRepository);
+
+                            while (rsFoundAllPostIds.next()) {
+                                int postId = rsFoundAllPostIds.getInt("id");
+                                Post foundPost = postService.getPostByIdWithoutUser(postId);
+                                listFoundPosts.add(foundPost);
+                            }
+                        }
+                    }
+
+                    User foundUser = new User(userId, login, password, listFoundRoles, listFoundPosts);
+
+                    return foundUser;
                 }
             }
-
-            ArrayList<Post> listPosts = new ArrayList<>();
-
-            try (PreparedStatement prepStmtFindPosts = connection.prepareStatement("SELECT id " + "FROM posts WHERE user_id = ?")) {
-                prepStmtFindPosts.setInt(1, userId);
-
-                try (ResultSet rsAllPostsId = prepStmtFindPosts.executeQuery()) {
-                    PostRepository POST_REPOSITORY = new PostRepository();
-                    PostServiceImpl POST_SERVICE = new PostServiceImpl(POST_REPOSITORY);
-
-                    while (rsAllPostsId.next()) {
-                        int postId = rsAllPostsId.getInt("id");
-                        Post post = POST_SERVICE.getPostByIdWithoutUser(postId);
-                        listPosts.add(post);
-                    }
-                }
-            }
-
-            User user = new User(userId, login, password, listRoles, listPosts);
-            return user;
         }
+
+        return null;
     }
 
     public User readUserWithoutRoles(int userId) throws SQLException {

@@ -10,39 +10,38 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class RoleUsersRepository {
-    public void assignUserToRole(int userId, int roleId) {
+    private static final String SQL_INSERT_USER_ID_AND_ROLE_ID = "INSERT INTO users_roles (user_id, role_id) VALUES (?, ?)";
+    private static final String SQL_SELECT_USERS_BY_ROLE_ID = "SELECT u.* FROM users u JOIN users_roles ur ON u.id = ur.role_id WHERE ur.role_id = ?";
+
+    public void assignUserToRole(int userId, int roleId) throws SQLException {
         try (Connection connection = DataSource.connect();
-             PreparedStatement prepStmt = connection.prepareStatement("INSERT INTO users_roles " + "(user_id, role_id) VALUES (?, ?)")
+             PreparedStatement prepStmtInsertUserIdAndRoleId = connection.prepareStatement(SQL_INSERT_USER_ID_AND_ROLE_ID)
         ) {
-            prepStmt.setInt(1, userId);
-            prepStmt.setInt(2, roleId);
-            prepStmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+            prepStmtInsertUserIdAndRoleId.setInt(1, userId);
+            prepStmtInsertUserIdAndRoleId.setInt(2, roleId);
+            prepStmtInsertUserIdAndRoleId.executeUpdate();
         }
     }
 
-    public ArrayList<User> getUsersWithRole(int roleId) {
-        ArrayList<User> listUsers = new ArrayList<>();
+    public ArrayList<User> getUsersWithRole(int roleId) throws SQLException {
+        ArrayList<User> listFoundUsers = new ArrayList<>();
 
         try (Connection connection = DataSource.connect();
-             PreparedStatement prepStmt = connection.prepareStatement("SELECT u.* FROM users u JOIN " + "users_roles ur ON u.id = ur.role_id WHERE ur.role_id = ?")
+             PreparedStatement prepStmtSelectUsersByRoleId = connection.prepareStatement(SQL_SELECT_USERS_BY_ROLE_ID)
         ) {
-            prepStmt.setInt(1, roleId);
+            prepStmtSelectUsersByRoleId.setInt(1, roleId);
 
-            try (ResultSet rs = prepStmt.executeQuery()) {
-                while (rs.next()) {
-                    int userId = rs.getInt("id");
-                    String login = rs.getString("login");
-                    String password = rs.getString("password");
-                    User user = new User(userId, login, password);
-                    listUsers.add(user);
+            try (ResultSet rsFoundUsers = prepStmtSelectUsersByRoleId.executeQuery()) {
+                while (rsFoundUsers.next()) {
+                    int userId = rsFoundUsers.getInt("id");
+                    String login = rsFoundUsers.getString("login");
+                    String password = rsFoundUsers.getString("password");
+                    User foundUser = new User(userId, login, password);
+                    listFoundUsers.add(foundUser);
                 }
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         }
 
-        return listUsers;
+        return listFoundUsers;
     }
 }

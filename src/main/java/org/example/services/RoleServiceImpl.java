@@ -7,44 +7,44 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class RoleServiceImpl implements RoleService {
-    private final RoleRepository ROLE_REPOSITORY;
+    private final RoleRepository roleRepository;
 
-    public RoleServiceImpl(RoleRepository ROLE_REPOSITORY) {
-        this.ROLE_REPOSITORY = ROLE_REPOSITORY;
+    public RoleServiceImpl(RoleRepository roleRepository) {
+        this.roleRepository = roleRepository;
     }
 
     @Override
-    public Role createRole(String roleName, String description) {
-        Role createdRole = ROLE_REPOSITORY.createRole(roleName, description);
+    public Role createRole(String roleName, String description) throws SQLException {
+        Role createdRole = roleRepository.createRole(roleName, description);
         return createdRole;
     }
 
     @Override
-    public Role getRoleById(int id) {
-        Role foundRole = ROLE_REPOSITORY.readRole(id);
+    public Role getRoleById(int id) throws SQLException {
+        Role foundRole = roleRepository.readRole(id);
         return foundRole;
     }
 
     @Override
-    public Role getRoleByIdWithoutArr(int id) {
-        Role foundRole = ROLE_REPOSITORY.readRoleWithoutArray(id);
+    public Role getRoleByIdWithoutArr(int id) throws SQLException {
+        Role foundRole = roleRepository.readRoleWithoutArray(id);
         return foundRole;
     }
 
     @Override
     public ArrayList<Role> getAllRoles() throws SQLException {
-        ArrayList<Role> listFoundRoles = ROLE_REPOSITORY.readAllRoles();
+        ArrayList<Role> listFoundRoles = roleRepository.readAllRoles();
         return listFoundRoles;
     }
 
     @Override
     public Role updateRoleById(int id, String newRoleName, String newDescription) throws SQLException {
-        Role updatedRole = ROLE_REPOSITORY.updateRole(id, newRoleName, newDescription);
+        Role updatedRole = roleRepository.updateRole(id, newRoleName, newDescription);
         return updatedRole;
     }
 
     @Override
     public void deleteRoleById(int id) throws SQLException {
-        ROLE_REPOSITORY.deleteRoleById(id);
+        roleRepository.deleteRoleById(id);
     }
 }

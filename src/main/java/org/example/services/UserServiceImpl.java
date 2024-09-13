@@ -6,38 +6,38 @@ import org.example.repositories.UserRepository;
 import java.sql.SQLException;
 
 public class UserServiceImpl implements UserService {
-    private final UserRepository USER_REPOSITORY;
+    private final UserRepository userRepository;
 
-    public UserServiceImpl(UserRepository USER_REPOSITORY) {
-        this.USER_REPOSITORY = USER_REPOSITORY;
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
     public User createUser(String login, String password) throws SQLException, ClassNotFoundException {
-        User user = USER_REPOSITORY.create(login, password);
-        return user;
+        User createdUser = userRepository.createUser(login, password);
+        return createdUser;
     }
 
     @Override
     public User getUserById(int id) throws SQLException {
-        User user = USER_REPOSITORY.readUser(id);
-        return user;
+        User foundUser = userRepository.findUserById(id);
+        return foundUser;
     }
 
     @Override
-    public User getUserByIdWithoutArr(int id) throws SQLException {
-        User user = USER_REPOSITORY.readUserWithoutRoles(id);
-        return user;
+    public User getUserByIdWithoutRoles(int id) throws SQLException {
+        User foundUser = userRepository.readUserWithoutRoles(id);
+        return foundUser;
     }
 
     @Override
     public User updateUserById(int id, String newLogin, String newPassword) throws SQLException {
-        User user = USER_REPOSITORY.update(id, newLogin, newPassword);
-        return user;
+        User updatedUser = userRepository.update(id, newLogin, newPassword);
+        return updatedUser;
     }
 
     @Override
     public void deleteUserById(int id) throws SQLException {
-        USER_REPOSITORY.delete(id);
+        userRepository.delete(id);
     }
 }

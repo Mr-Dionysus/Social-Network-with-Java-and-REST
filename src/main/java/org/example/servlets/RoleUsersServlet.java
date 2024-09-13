@@ -17,6 +17,7 @@ import org.example.services.RoleUsersServiceImpl;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 
 @WebServlet(name = "RoleUsersServlet", urlPatterns = "/roles/users/*")
 public class RoleUsersServlet extends HttpServlet {
@@ -45,6 +46,10 @@ public class RoleUsersServlet extends HttpServlet {
             out.println(gson.toJson(roleDTO.getUsers()));
             resp.setStatus(HttpServletResponse.SC_OK);
         } catch (NumberFormatException e) {
+            throw new RuntimeException(e);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }

@@ -6,11 +6,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public interface RoleService {
-    Role createRole(String roleName, String description);
+    Role createRole(String roleName, String description) throws SQLException;
 
-    Role getRoleById(int id);
+    Role getRoleById(int id) throws SQLException;
 
-    Role getRoleByIdWithoutArr(int id);
+    Role getRoleByIdWithoutArr(int id) throws SQLException;
 
     ArrayList<Role> getAllRoles() throws SQLException;
 

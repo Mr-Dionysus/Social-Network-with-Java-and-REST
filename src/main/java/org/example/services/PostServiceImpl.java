@@ -6,38 +6,38 @@ import org.example.repositories.PostRepository;
 import java.sql.SQLException;
 
 public class PostServiceImpl implements PostService {
-    private final PostRepository POST_REPOSITORY;
+    private final PostRepository postRepository;
 
-    public PostServiceImpl(PostRepository POST_REPOSITORY) {
-        this.POST_REPOSITORY = POST_REPOSITORY;
+    public PostServiceImpl(PostRepository postRepository) {
+        this.postRepository = postRepository;
     }
 
     @Override
     public Post createPost(String text, int user_id) throws SQLException {
-        Post createdPost = POST_REPOSITORY.createPost(text, user_id);
+        Post createdPost = postRepository.createPost(text, user_id);
         return createdPost;
     }
 
     @Override
     public Post getPostById(int postId) throws SQLException {
-        Post foundPost = POST_REPOSITORY.findPostById(postId);
+        Post foundPost = postRepository.findPostById(postId);
         return foundPost;
     }
 
     @Override
     public Post getPostByIdWithoutUser(int postId) throws SQLException {
-        Post foundPost = POST_REPOSITORY.findPostByIdWithoutUser(postId);
+        Post foundPost = postRepository.findPostByIdWithoutUser(postId);
         return foundPost;
     }
 
     @Override
     public Post updatePostById(int postId, String newText) throws SQLException {
-        Post updatedPost = POST_REPOSITORY.updatePostById(postId, newText);
+        Post updatedPost = postRepository.updatePostById(postId, newText);
         return updatedPost;
     }
 
     @Override
     public void deletePostById(int postId) throws SQLException {
-        POST_REPOSITORY.deletePostById(postId);
+        postRepository.deletePostById(postId);
     }
 }
