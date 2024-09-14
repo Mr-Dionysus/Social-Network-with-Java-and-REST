@@ -12,6 +12,7 @@ import org.example.entities.Post;
 import org.example.mappers.PostMapper;
 import org.example.mappers.PostMapperImpl;
 import org.example.repositories.PostRepository;
+import org.example.services.PostService;
 import org.example.services.PostServiceImpl;
 
 import java.io.IOException;
@@ -20,8 +21,18 @@ import java.io.PrintWriter;
 @WebServlet(name = "PostServlet", urlPatterns = "/users/posts/*")
 public class PostServlet extends HttpServlet {
     private static final PostRepository POST_REPOSITORY = new PostRepository();
-    private static final PostServiceImpl POST_SERVICE = new PostServiceImpl(POST_REPOSITORY);
-    private static final PostMapper POST_MAPPER = new PostMapperImpl();
+    private PostServiceImpl postService = new PostServiceImpl(POST_REPOSITORY);
+    private PostMapper postMapper = new PostMapperImpl();
+
+    public PostServlet() {
+        this.postService = new PostServiceImpl(POST_REPOSITORY);
+        this.postMapper = new PostMapperImpl();
+    }
+
+    public PostServlet(PostServiceImpl postService, PostMapper postMapper) {
+        this.postService = postService;
+        this.postMapper = postMapper;
+    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
@@ -33,10 +44,9 @@ public class PostServlet extends HttpServlet {
         try {
             PrintWriter out = resp.getWriter();
             int userId = Integer.parseInt(path.split("/")[1]);
-
             PostDTO postDTO = gson.fromJson(req.getReader(), PostDTO.class);
-            Post createdPost = POST_SERVICE.createPost(postDTO.getText(), userId);
-            postDTO = POST_MAPPER.postToPostDTO(createdPost);
+            Post createdPost = postService.createPost(postDTO.getText(), userId);
+            postDTO = postMapper.postToPostDTO(createdPost);
 
             out.println(gson.toJson(postDTO));
             out.flush();
@@ -66,8 +76,8 @@ public class PostServlet extends HttpServlet {
         try {
             PrintWriter out = resp.getWriter();
             int postId = Integer.parseInt(path.split("/")[1]);
-            Post foundPost = POST_SERVICE.getPostById(postId);
-            PostDTO postDTO = POST_MAPPER.postToPostDTO(foundPost);
+            Post foundPost = postService.getPostById(postId);
+            PostDTO postDTO = postMapper.postToPostDTO(foundPost);
 
             out.println(gson.toJson(postDTO));
             out.flush();
@@ -98,13 +108,13 @@ public class PostServlet extends HttpServlet {
             PrintWriter out = resp.getWriter();
             int postId = Integer.parseInt(path.split("/")[1]);
             PostDTO postDTO = gson.fromJson(req.getReader(), PostDTO.class);
-            Post updatedPost = POST_SERVICE.updatePostById(postId, postDTO.getText());
-            postDTO = POST_MAPPER.postToPostDTO(updatedPost);
+            Post updatedPost = postService.updatePostById(postId, postDTO.getText());
+            postDTO = postMapper.postToPostDTO(updatedPost);
 
             out.println(gson.toJson(postDTO));
             out.flush();
             resp.setStatus(HttpServletResponse.SC_OK);
-        }  catch (IOException e) {
+        } catch (IOException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             throw new RuntimeException(e);
         } catch (NumberFormatException e) {
@@ -127,10 +137,10 @@ public class PostServlet extends HttpServlet {
 
         try {
             int postId = Integer.parseInt(path.split("/")[1]);
-            POST_SERVICE.deletePostById(postId);
+            postService.deletePostById(postId);
 
             resp.setStatus(HttpServletResponse.SC_OK);
-        }  catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             throw new RuntimeException(e);
         }

@@ -40,7 +40,7 @@ public class User implements Serializable {
         this.posts = posts;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 

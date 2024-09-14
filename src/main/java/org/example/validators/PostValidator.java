@@ -16,7 +16,7 @@ public class PostValidator {
 
     public static void foundPost(Post foundPost, int postId) {
         if (foundPost == null) {
-            throw new PostNotFoundException("Post with ID '" + postId + " can't be found");
+            throw new PostNotFoundException("Post with ID '" + postId + "' can't be found");
         }
     }
 

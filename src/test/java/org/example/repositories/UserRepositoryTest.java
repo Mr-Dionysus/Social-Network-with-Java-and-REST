@@ -7,6 +7,7 @@ import org.example.entities.Role;
 import org.example.entities.User;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.MySQLContainer;
 
@@ -24,7 +25,7 @@ class UserRepositoryTest {
     public UserRepository userRepository = new UserRepository(dataSource);
 
     @BeforeAll
-    static void setUpContainer() {
+    static void setUpContainer() throws SQLException {
         mySQLcontainer = new MySQLContainer<>("mysql:8.0");
         mySQLcontainer.start();
 
@@ -33,8 +34,6 @@ class UserRepositoryTest {
 
         try (Connection connection = dataSource.connect()) {
             MySQLtest.createAllTablesWithTestEntities(connection, dataSource);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -44,77 +43,76 @@ class UserRepositoryTest {
     }
 
     @Test
-    void createUser() {
-        try {
-            String expectedLogin = "login";
-            String expectedPassword = "password";
-            User expectedUser = new User(3, expectedLogin, expectedPassword);
+    @DisplayName("Create a User")
+    void createUser() throws SQLException {
+        String expectedLogin = "login";
+        String expectedPassword = "password";
+        User expectedUser = new User(3, expectedLogin, expectedPassword);
 
-            User actualUser = userRepository.createUser(expectedLogin, expectedPassword);
+        User actualUser = userRepository.createUser(expectedLogin, expectedPassword);
 
-            assertEquals(expectedUser, actualUser);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
+        assertEquals(expectedUser, actualUser);
     }
 
     @Test
-    void findUserById() {
-        try {
-            String expectedLogin = "testLogin";
-            String expectedPassword = "testPassword";
-            ArrayList<Role> expectedRoles = new ArrayList<>();
-            ArrayList<Post> expectedPosts = new ArrayList<>();
-            Post expectedPost = new Post(1, "test text", 0, 0, null);
-            expectedPosts.add(expectedPost);
-            User expectedUser = new User(1, expectedLogin, expectedPassword, expectedRoles, expectedPosts);
+    @DisplayName("Find a User by ID")
+    void findUserById() throws SQLException {
+        String expectedLogin = "testLogin";
+        String expectedPassword = "testPassword";
+        ArrayList<Role> expectedRoles = new ArrayList<>();
+        ArrayList<Post> expectedPosts = new ArrayList<>();
 
-            User actualUser = userRepository.findUserById(1);
+        int expectedPostId = 1;
+        String expectedText = "test text";
+        int expectedLikes = 0;
+        int expectedDislikes = 0;
+        Post expectedPost = new Post(expectedPostId, expectedText, expectedLikes, expectedDislikes, null);
+        expectedPosts.add(expectedPost);
+        User expectedUser = new User(1, expectedLogin, expectedPassword, expectedRoles, expectedPosts);
 
-            assertEquals(expectedUser, actualUser);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        User actualUser = userRepository.findUserById(1);
+
+        assertEquals(expectedUser, actualUser);
     }
 
     @Test
-    void findUserWithoutHisRoles() {
-        try {
-            String expectedLogin = "testLogin";
-            String expectedPassword = "testPassword";
-            ArrayList<Role> expectedRoles = new ArrayList<>();
-            ArrayList<Post> expectedPosts = new ArrayList<>();
-            Post expectedPost = new Post(1, "test text", 0, 0, null);
-            expectedPosts.add(expectedPost);
-            User expectedUser = new User(1, expectedLogin, expectedPassword, expectedRoles, expectedPosts);
+    @DisplayName("Find a User without his Roles")
+    void findUserWithoutHisRoles() throws SQLException {
+        String expectedLogin = "testLogin";
+        String expectedPassword = "testPassword";
+        ArrayList<Role> expectedRoles = new ArrayList<>();
+        ArrayList<Post> expectedPosts = new ArrayList<>();
+        Post expectedPost = new Post(1, "test text", 0, 0, null);
+        expectedPosts.add(expectedPost);
+        User expectedUser = new User(1, expectedLogin, expectedPassword, expectedRoles, expectedPosts);
 
-            User actualUser = userRepository.findUserById(1);
+        User actualUser = userRepository.findUserById(1);
 
-            assertEquals(expectedUser, actualUser);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        assertEquals(expectedUser, actualUser);
     }
 
     @Test
-    void updateUser() {
-        try {
-            String expectedLogin = "testLogin2";
-            String expectedPassword = "testPassword2";
-            ArrayList<Role> expectedRoles = new ArrayList<>();
-            ArrayList<Post> expectedPosts = new ArrayList<>();
-            User expectedUser = new User(2, expectedLogin, expectedPassword, expectedRoles, expectedPosts);
+    @DisplayName("Update a User")
+    void updateUser() throws SQLException {
+        String expectedLogin = "testLogin2";
+        String expectedPassword = "testPassword2";
+        User expectedUser = new User(2, expectedLogin, expectedPassword);
 
-            User actualUser = userRepository.updateUser(2, expectedLogin, expectedPassword);
+        User actualUser = userRepository.updateUser(2, expectedLogin, expectedPassword);
 
-            assertEquals(expectedUser, actualUser);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        assertEquals(expectedUser, actualUser);
     }
 
-    User findTestUser() {
+    @Test
+    @DisplayName("Delete a User")
+    void deleteUser() throws SQLException {
+        userRepository.deleteUser(1);
+        User actualUser = findTestUser();
+
+        assertNull(actualUser);
+    }
+
+    private User findTestUser() throws SQLException {
         try (Connection connection = dataSource.connect();
              PreparedStatement prepStmtSelectUserById = connection.prepareStatement(MySQLtest.SQL_SELECT_USER_BY_ID)
         ) {
@@ -130,24 +128,8 @@ class UserRepositoryTest {
                     return user;
                 }
             }
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         }
 
         return null;
-    }
-
-    @Test
-    void deleteUser() {
-        try {
-            userRepository.deleteUser(1);
-            User expectedUser = null;
-            User actualUser = findTestUser();
-
-            assertEquals(expectedUser, actualUser);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

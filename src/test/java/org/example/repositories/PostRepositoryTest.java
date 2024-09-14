@@ -6,6 +6,7 @@ import org.example.entities.Post;
 import org.example.entities.User;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.MySQLContainer;
 
@@ -15,6 +16,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -24,7 +26,7 @@ class PostRepositoryTest {
     public PostRepository postRepository = new PostRepository(dataSource);
 
     @BeforeAll
-    static void setUpContainer() {
+    static void setUpContainer() throws SQLException {
         mySQLcontainer = new MySQLContainer<>("mysql:8.0");
         mySQLcontainer.start();
 
@@ -33,8 +35,6 @@ class PostRepositoryTest {
 
         try (Connection connection = dataSource.connect()) {
             MySQLtest.createAllTablesWithTestEntities(connection, dataSource);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -43,7 +43,7 @@ class PostRepositoryTest {
         mySQLcontainer.stop();
     }
 
-    User findTestUser() {
+    private User findTestUser() throws SQLException {
         try (Connection connection = dataSource.connect();
              PreparedStatement prepStmtSelectUserById = connection.prepareStatement(MySQLtest.SQL_SELECT_USER_BY_ID)
         ) {
@@ -59,90 +59,100 @@ class PostRepositoryTest {
                     return user;
                 }
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        }
+
+        return null;
+    }
+
+    private Post createExpectedPost(int firstOrSecond) {
+        if (firstOrSecond == 1) {
+            int postId = 1;
+            String expectedText = "test text";
+            int expectedLikes = 0;
+            int expectedDislikes = 0;
+            Post expectedPost = new Post(postId, expectedText, expectedLikes, expectedDislikes);
+
+            return expectedPost;
+        } else if (firstOrSecond == 2) {
+            int postId = 2;
+            String expectedText = "Hello there";
+            int expectedLikes = 0;
+            int expectedDislikes = 0;
+            Post expectedPost = new Post(postId, expectedText, expectedLikes, expectedDislikes);
+
+            return expectedPost;
         }
 
         return null;
     }
 
     @Test
-    void createPost() {
-        try {
-            String actualText = "Hello there";
-            int actualUserId = 1;
-            Post actualPost = postRepository.createPost(actualText, actualUserId);
+    @DisplayName("Create a Post")
+    void createPost() throws SQLException {
+        Post expectedPost1 = this.createExpectedPost(1);
+        Post expectedPost2 = this.createExpectedPost(2);
+        User expectedUser = this.findTestUser();
 
-            User expectedUser = findTestUser();
-            Post testPost1 = new Post(1, "test text", null);
-            Post testPost2 = new Post(2, "Hello there", null);
-            ArrayList<Post> testListPosts = new ArrayList<>(Arrays.asList(testPost1, testPost2));
-            expectedUser.setPosts(testListPosts);
-            String expectedText = "Hello there";
-            Post expectedPost = new Post(2, expectedText, expectedUser);
+        int expectedPostId = 2;
+        String expectedText = expectedPost2.getText();
+        int expectedLikes = 0;
+        int expectedDislikes = 0;
+        int expectedUserId = expectedUser.getId();
 
-            assertEquals(expectedPost, actualPost);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        Post actualPost = postRepository.createPost(expectedText, expectedUserId);
+        ArrayList<Post> testListPosts = new ArrayList<>();
+        testListPosts.add(expectedPost1);
+        testListPosts.add(expectedPost2);
+        expectedUser.setPosts(testListPosts);
+
+        Post expectedPost = new Post(expectedPostId, expectedText, expectedLikes, expectedDislikes, expectedUser);
+
+        assertEquals(expectedPost, actualPost);
     }
 
     @Test
-    void findPostById() {
-        try {
-            String expectedText = "test text";
-            int expectedLikes = 0;
-            int expectedDislikes = 0;
-            User expectedUser = findTestUser();
-            Post testPost1 = new Post(1, "test text", null);
-            expectedUser.setPosts(new ArrayList<>(Arrays.asList(testPost1)));
-            Post expectedPost = new Post(1, expectedText, expectedLikes, expectedDislikes, expectedUser);
+    @DisplayName("Find a Post by ID")
+    void findPostById() throws SQLException {
+        User expectedUser = this.findTestUser();
+        Post testPost = this.createExpectedPost(1);
+        expectedUser.setPosts(new ArrayList<>(List.of(testPost)));
+        Post expectedPost = this.createExpectedPost(1);
+        expectedPost.setUser(expectedUser);
 
-            Post actualPost = postRepository.findPostById(1);
+        Post actualPost = postRepository.findPostById(1);
 
-            assertEquals(expectedPost, actualPost);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        assertEquals(expectedPost, actualPost);
     }
 
     @Test
-    void findPostByIdWithoutUser() {
-        try {
-            String expectedText = "test text";
-            int expectedLikes = 0;
-            int expectedDislikes = 0;
-            Post expectedPost = new Post(1, expectedText, expectedLikes, expectedDislikes);
+    @DisplayName("Find a Post by ID without its Users")
+    void findPostByIdWithoutUser() throws SQLException {
+        Post expectedPost = this.createExpectedPost(1);
+        int expectedPostId = expectedPost.getId();
 
-            Post actualPost = postRepository.findPostByIdWithoutUser(1);
+        Post actualPost = postRepository.findPostByIdWithoutUser(expectedPostId);
 
-            assertEquals(expectedPost, actualPost);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        assertEquals(expectedPost, actualPost);
     }
 
     @Test
-    void updatePostById() {
-        try {
-            String expectedText = "test updated test";
-            int expectedLikes = 0;
-            int expectedDislikes = 0;
-            User expectedUser = findTestUser();
-            Post testPost1 = new Post(1, "test text", null);
-            Post testPost2 = new Post(2, expectedText, null);
-            expectedUser.setPosts(new ArrayList<>(Arrays.asList(testPost1, testPost2)));
-            Post expectedPost = new Post(2, expectedText, expectedLikes, expectedDislikes, expectedUser);
+    @DisplayName("Update a Post by ID")
+    void updatePostById() throws SQLException {
+        User expectedUser = this.findTestUser();
+        Post testPost1 = this.createExpectedPost(1);
+        String expectedText = "test updated test";
+        int expectedLikes = 0;
+        int expectedDislikes = 0;
+        Post testPost2 = new Post(2, expectedText, null);
+        expectedUser.setPosts(new ArrayList<>(Arrays.asList(testPost1, testPost2)));
+        Post expectedPost = new Post(2, expectedText, expectedLikes, expectedDislikes, expectedUser);
 
-            Post actualPost = postRepository.updatePostById(2, expectedText);
+        Post actualPost = postRepository.updatePostById(2, expectedText);
 
-            assertEquals(expectedPost, actualPost);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        assertEquals(expectedPost, actualPost);
     }
 
-    Post checkIfPostDeleted() {
+    private Post checkIfPostDeleted() throws SQLException {
         try (Connection connection = dataSource.connect();
              PreparedStatement prepStmtSelectPostById = connection.prepareStatement(MySQLtest.SQL_SELECT_POST_BY_ID)
         ) {
@@ -163,24 +173,18 @@ class PostRepositoryTest {
                     }
                 }
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         }
 
         return null;
     }
 
     @Test
-    void deletePostById() {
-        try {
-            postRepository.deletePostById(2);
-            Post actualPost = checkIfPostDeleted();
-            Post expectedPost = null;
+    @DisplayName("Delete a Post by ID")
+    void deletePostById() throws SQLException {
+        postRepository.deletePostById(2);
+        Post actualPost = this.checkIfPostDeleted();
+        Post expectedPost = null;
 
-            assertEquals(expectedPost, actualPost);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
+        assertEquals(expectedPost, actualPost);
     }
 }

@@ -21,13 +21,22 @@ import org.example.services.UserServiceImpl;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
 
 @WebServlet(name = "UserServlet", urlPatterns = "/users/*")
 public class UserServlet extends HttpServlet {
     private static final UserRepository USER_REPOSITORY = new UserRepository();
-    private static final UserServiceImpl USER_SERVICE = new UserServiceImpl(USER_REPOSITORY);
-    private static final UserMapper USER_MAPPER = new UserMapperImpl();
+    private UserServiceImpl userService = new UserServiceImpl(USER_REPOSITORY);
+    private UserMapper userMapper = new UserMapperImpl();
+
+    public UserServlet() {
+        this.userService = new UserServiceImpl(USER_REPOSITORY);
+        this.userMapper = new UserMapperImpl();
+    }
+
+    public UserServlet(UserServiceImpl userService, UserMapper userMapper) {
+        this.userService = userService;
+        this.userMapper = userMapper;
+    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
@@ -35,19 +44,19 @@ public class UserServlet extends HttpServlet {
         String password = req.getParameter("password");
 
         if (login != null && password != null) {
-            this.updateUserByURL(req, resp, login, password);
+            this.createUserByURL(req, resp, login, password);
         } else {
-            this.updateUserByJSON(req, resp);
+            this.createUserByJSON(req, resp);
         }
     }
 
-    private void updateUserByURL(HttpServletRequest req, HttpServletResponse resp, String login, String password) {
+    private void createUserByURL(HttpServletRequest req, HttpServletResponse resp, String login, String password) {
         resp.setContentType("text/html");
         String cssTag = "<link href='" + req.getContextPath() + "/css/style.css' rel='stylesheet' type='text/css'>";
 
         try (PrintWriter out = resp.getWriter();) {
-            User createdUser = USER_SERVICE.createUser(login, password);
-            UserDTO createdUserDTO = USER_MAPPER.userToUserDTO(createdUser);
+            User createdUser = userService.createUser(login, password);
+            UserDTO createdUserDTO = userMapper.userToUserDTO(createdUser);
 
             out.println("<html>");
             out.println("<head><title>Post User</title>" + cssTag + "</head>");
@@ -57,17 +66,11 @@ public class UserServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_CREATED);
         } catch (IOException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        throw new RuntimeException(e);
-        } catch (SQLException e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             throw new RuntimeException(e);
         }
     }
 
-    private void updateUserByJSON(HttpServletRequest req, HttpServletResponse resp) {
+    private void createUserByJSON(HttpServletRequest req, HttpServletResponse resp) {
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
         Gson gson = new Gson();
@@ -75,19 +78,13 @@ public class UserServlet extends HttpServlet {
         try {
             PrintWriter out = resp.getWriter();
             UserCredentialsDTO userCredentialsDTO = gson.fromJson(req.getReader(), UserCredentialsDTO.class);
-            User createdUser = USER_SERVICE.createUser(userCredentialsDTO.getLogin(), userCredentialsDTO.getPassword());
-            UserDTO createdUserDTO = USER_MAPPER.userToUserDTO(createdUser);
+            User createdUser = userService.createUser(userCredentialsDTO.getLogin(), userCredentialsDTO.getPassword());
+            UserDTO createdUserDTO = userMapper.userToUserDTO(createdUser);
 
             out.println(gson.toJson(createdUserDTO));
             out.flush();
             resp.setStatus(HttpServletResponse.SC_CREATED);
         } catch (IOException e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             throw new RuntimeException(e);
         } catch (JsonSyntaxException e) {
@@ -134,8 +131,8 @@ public class UserServlet extends HttpServlet {
         try {
             PrintWriter out = resp.getWriter();
             int id = Integer.parseInt(path.split("/")[1]);
-            User foundUser = USER_SERVICE.getUserById(id);
-            UserDTO foundUserDTO = USER_MAPPER.userToUserDTO(foundUser);
+            User foundUser = userService.getUserById(id);
+            UserDTO foundUserDTO = userMapper.userToUserDTO(foundUser);
 
             out.println("<html>");
             out.println("<head><title>Get User</title>" + cssTag + "</head>");
@@ -143,14 +140,18 @@ public class UserServlet extends HttpServlet {
             out.println("<p><b>Login:</b>" + foundUser.getLogin() + "</p>");
             out.println("<p>Your Roles:</p>");
 
-            for (Role role : foundUserDTO.getRoles()) {
-                out.println("<p>" + role + "</p>");
+            if (foundUserDTO.getRoles() != null) {
+                for (Role role : foundUserDTO.getRoles()) {
+                    out.println("<p>" + role + "</p>");
+                }
             }
 
             out.println("<p>Your Posts:</p>");
 
-            for (Post post : foundUserDTO.getPosts()) {
-                out.println("<p>" + post + "</p>");
+            if (foundUserDTO.getPosts() != null) {
+                for (Post post : foundUserDTO.getPosts()) {
+                    out.println("<p>" + post + "</p>");
+                }
             }
 
             out.println("</body>");
@@ -161,9 +162,6 @@ public class UserServlet extends HttpServlet {
             out.flush();
 
             resp.setStatus(HttpServletResponse.SC_OK);
-        } catch (SQLException e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
         } catch (NumberFormatException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             throw new RuntimeException(e);
@@ -194,8 +192,8 @@ public class UserServlet extends HttpServlet {
         try {
             PrintWriter out = resp.getWriter();
             int id = Integer.parseInt(path.split("/")[1]);
-            User updatedUser = USER_SERVICE.updateUserById(id, newLogin, newPassword);
-            UserDTO updatedUserDTO = USER_MAPPER.userToUserDTO(updatedUser);
+            User updatedUser = userService.updateUserById(id, newLogin, newPassword);
+            UserDTO updatedUserDTO = userMapper.userToUserDTO(updatedUser);
 
             out.println("<html>");
             out.println("<head><title>Put User</title>" + cssTag + "</head>");
@@ -206,9 +204,6 @@ public class UserServlet extends HttpServlet {
             out.println(gson.toJson(updatedUserDTO));
             out.flush();
             resp.setStatus(HttpServletResponse.SC_OK);
-        } catch (SQLException e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
         } catch (IOException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             throw new RuntimeException(e);
@@ -227,16 +222,13 @@ public class UserServlet extends HttpServlet {
             PrintWriter out = resp.getWriter();
             int id = Integer.parseInt(path.split("/")[1]);
             UserCredentialsDTO userCredentialsDTO = gson.fromJson(req.getReader(), UserCredentialsDTO.class);
-            User updatedUser = USER_SERVICE.updateUserById(id, userCredentialsDTO.getLogin(), userCredentialsDTO.getPassword());
-            UserDTO updatedUserDTO = USER_MAPPER.userToUserDTO(updatedUser);
+            User updatedUser = userService.updateUserById(id, userCredentialsDTO.getLogin(), userCredentialsDTO.getPassword());
+            UserDTO updatedUserDTO = userMapper.userToUserDTO(updatedUser);
 
             out.println(gson.toJson(updatedUserDTO));
             out.flush();
             resp.setStatus(HttpServletResponse.SC_OK);
         } catch (IOException e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             throw new RuntimeException(e);
         } catch (JsonSyntaxException e) {
@@ -260,9 +252,9 @@ public class UserServlet extends HttpServlet {
         try {
             PrintWriter out = resp.getWriter();
             int id = Integer.parseInt(path.split("/")[1]);
-            String login = USER_SERVICE.getUserById(id)
-                                       .getLogin();
-            USER_SERVICE.deleteUserById(id);
+            String login = userService.getUserById(id)
+                                      .getLogin();
+            userService.deleteUserById(id);
 
             out.println("<html>");
             out.println("<head><title>Delete User</title>" + cssTag + "</head>");
@@ -273,9 +265,6 @@ public class UserServlet extends HttpServlet {
             out.flush();
             resp.setStatus(HttpServletResponse.SC_OK);
         } catch (IOException e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             throw new RuntimeException(e);
         } catch (NumberFormatException e) {

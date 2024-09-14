@@ -11,8 +11,11 @@ import org.example.dtos.RoleDTO;
 import org.example.entities.Role;
 import org.example.mappers.RoleMapper;
 import org.example.mappers.RoleMapperImpl;
+import org.example.mappers.UserMapper;
+import org.example.mappers.UserMapperImpl;
 import org.example.repositories.RoleRepository;
 import org.example.services.RoleServiceImpl;
+import org.example.services.UserServiceImpl;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -20,9 +23,19 @@ import java.util.ArrayList;
 
 @WebServlet(name = "RoleServlet", urlPatterns = "/roles/*")
 public class RoleServlet extends HttpServlet {
-    private static final RoleMapper ROLE_MAPPER = new RoleMapperImpl();
     private static final RoleRepository ROLE_REPOSITORY = new RoleRepository();
-    private static final RoleServiceImpl ROLE_SERVICE = new RoleServiceImpl(ROLE_REPOSITORY);
+    private RoleServiceImpl roleService = new RoleServiceImpl(ROLE_REPOSITORY);
+    private RoleMapper roleMapper = new RoleMapperImpl();
+
+    public RoleServlet() {
+        this.roleService = new RoleServiceImpl(ROLE_REPOSITORY);
+        this.roleMapper = new RoleMapperImpl();
+    }
+
+    public RoleServlet(RoleServiceImpl roleService, RoleMapper roleMapper) {
+        this.roleService = roleService;
+        this.roleMapper = roleMapper;
+    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
@@ -33,11 +46,10 @@ public class RoleServlet extends HttpServlet {
         try {
             PrintWriter out = resp.getWriter();
             RoleDTO createdRoleDTO = gson.fromJson(req.getReader(), RoleDTO.class);
-            Role createdRole = ROLE_MAPPER.roleDTOtoRole(createdRoleDTO);
-            createdRole = ROLE_SERVICE.createRole(createdRole.getRoleName(), createdRole.getDescription());
-            createdRoleDTO = ROLE_MAPPER.roleToRoleDTO(createdRole);
+            Role createdRole = roleService.createRole(createdRoleDTO.getRoleName(), createdRoleDTO.getDescription());
+            createdRoleDTO = roleMapper.roleToRoleDTO(createdRole);
 
-            out.print(gson.toJson(createdRoleDTO));
+            out.println(gson.toJson(createdRoleDTO));
             out.flush();
             resp.setStatus(HttpServletResponse.SC_CREATED);
         } catch (IOException e) {
@@ -70,11 +82,11 @@ public class RoleServlet extends HttpServlet {
 
         try {
             PrintWriter out = resp.getWriter();
-            ArrayList<Role> listRoles = ROLE_SERVICE.getAllRoles();
+            ArrayList<Role> listRoles = roleService.getAllRoles();
             ArrayList<RoleDTO> listRolesDTO = new ArrayList<>();
 
             for (Role role : listRoles) {
-                listRolesDTO.add(ROLE_MAPPER.roleToRoleDTO(role));
+                listRolesDTO.add(roleMapper.roleToRoleDTO(role));
             }
 
             out.println(gson.toJson(listRolesDTO));
@@ -91,8 +103,8 @@ public class RoleServlet extends HttpServlet {
             Gson gson = new Gson();
             PrintWriter out = resp.getWriter();
             int id = Integer.parseInt(path.split("/")[1]);
-            Role foundUser = ROLE_SERVICE.getRoleById(id);
-            RoleDTO foundRoleDTO = ROLE_MAPPER.roleToRoleDTO(foundUser);
+            Role foundUser = roleService.getRoleById(id);
+            RoleDTO foundRoleDTO = roleMapper.roleToRoleDTO(foundUser);
 
             out.println(gson.toJson(foundRoleDTO));
             out.flush();
@@ -117,8 +129,8 @@ public class RoleServlet extends HttpServlet {
             PrintWriter out = resp.getWriter();
             int id = Integer.parseInt(path.split("/")[1]);
             RoleDTO updatedRoleDTO = gson.fromJson(req.getReader(), RoleDTO.class);
-            Role updatedRole = ROLE_SERVICE.updateRoleById(id, updatedRoleDTO.getRoleName(), updatedRoleDTO.getDescription());
-            updatedRoleDTO = ROLE_MAPPER.roleToRoleDTO(updatedRole);
+            Role updatedRole = roleService.updateRoleById(id, updatedRoleDTO.getRoleName(), updatedRoleDTO.getDescription());
+            updatedRoleDTO = roleMapper.roleToRoleDTO(updatedRole);
 
             out.println(gson.toJson(updatedRoleDTO));
             out.flush();
@@ -146,7 +158,7 @@ public class RoleServlet extends HttpServlet {
 
         try {
             int id = Integer.parseInt(path.split("/")[1]);
-            ROLE_SERVICE.deleteRoleById(id);
+            roleService.deleteRoleById(id);
 
             resp.setStatus(HttpServletResponse.SC_OK);
         } catch (NumberFormatException e) {

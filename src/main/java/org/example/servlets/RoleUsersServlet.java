@@ -20,11 +20,23 @@ import java.io.PrintWriter;
 @WebServlet(name = "RoleUsersServlet", urlPatterns = "/roles/users/*")
 public class RoleUsersServlet extends HttpServlet {
     private static final RoleRepository ROLE_REPOSITORY = new RoleRepository();
-    private static final RoleServiceImpl ROLE_SERVICE = new RoleServiceImpl(ROLE_REPOSITORY);
+    private RoleServiceImpl ROLE_SERVICE = new RoleServiceImpl(ROLE_REPOSITORY);
+    private RoleMapper ROLE_MAPPER = new RoleMapperImpl();
 
     private static final UsersRolesRepository USERS_ROLES_REPOSITORY = new UsersRolesRepository();
-    private static final UsersRolesServiceImpl USERS_ROLES_SERVICE = new UsersRolesServiceImpl(USERS_ROLES_REPOSITORY);
-    private static final RoleMapper ROLE_MAPPER = new RoleMapperImpl();
+    private UsersRolesServiceImpl USERS_ROLES_SERVICE = new UsersRolesServiceImpl(USERS_ROLES_REPOSITORY);
+
+    public RoleUsersServlet() {
+        this.ROLE_SERVICE = new RoleServiceImpl(ROLE_REPOSITORY);
+        this.USERS_ROLES_SERVICE = new UsersRolesServiceImpl(USERS_ROLES_REPOSITORY);
+        this.ROLE_MAPPER = new RoleMapperImpl();
+    }
+
+    public RoleUsersServlet(RoleServiceImpl ROLE_SERVICE, UsersRolesServiceImpl USERS_ROLES_SERVICE, RoleMapper ROLE_MAPPER) {
+        this.ROLE_SERVICE = ROLE_SERVICE;
+        this.USERS_ROLES_SERVICE = USERS_ROLES_SERVICE;
+        this.ROLE_MAPPER = ROLE_MAPPER;
+    }
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) {
