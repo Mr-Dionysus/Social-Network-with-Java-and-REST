@@ -77,6 +77,10 @@ public class PostServiceImpl implements PostService {
     public void deletePostById(int postId) {
         PostValidator.postId(postId);
 
+        if (this.getPostById(postId) == null) {
+            throw new PostNotFoundException("Error while deleting post. Post with ID '" + postId + "' can't be found");
+        }
+
         try {
             postRepository.deletePostById(postId);
         } catch (SQLException e) {

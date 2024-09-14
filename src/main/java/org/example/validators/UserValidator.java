@@ -1,7 +1,7 @@
 package org.example.validators;
 
 import org.example.entities.User;
-import org.example.exceptions.PostNotFoundException;
+import org.example.exceptions.UserNotFoundException;
 
 public class UserValidator {
     private UserValidator() {
@@ -16,13 +16,13 @@ public class UserValidator {
 
     public static void foundUser(User foundUser, int userId) {
         if (foundUser == null) {
-            throw new PostNotFoundException("User with ID '" + userId + " can't be found");
+            throw new UserNotFoundException("User with ID '" + userId + " can't be found");
         }
     }
 
     public static void createdUser(User createdUser, String login) {
         if (createdUser == null) {
-            throw new PostNotFoundException("Created User with the login '" + login + "' can't be found");
+            throw new UserNotFoundException("Created User with the login '" + login + "' can't be found");
         }
     }
 

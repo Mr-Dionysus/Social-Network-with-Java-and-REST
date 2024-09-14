@@ -2,6 +2,8 @@ package org.example.services;
 
 import org.example.entities.Role;
 import org.example.entities.User;
+import org.example.exceptions.PostNotFoundException;
+import org.example.exceptions.UserNotFoundException;
 import org.example.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -104,7 +106,14 @@ class UserServiceImplTest {
     @DisplayName("Delete a User by ID")
     void deleteUserById() throws SQLException {
         int userId = 1;
-        userService.deleteUserById(userId);
-        verify(userRepository, times(1)).deleteUser(userId);
+        String expectedMessage = "User with ID '1 can't be found";
+        doThrow(new UserNotFoundException(expectedMessage)).when(userRepository)
+                                                           .deleteUser(userId);
+
+        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
+            userService.deleteUserById(userId);
+        });
+
+        assertEquals(expectedMessage, exception.getMessage());
     }
 }

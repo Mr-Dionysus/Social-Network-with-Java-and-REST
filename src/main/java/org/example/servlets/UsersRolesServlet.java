@@ -17,25 +17,25 @@ import org.example.services.UsersRolesServiceImpl;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet(name = "RoleUsersServlet", urlPatterns = "/roles/users/*")
-public class RoleUsersServlet extends HttpServlet {
+@WebServlet(name = "UsersRolesServlet", urlPatterns = "/roles/users/*")
+public class UsersRolesServlet extends HttpServlet {
     private static final RoleRepository ROLE_REPOSITORY = new RoleRepository();
-    private RoleServiceImpl ROLE_SERVICE = new RoleServiceImpl(ROLE_REPOSITORY);
-    private RoleMapper ROLE_MAPPER = new RoleMapperImpl();
+    private final transient RoleServiceImpl roleService;
+    private final transient RoleMapper roleMapper;
 
     private static final UsersRolesRepository USERS_ROLES_REPOSITORY = new UsersRolesRepository();
-    private UsersRolesServiceImpl USERS_ROLES_SERVICE = new UsersRolesServiceImpl(USERS_ROLES_REPOSITORY);
+    private final transient UsersRolesServiceImpl usersRolesService;
 
-    public RoleUsersServlet() {
-        this.ROLE_SERVICE = new RoleServiceImpl(ROLE_REPOSITORY);
-        this.USERS_ROLES_SERVICE = new UsersRolesServiceImpl(USERS_ROLES_REPOSITORY);
-        this.ROLE_MAPPER = new RoleMapperImpl();
+    public UsersRolesServlet() {
+        this.roleService = new RoleServiceImpl(ROLE_REPOSITORY);
+        this.usersRolesService = new UsersRolesServiceImpl(USERS_ROLES_REPOSITORY);
+        this.roleMapper = new RoleMapperImpl();
     }
 
-    public RoleUsersServlet(RoleServiceImpl ROLE_SERVICE, UsersRolesServiceImpl USERS_ROLES_SERVICE, RoleMapper ROLE_MAPPER) {
-        this.ROLE_SERVICE = ROLE_SERVICE;
-        this.USERS_ROLES_SERVICE = USERS_ROLES_SERVICE;
-        this.ROLE_MAPPER = ROLE_MAPPER;
+    public UsersRolesServlet(RoleServiceImpl roleService, UsersRolesServiceImpl usersRolesService, RoleMapper roleMapper) {
+        this.roleService = roleService;
+        this.usersRolesService = usersRolesService;
+        this.roleMapper = roleMapper;
     }
 
     @Override
@@ -50,9 +50,9 @@ public class RoleUsersServlet extends HttpServlet {
             PrintWriter out = resp.getWriter();
             int roleId = Integer.parseInt(listPath[1]);
             int userId = Integer.parseInt(listPath[2]);
-            USERS_ROLES_SERVICE.assignRoleToUser(userId, roleId);
-            Role updatedRole = ROLE_SERVICE.getRoleById(roleId);
-            RoleDTO updatedRoleDTO = ROLE_MAPPER.roleToRoleDTO(updatedRole);
+            usersRolesService.assignRoleToUser(userId, roleId);
+            Role updatedRole = roleService.getRoleById(roleId);
+            RoleDTO updatedRoleDTO = roleMapper.roleToRoleDTO(updatedRole);
 
             out.println(gson.toJson(updatedRoleDTO));
             out.println(gson.toJson(updatedRoleDTO.getUsers()));

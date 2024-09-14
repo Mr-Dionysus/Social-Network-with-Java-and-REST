@@ -1,6 +1,6 @@
 package org.example.repositories;
 
-import connection.MySQLtest;
+import org.example.connection.MySQLtest;
 import org.example.DataSource;
 import org.example.entities.Post;
 import org.example.entities.User;

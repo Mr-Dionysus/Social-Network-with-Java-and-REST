@@ -25,8 +25,8 @@ import java.io.PrintWriter;
 @WebServlet(name = "UserServlet", urlPatterns = "/users/*")
 public class UserServlet extends HttpServlet {
     private static final UserRepository USER_REPOSITORY = new UserRepository();
-    private UserServiceImpl userService = new UserServiceImpl(USER_REPOSITORY);
-    private UserMapper userMapper = new UserMapperImpl();
+    private final transient UserServiceImpl userService;
+    private final transient UserMapper userMapper;
 
     public UserServlet() {
         this.userService = new UserServiceImpl(USER_REPOSITORY);

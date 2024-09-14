@@ -4,8 +4,6 @@ import com.google.gson.Gson;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.dtos.RoleDTO;
-import org.example.dtos.UserCredentialsDTO;
-import org.example.dtos.UserDTO;
 import org.example.entities.Role;
 import org.example.entities.User;
 import org.example.mappers.RoleMapper;
@@ -16,17 +14,14 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
 
-class RoleUsersServletTest {
+class UsersRolesServletTest {
     @Mock
     private HttpServletRequest req;
 
@@ -43,13 +38,13 @@ class RoleUsersServletTest {
     private UsersRolesServiceImpl usersRolesService;
 
     private Gson gson;
-    private RoleUsersServlet roleUsersServlet;
+    private UsersRolesServlet usersRolesServlet;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
         gson = new Gson();
-        roleUsersServlet = new RoleUsersServlet(roleService, usersRolesService, roleMapper);
+        usersRolesServlet = new UsersRolesServlet(roleService, usersRolesService, roleMapper);
     }
 
     @Test
@@ -74,7 +69,7 @@ class RoleUsersServletTest {
         PrintWriter out = mock(PrintWriter.class);
         when(resp.getWriter()).thenReturn(out);
 
-        roleUsersServlet.doPut(req, resp);
+        usersRolesServlet.doPut(req, resp);
 
         verify(resp).setContentType("application/json");
         verify(resp).setCharacterEncoding("UTF-8");

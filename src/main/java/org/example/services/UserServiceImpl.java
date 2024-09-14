@@ -1,10 +1,7 @@
 package org.example.services;
 
 import org.example.entities.User;
-import org.example.exceptions.CreateUserException;
-import org.example.exceptions.DeleteUserException;
-import org.example.exceptions.GetUserException;
-import org.example.exceptions.UpdateUserException;
+import org.example.exceptions.*;
 import org.example.repositories.UserRepository;
 import org.example.validators.UserValidator;
 
@@ -79,6 +76,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUserById(int userId) {
         UserValidator.userId(userId);
+
+        if (this.getUserById(userId) == null) {
+            throw new UserNotFoundException("Error while deleting the User. User with ID '" + userId + "' can't " + "be" + " " + "found");
+        }
 
         try {
             userRepository.deleteUser(userId);

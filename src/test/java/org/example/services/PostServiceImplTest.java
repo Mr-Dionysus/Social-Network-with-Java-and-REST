@@ -2,6 +2,8 @@ package org.example.services;
 
 import org.example.entities.Post;
 import org.example.entities.User;
+import org.example.exceptions.PostNotFoundException;
+import org.example.exceptions.UserNotFoundException;
 import org.example.repositories.PostRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -118,8 +120,15 @@ class PostServiceImplTest {
     @DisplayName("Delete a Post by ID")
     void deletePostById() throws SQLException {
         int postId = 1;
-        postService.deletePostById(postId);
 
-        verify(postRepository, times(1)).deletePostById(postId);
+        String expectedMessage = "Post with ID '1' can't be found";
+        doThrow(new PostNotFoundException(expectedMessage)).when(postRepository)
+                                                           .deletePostById(postId);
+
+        PostNotFoundException exception = assertThrows(PostNotFoundException.class, () -> {
+            postService.deletePostById(postId);
+        });
+
+        assertEquals(expectedMessage, exception.getMessage());
     }
 }

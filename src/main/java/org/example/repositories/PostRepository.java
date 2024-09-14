@@ -4,6 +4,7 @@ import org.example.DataSource;
 import org.example.db.PostsSQL;
 import org.example.entities.Post;
 import org.example.entities.User;
+import org.example.exceptions.PostNotFoundException;
 import org.example.services.UserServiceImpl;
 
 import java.sql.Connection;
@@ -39,8 +40,7 @@ public class PostRepository {
     }
 
     private Post findPostId(Connection connection, String text, int user_id) throws SQLException {
-        try (PreparedStatement prepStmtSelectCreatedPostId =
-                     connection.prepareStatement(PostsSQL.SELECT_POST_ID_BY_FIELDS.getQuery())) {
+        try (PreparedStatement prepStmtSelectCreatedPostId = connection.prepareStatement(PostsSQL.SELECT_POST_ID_BY_FIELDS.getQuery())) {
             prepStmtSelectCreatedPostId.setString(1, text);
             prepStmtSelectCreatedPostId.setInt(2, 0);
             prepStmtSelectCreatedPostId.setInt(3, 0);
@@ -65,8 +65,7 @@ public class PostRepository {
 
     public Post findPostById(int postId) throws SQLException {
         try (Connection connection = dataSource.connect();
-             PreparedStatement prepStmtSelectPostById =
-                     connection.prepareStatement(PostsSQL.SELECT_BY_ID.getQuery())
+             PreparedStatement prepStmtSelectPostById = connection.prepareStatement(PostsSQL.SELECT_BY_ID.getQuery())
         ) {
             prepStmtSelectPostById.setInt(1, postId);
 
@@ -92,8 +91,7 @@ public class PostRepository {
 
     public Post findPostByIdWithoutUser(int postId) throws SQLException {
         try (Connection connection = dataSource.connect();
-             PreparedStatement prepStmtSelectPostById =
-                     connection.prepareStatement(PostsSQL.SELECT_BY_ID.getQuery())
+             PreparedStatement prepStmtSelectPostById = connection.prepareStatement(PostsSQL.SELECT_BY_ID.getQuery())
         ) {
             prepStmtSelectPostById.setInt(1, postId);
 
@@ -114,8 +112,7 @@ public class PostRepository {
 
     public Post updatePostById(int postId, String newText) throws SQLException {
         try (Connection connection = dataSource.connect();
-             PreparedStatement prepStmtUpdatePostById =
-                     connection.prepareStatement(PostsSQL.UPDATE_BY_ID.getQuery())
+             PreparedStatement prepStmtUpdatePostById = connection.prepareStatement(PostsSQL.UPDATE_BY_ID.getQuery())
         ) {
             prepStmtUpdatePostById.setString(1, newText);
             prepStmtUpdatePostById.setInt(2, postId);
@@ -128,8 +125,7 @@ public class PostRepository {
 
     public void deletePostById(int postId) throws SQLException {
         try (Connection connection = dataSource.connect();
-             PreparedStatement prepStmtDeletePostById =
-                     connection.prepareStatement(PostsSQL.DELETE_BY_ID.getQuery())
+             PreparedStatement prepStmtDeletePostById = connection.prepareStatement(PostsSQL.DELETE_BY_ID.getQuery())
         ) {
             prepStmtDeletePostById.setInt(1, postId);
             prepStmtDeletePostById.executeUpdate();

@@ -91,8 +91,8 @@ public class User implements Serializable {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        User foundUser = (User) o;
-        return id == foundUser.id && Objects.equals(login, foundUser.login) && Objects.equals(password, foundUser.password) && Objects.equals(roles, foundUser.roles) && Objects.equals(posts, foundUser.posts);
+        User user = (User) o;
+        return id == user.id && Objects.equals(login, user.login) && Objects.equals(password, user.password) && Objects.equals(roles, user.roles) && Objects.equals(posts, user.posts);
     }
 
     @Override

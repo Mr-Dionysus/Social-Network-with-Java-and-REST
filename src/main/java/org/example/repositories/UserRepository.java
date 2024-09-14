@@ -17,17 +17,18 @@ import java.util.ArrayList;
 
 public class UserRepository {
     private DataSource dataSource;
+    private RoleRepository roleRepository = new RoleRepository(dataSource);
+    private RoleServiceImpl roleService = new RoleServiceImpl(roleRepository);
 
     public UserRepository() {
         this.dataSource = new DataSource();
+        this.roleRepository = new RoleRepository(dataSource);
+        this.roleService = new RoleServiceImpl(roleRepository);
     }
 
     public UserRepository(DataSource dataSource) {
         this.dataSource = dataSource;
     }
-
-    private final RoleRepository roleRepository = new RoleRepository(dataSource);
-    private final RoleServiceImpl roleService = new RoleServiceImpl(roleRepository);
 
     private static final String SQL_SELECT_POST_ID_BY_USER_ID = "SELECT id FROM posts WHERE user_id = ?";
 
@@ -81,8 +82,7 @@ public class UserRepository {
     }
 
     private ArrayList<Role> findListOfRoles(Connection connection, int userId) throws SQLException {
-        try (PreparedStatement prepStmtSelectAllRoleIdsByUserId =
-                     connection.prepareStatement(UsersRolesSQL.SELECT_ALL_ROLE_IDS_BY_USER_ID.getQuery())) {
+        try (PreparedStatement prepStmtSelectAllRoleIdsByUserId = connection.prepareStatement(UsersRolesSQL.SELECT_ALL_ROLE_IDS_BY_USER_ID.getQuery())) {
             prepStmtSelectAllRoleIdsByUserId.setInt(1, userId);
 
             try (ResultSet rsFoundAllRoleIds = prepStmtSelectAllRoleIdsByUserId.executeQuery()) {
