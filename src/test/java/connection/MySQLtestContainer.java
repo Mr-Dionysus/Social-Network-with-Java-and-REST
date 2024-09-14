@@ -1,4 +1,4 @@
-package org.example.repositories;
+package connection;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;

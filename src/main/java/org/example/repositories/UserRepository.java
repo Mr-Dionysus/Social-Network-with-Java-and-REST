@@ -1,6 +1,8 @@
 package org.example.repositories;
 
 import org.example.DataSource;
+import org.example.db.UsersRolesSQL;
+import org.example.db.UsersSQL;
 import org.example.entities.Post;
 import org.example.entities.Role;
 import org.example.entities.User;
@@ -27,25 +29,17 @@ public class UserRepository {
     private final RoleRepository roleRepository = new RoleRepository(dataSource);
     private final RoleServiceImpl roleService = new RoleServiceImpl(roleRepository);
 
-    private static final String SQL_INSERT_USER = "INSERT INTO users (login, password) VALUES(?,?)";
-    private static final String SQL_SELECT_USER_ID_BY_LOGIN = "SELECT id FROM users WHERE login = ?";
-    private static final String SQL_SELECT_USER_BY_ID = "SELECT * FROM users WHERE id = ?";
-    private static final String SQL_UPDATE_USER_BY_ID = "UPDATE users SET login = ?, password = ? WHERE id = ?";
-    private static final String SQL_DELETE_USER_BY_ID = "DELETE FROM users WHERE id = ?";
-
-    private static final String SQL_SELECT_ALL_ROLE_IDS_BY_USER_ID = "SELECT role_id FROM users_roles WHERE user_id = ?";
-
     private static final String SQL_SELECT_POST_ID_BY_USER_ID = "SELECT id FROM posts WHERE user_id = ?";
 
     public User createUser(String login, String password) throws SQLException {
         try (Connection connection = dataSource.connect();
-             PreparedStatement prepStmtInsertUser = connection.prepareStatement(SQL_INSERT_USER);
+             PreparedStatement prepStmtInsertUser = connection.prepareStatement(UsersSQL.INSERT.getQuery())
         ) {
             prepStmtInsertUser.setString(1, login);
             prepStmtInsertUser.setString(2, password);
             prepStmtInsertUser.executeUpdate();
 
-            try (PreparedStatement prepStmtSelectUserIdByLogin = connection.prepareStatement(SQL_SELECT_USER_ID_BY_LOGIN);) {
+            try (PreparedStatement prepStmtSelectUserIdByLogin = connection.prepareStatement(UsersSQL.SELECT_USER_ID_BY_LOGIN.getQuery())) {
                 prepStmtSelectUserIdByLogin.setString(1, login);
 
                 try (ResultSet rsFoundUser = prepStmtSelectUserIdByLogin.executeQuery()) {
@@ -64,7 +58,7 @@ public class UserRepository {
 
     public User findUserById(int userId) throws SQLException {
         try (Connection connection = dataSource.connect();
-             PreparedStatement prepStmtSelectUserById = connection.prepareStatement(SQL_SELECT_USER_BY_ID);
+             PreparedStatement prepStmtSelectUserById = connection.prepareStatement(UsersSQL.SELECT_BY_ID.getQuery())
         ) {
             prepStmtSelectUserById.setInt(1, userId);
 
@@ -87,7 +81,8 @@ public class UserRepository {
     }
 
     private ArrayList<Role> findListOfRoles(Connection connection, int userId) throws SQLException {
-        try (PreparedStatement prepStmtSelectAllRoleIdsByUserId = connection.prepareStatement(SQL_SELECT_ALL_ROLE_IDS_BY_USER_ID)) {
+        try (PreparedStatement prepStmtSelectAllRoleIdsByUserId =
+                     connection.prepareStatement(UsersRolesSQL.SELECT_ALL_ROLE_IDS_BY_USER_ID.getQuery())) {
             prepStmtSelectAllRoleIdsByUserId.setInt(1, userId);
 
             try (ResultSet rsFoundAllRoleIds = prepStmtSelectAllRoleIdsByUserId.executeQuery()) {
@@ -95,7 +90,7 @@ public class UserRepository {
 
                 while (rsFoundAllRoleIds.next()) {
                     int roleId = rsFoundAllRoleIds.getInt("role_id");
-                    Role foundRole = roleService.getRoleByIdWithoutArr(roleId);
+                    Role foundRole = roleService.getRoleByIdWithoutUsers(roleId);
                     listFoundRoles.add(foundRole);
                 }
 
@@ -126,7 +121,7 @@ public class UserRepository {
 
     public User findUserWithoutHisRoles(int userId) throws SQLException {
         try (Connection connection = dataSource.connect();
-             PreparedStatement prepStmtSelectUserById = connection.prepareStatement(SQL_SELECT_USER_BY_ID);
+             PreparedStatement prepStmtSelectUserById = connection.prepareStatement(UsersSQL.SELECT_BY_ID.getQuery())
         ) {
             prepStmtSelectUserById.setInt(1, userId);
 
@@ -146,7 +141,7 @@ public class UserRepository {
 
     public User updateUser(int id, String newLogin, String newPassword) throws SQLException {
         try (Connection connection = dataSource.connect();
-             PreparedStatement prepStmtUpdateUserById = connection.prepareStatement(SQL_UPDATE_USER_BY_ID);
+             PreparedStatement prepStmtUpdateUserById = connection.prepareStatement(UsersSQL.SQL_UPDATE_USER_BY_ID.getQuery())
         ) {
             prepStmtUpdateUserById.setString(1, newLogin);
             prepStmtUpdateUserById.setString(2, newPassword);
@@ -160,7 +155,7 @@ public class UserRepository {
 
     public void deleteUser(int id) throws SQLException {
         try (Connection connection = dataSource.connect();
-             PreparedStatement prepStmtDeleteUserById = connection.prepareStatement(SQL_DELETE_USER_BY_ID)
+             PreparedStatement prepStmtDeleteUserById = connection.prepareStatement(UsersSQL.SQL_DELETE_USER_BY_ID.getQuery())
         ) {
             prepStmtDeleteUserById.setInt(1, id);
             prepStmtDeleteUserById.executeUpdate();

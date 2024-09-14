@@ -1,5 +1,7 @@
 package org.example.entities;
 
+import java.util.Objects;
+
 public class Post {
     private int id;
     private String text;
@@ -87,5 +89,20 @@ public class Post {
     @Override
     public String toString() {
         return "Post{" + "id=" + id + ", text='" + text + '\'' + ", likes=" + likes + ", dislikes=" + dislikes + ", user=" + user + '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Post post = (Post) o;
+        return id == post.id && likes == post.likes && dislikes == post.dislikes && Objects.equals(text, post.text) && Objects.equals(user, post.user);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, text, likes, dislikes, user);
     }
 }

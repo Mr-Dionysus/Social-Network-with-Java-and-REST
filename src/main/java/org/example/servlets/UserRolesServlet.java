@@ -10,8 +10,8 @@ import org.example.entities.User;
 import org.example.mappers.UserMapper;
 import org.example.mappers.UserMapperImpl;
 import org.example.repositories.UserRepository;
-import org.example.repositories.UserRolesRepository;
-import org.example.services.UserRolesServiceImpl;
+import org.example.repositories.UsersRolesRepository;
+import org.example.services.UsersRolesServiceImpl;
 import org.example.services.UserServiceImpl;
 
 import java.io.IOException;
@@ -23,8 +23,8 @@ public class UserRolesServlet extends HttpServlet {
     private static final UserRepository USER_REPOSITORY = new UserRepository();
     private static final UserServiceImpl USER_SERVICE = new UserServiceImpl(USER_REPOSITORY);
 
-    private static final UserRolesRepository USER_ROLES_REPOSITORY = new UserRolesRepository();
-    private static final UserRolesServiceImpl USER_ROLES_SERVICE = new UserRolesServiceImpl(USER_ROLES_REPOSITORY);
+    private static final UsersRolesRepository USER_ROLES_REPOSITORY = new UsersRolesRepository();
+    private static final UsersRolesServiceImpl USER_ROLES_SERVICE = new UsersRolesServiceImpl(USER_ROLES_REPOSITORY);
     private static final UserMapper USER_MAPPER = new UserMapperImpl();
 
     @Override
@@ -38,7 +38,7 @@ public class UserRolesServlet extends HttpServlet {
         try (PrintWriter out = resp.getWriter()) {
             int userId = Integer.parseInt(listPath[1]);
             int roleId = Integer.parseInt(listPath[2]);
-            USER_ROLES_SERVICE.addRoleToUser(userId, roleId);
+            USER_ROLES_SERVICE.assignRoleToUser(userId, roleId);
             User updatedUser = USER_SERVICE.getUserById(userId);
             UserDTO updatedUserDTO = USER_MAPPER.userToUserDTO(updatedUser);
 

@@ -16,7 +16,6 @@ import org.example.services.PostServiceImpl;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
 
 @WebServlet(name = "PostServlet", urlPatterns = "/users/posts/*")
 public class PostServlet extends HttpServlet {
@@ -42,9 +41,6 @@ public class PostServlet extends HttpServlet {
             out.println(gson.toJson(postDTO));
             out.flush();
             resp.setStatus(HttpServletResponse.SC_CREATED);
-        } catch (SQLException e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
         } catch (IOException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             throw new RuntimeException(e);
@@ -76,9 +72,6 @@ public class PostServlet extends HttpServlet {
             out.println(gson.toJson(postDTO));
             out.flush();
             resp.setStatus(HttpServletResponse.SC_OK);
-        } catch (SQLException e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
         } catch (IOException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             throw new RuntimeException(e);
@@ -111,10 +104,7 @@ public class PostServlet extends HttpServlet {
             out.println(gson.toJson(postDTO));
             out.flush();
             resp.setStatus(HttpServletResponse.SC_OK);
-        } catch (SQLException e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
-        } catch (IOException e) {
+        }  catch (IOException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             throw new RuntimeException(e);
         } catch (NumberFormatException e) {
@@ -140,10 +130,7 @@ public class PostServlet extends HttpServlet {
             POST_SERVICE.deletePostById(postId);
 
             resp.setStatus(HttpServletResponse.SC_OK);
-        } catch (SQLException e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
-        } catch (NumberFormatException e) {
+        }  catch (NumberFormatException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             throw new RuntimeException(e);
         }
