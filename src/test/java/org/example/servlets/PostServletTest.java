@@ -96,7 +96,6 @@ class PostServletTest {
         verify(resp).setCharacterEncoding("UTF-8");
         verify(resp).setStatus(HttpServletResponse.SC_OK);
         verify(out).println(gson.toJson(mockPostDTO));
-
     }
 
     @Test

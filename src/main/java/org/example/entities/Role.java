@@ -1,13 +1,14 @@
 package org.example.entities;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Role {
     private int id;
     private String roleName;
     private String description;
-    private ArrayList<User> users = new ArrayList<>();
+    private List<User> users = new ArrayList<>();
 
     public Role() {
     }
@@ -23,7 +24,7 @@ public class Role {
         this.description = description;
     }
 
-    public Role(int id, String roleName, String description, ArrayList<User> users) {
+    public Role(int id, String roleName, String description, List<User> users) {
         this.id = id;
         this.roleName = roleName;
         this.description = description;
@@ -54,11 +55,11 @@ public class Role {
         this.description = description;
     }
 
-    public ArrayList<User> getUsers() {
+    public List<User> getUsers() {
         return users;
     }
 
-    public void setUsers(ArrayList<User> users) {
+    public void setUsers(List<User> users) {
         this.users = users;
     }
 

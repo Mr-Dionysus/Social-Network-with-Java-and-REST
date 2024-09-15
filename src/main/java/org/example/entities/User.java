@@ -1,15 +1,15 @@
 package org.example.entities;
 
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
-public class User implements Serializable {
+public class User {
     private int id;
     private String login;
     private String password;
-    private ArrayList<Role> roles = new ArrayList<>();
-    private ArrayList<Post> posts = new ArrayList<>();
+    private List<Role> roles = new ArrayList<>();
+    private List<Post> posts = new ArrayList<>();
 
     public User() {
     }
@@ -25,14 +25,14 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public User(int id, String login, String password, ArrayList<Role> roles) {
+    public User(int id, String login, String password, List<Role> roles) {
         this.id = id;
         this.login = login;
         this.password = password;
         this.roles = roles;
     }
 
-    public User(int id, String login, String password, ArrayList<Role> roles, ArrayList<Post> posts) {
+    public User(int id, String login, String password, List<Role> roles, List<Post> posts) {
         this.id = id;
         this.login = login;
         this.password = password;
@@ -64,7 +64,7 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public ArrayList<Role> getRoles() {
+    public List<Role> getRoles() {
         return roles;
     }
 
@@ -72,11 +72,11 @@ public class User implements Serializable {
         this.roles = roles;
     }
 
-    public ArrayList<Post> getPosts() {
+    public List<Post> getPosts() {
         return posts;
     }
 
-    public void setPosts(ArrayList<Post> posts) {
+    public void setPosts(List<Post> posts) {
         this.posts = posts;
     }
 

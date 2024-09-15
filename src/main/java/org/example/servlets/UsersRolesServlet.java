@@ -17,13 +17,10 @@ import java.io.PrintWriter;
 
 @WebServlet(name = "UsersRolesServlet", urlPatterns = "/roles/users/*")
 public class UsersRolesServlet extends HttpServlet {
-    private static final RoleRepository ROLE_REPOSITORY = new RoleRepository();
-    private final transient RoleServiceImpl roleService;
-    private final transient RoleMapper roleMapper;
+    private RoleServiceImpl roleService = new RoleServiceImpl(new RoleRepository());
+    private RoleMapper roleMapper = new RoleMapperImpl();
 
     public UsersRolesServlet() {
-        this.roleService = new RoleServiceImpl(ROLE_REPOSITORY);
-        this.roleMapper = new RoleMapperImpl();
     }
 
     public UsersRolesServlet(RoleServiceImpl roleService, RoleMapper roleMapper) {

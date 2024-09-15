@@ -5,12 +5,13 @@ import org.example.entities.Role;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
-public class UserDTO implements Serializable {
+public class UserDTO {
     private String login;
-    private transient ArrayList<Role> roles = new ArrayList<>();
-    private transient ArrayList<Post> posts = new ArrayList<>();
+    private List<Role> roles = new ArrayList<>();
+    private ArrayList<Post> posts = new ArrayList<>();
 
     public String getLogin() {
         return login;
@@ -20,7 +21,7 @@ public class UserDTO implements Serializable {
         this.login = login;
     }
 
-    public ArrayList<Role> getRoles() {
+    public List<Role> getRoles() {
         return roles;
     }
 
