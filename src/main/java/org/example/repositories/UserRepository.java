@@ -162,10 +162,32 @@ public class UserRepository {
     }
 
     private void deleteAllPostsByUserId(Connection connection, int userId) throws SQLException {
-        try (PreparedStatement prepStmtDeleteAllPostsByUserId =
-                     connection.prepareStatement(PostsSQL.DELETE_ALL_POSTS_BY_USER_ID.getQuery())) {
+        try (PreparedStatement prepStmtDeleteAllPostsByUserId = connection.prepareStatement(PostsSQL.DELETE_ALL_POSTS_BY_USER_ID.getQuery())) {
             prepStmtDeleteAllPostsByUserId.setInt(1, userId);
             prepStmtDeleteAllPostsByUserId.executeUpdate();
         }
     }
+
+    //    public ArrayList<User> getUsersWithRole(int roleId) throws SQLException {
+    //        ArrayList<User> listFoundUsers = new ArrayList<>();
+    //
+    //        try (Connection connection = dataSource.connect();
+    //             PreparedStatement prepStmtSelectUsersByRoleId = connection.prepareStatement
+    //             (UsersSQL.SQL_SELECT_USERS_BY_ROLE_ID.getQuery())
+    //        ) {
+    //            prepStmtSelectUsersByRoleId.setInt(1, roleId);
+    //
+    //            try (ResultSet rsFoundUsers = prepStmtSelectUsersByRoleId.executeQuery()) {
+    //                while (rsFoundUsers.next()) {
+    //                    int userId = rsFoundUsers.getInt("id");
+    //                    String login = rsFoundUsers.getString("login");
+    //                    String password = rsFoundUsers.getString("password");
+    //                    User foundUser = new User(userId, login, password);
+    //                    listFoundUsers.add(foundUser);
+    //                }
+    //            }
+    //        }
+    //
+    //        return listFoundUsers;
+    //    }
 }

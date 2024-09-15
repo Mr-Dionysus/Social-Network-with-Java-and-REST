@@ -138,4 +138,5 @@ class RoleRepositoryTest {
 
         assertNull(actualRole);
     }
+
 }
