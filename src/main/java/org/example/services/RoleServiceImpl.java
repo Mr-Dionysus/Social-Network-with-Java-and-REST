@@ -4,6 +4,7 @@ import org.example.entities.Role;
 import org.example.exceptions.*;
 import org.example.repositories.RoleRepository;
 import org.example.validators.RoleValidator;
+import org.example.validators.UserValidator;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -98,6 +99,18 @@ public class RoleServiceImpl implements RoleService {
             roleRepository.deleteRoleById(roleId);
         } catch (SQLException e) {
             throw new DeleteRoleException("Error while deleting a Role", e);
+        }
+    }
+
+    @Override
+    public void assignRoleToUser(int userId, int roleId) {
+        UserValidator.userId(userId);
+        RoleValidator.roleId(roleId);
+
+        try {
+            roleRepository.assignRoleToUser(userId, roleId);
+        } catch (SQLException e) {
+            throw new AssignRoleException("Error while assigning a Role to a User", e);
         }
     }
 }

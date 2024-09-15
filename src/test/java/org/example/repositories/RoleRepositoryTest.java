@@ -3,6 +3,7 @@ package org.example.repositories;
 import org.example.connection.TestSQL;
 import org.example.db.DataSource;
 import org.example.entities.Role;
+import org.example.entities.User;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -13,6 +14,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -62,25 +64,31 @@ class RoleRepositoryTest {
     }
 
     @Test
-    @DisplayName("Read a Role")
+    @DisplayName("Get a Role")
     void getRoleById() throws SQLException {
         String expectedRoleName = "admin";
         String expectedDescription = "manage stuff";
         int expectedRoleId = 1;
         Role expectedRole = new Role(expectedRoleId, expectedRoleName, expectedDescription);
 
+        int expectedUserId = 1;
+        String expectedLogin = "testLogin";
+        String expectedPassword = "testPassword";
+        User expectedUser = new User(expectedUserId, expectedLogin, expectedPassword);
+        ArrayList<User> expectedListUsers = new ArrayList<>();
+        expectedListUsers.add(expectedUser);
+        expectedRole.setUsers(expectedListUsers);
+
         Role actualRole = roleRepository.getRoleById(expectedRoleId);
 
         assertEquals(expectedRole, actualRole);
     }
 
     @Test
-    @DisplayName("Read a Role without its Users")
+    @DisplayName("Get a Role without its Users")
     void getRoleByIdWithoutArray() throws SQLException {
-        String expectedRoleName = "user";
-        String expectedDescription = "read stuff";
-        int expectedRoleId = 3;
-        Role expectedRole = new Role(expectedRoleId, expectedRoleName, expectedDescription);
+        int expectedRoleId = 1;
+        Role expectedRole = this.createExpectedRole();
 
         Role actualRole = roleRepository.getRoleById(expectedRoleId);
 
@@ -88,22 +96,14 @@ class RoleRepositoryTest {
     }
 
     @Test
-    @DisplayName("Read all Roles")
+    @DisplayName("Get all Roles")
     void getAllRoles() throws SQLException {
         Role expectedRole1 = this.createExpectedRole();
-        int expectedRoleId2 = 2;
-        String expectedRoleName2 = "hacker";
-        String expectedDescription2 = "hack stuff";
-        Role expectedRole2 = new Role(expectedRoleId2, expectedRoleName2, expectedDescription2);
-
-        ArrayList<Role> expectedRoles = new ArrayList<>(Arrays.asList(expectedRole1, expectedRole2));
-
+        ArrayList<Role> expectedRoles = new ArrayList<>(List.of(expectedRole1));
         ArrayList<Role> actualRoles = roleRepository.getAllRoles();
         boolean areArraysEqual = true;
 
         for (int i = 0; i < expectedRoles.size(); i++) {
-            System.out.println(expectedRoles.get(i));
-            System.out.println(actualRoles.get(i));
             if (!expectedRoles.get(i)
                               .equals(actualRoles.get(i))) {
                 areArraysEqual = false;
@@ -139,4 +139,24 @@ class RoleRepositoryTest {
         assertNull(actualRole);
     }
 
+    @Test
+    @DisplayName("Assign a Role to a User")
+    void assignRoleToUser() throws SQLException {
+        int expectedRoleId = 1;
+        String expectedRoleName = "admin";
+        String expectedDescription = "manage stuff";
+
+        int expectedUserId = 1;
+        String expectedLogin = "testLogin";
+        String expectedPassword = "testPassword";
+
+        User expectedUser = new User(expectedUserId, expectedLogin, expectedPassword);
+        ArrayList<User> expectedListUsers = new ArrayList<>(List.of(expectedUser));
+        Role expectedRole = new Role(expectedRoleId, expectedRoleName, expectedDescription, expectedListUsers);
+
+        roleRepository.assignRoleToUser(expectedUserId, expectedRoleId);
+        Role actualRole = roleRepository.getRoleById(expectedRoleId);
+
+        assertEquals(expectedRole, actualRole);
+    }
 }

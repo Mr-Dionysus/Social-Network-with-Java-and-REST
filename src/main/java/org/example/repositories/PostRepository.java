@@ -22,17 +22,17 @@ public class PostRepository {
         this.dataSource = dataSource;
     }
 
-    public Post createPost(String text, int user_id) throws SQLException {
+    public Post createPost(String text, int userId) throws SQLException {
         try (Connection connection = dataSource.connect();
              PreparedStatement prepStmtCreatePost = connection.prepareStatement(PostsSQL.INSERT.getQuery())
         ) {
             prepStmtCreatePost.setString(1, text);
             prepStmtCreatePost.setInt(2, 0);
             prepStmtCreatePost.setInt(3, 0);
-            prepStmtCreatePost.setInt(4, user_id);
+            prepStmtCreatePost.setInt(4, userId);
             prepStmtCreatePost.executeUpdate();
 
-            Post createdPost = this.getPostId(connection, text, user_id);
+            Post createdPost = this.getPostId(connection, text, userId);
 
             return createdPost;
         }

@@ -10,9 +10,7 @@ import org.example.entities.Role;
 import org.example.mappers.RoleMapper;
 import org.example.mappers.RoleMapperImpl;
 import org.example.repositories.RoleRepository;
-import org.example.repositories.UsersRolesRepository;
 import org.example.services.RoleServiceImpl;
-import org.example.services.UsersRolesServiceImpl;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -23,18 +21,13 @@ public class UsersRolesServlet extends HttpServlet {
     private final transient RoleServiceImpl roleService;
     private final transient RoleMapper roleMapper;
 
-    private static final UsersRolesRepository USERS_ROLES_REPOSITORY = new UsersRolesRepository();
-    private final transient UsersRolesServiceImpl usersRolesService;
-
     public UsersRolesServlet() {
         this.roleService = new RoleServiceImpl(ROLE_REPOSITORY);
-        this.usersRolesService = new UsersRolesServiceImpl(USERS_ROLES_REPOSITORY);
         this.roleMapper = new RoleMapperImpl();
     }
 
-    public UsersRolesServlet(RoleServiceImpl roleService, UsersRolesServiceImpl usersRolesService, RoleMapper roleMapper) {
+    public UsersRolesServlet(RoleServiceImpl roleService, RoleMapper roleMapper) {
         this.roleService = roleService;
-        this.usersRolesService = usersRolesService;
         this.roleMapper = roleMapper;
     }
 
@@ -50,7 +43,7 @@ public class UsersRolesServlet extends HttpServlet {
             PrintWriter out = resp.getWriter();
             int roleId = Integer.parseInt(listPath[1]);
             int userId = Integer.parseInt(listPath[2]);
-            usersRolesService.assignRoleToUser(userId, roleId);
+            roleService.assignRoleToUser(userId, roleId);
             Role updatedRole = roleService.getRoleById(roleId);
             RoleDTO updatedRoleDTO = roleMapper.roleToRoleDTO(updatedRole);
 

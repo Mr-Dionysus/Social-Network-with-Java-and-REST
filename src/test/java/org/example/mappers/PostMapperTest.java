@@ -1,9 +1,8 @@
-package test.java.org.example.mappers;
+package org.example.mappers;
 
 import org.example.dtos.PostDTO;
 import org.example.entities.Post;
 import org.example.entities.User;
-import org.example.mappers.PostMapperImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

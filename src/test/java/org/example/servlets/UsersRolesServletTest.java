@@ -8,7 +8,6 @@ import org.example.entities.Role;
 import org.example.entities.User;
 import org.example.mappers.RoleMapper;
 import org.example.services.RoleServiceImpl;
-import org.example.services.UsersRolesServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,9 +34,6 @@ class UsersRolesServletTest {
     @Mock
     private RoleMapper roleMapper;
 
-    @Mock
-    private UsersRolesServiceImpl usersRolesService;
-
     private Gson gson;
     private UsersRolesServlet usersRolesServlet;
 
@@ -45,7 +41,7 @@ class UsersRolesServletTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         gson = new Gson();
-        usersRolesServlet = new UsersRolesServlet(roleService, usersRolesService, roleMapper);
+        usersRolesServlet = new UsersRolesServlet(roleService, roleMapper);
     }
 
     @Test
