@@ -49,7 +49,7 @@ public class PostServiceImpl implements PostService {
         PostValidator.postId(postId);
 
         try {
-            Post foundPost = postRepository.findPostByIdWithoutUser(postId);
+            Post foundPost = postRepository.getPostByIdWithoutUser(postId);
             PostValidator.foundPost(foundPost, postId);
 
             return foundPost;

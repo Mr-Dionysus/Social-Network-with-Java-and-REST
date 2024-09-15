@@ -11,11 +11,8 @@ import org.example.dtos.RoleDTO;
 import org.example.entities.Role;
 import org.example.mappers.RoleMapper;
 import org.example.mappers.RoleMapperImpl;
-import org.example.mappers.UserMapper;
-import org.example.mappers.UserMapperImpl;
 import org.example.repositories.RoleRepository;
 import org.example.services.RoleServiceImpl;
-import org.example.services.UserServiceImpl;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -24,8 +21,8 @@ import java.util.ArrayList;
 @WebServlet(name = "RoleServlet", urlPatterns = "/roles/*")
 public class RoleServlet extends HttpServlet {
     private static final RoleRepository ROLE_REPOSITORY = new RoleRepository();
-    private RoleServiceImpl roleService = new RoleServiceImpl(ROLE_REPOSITORY);
-    private RoleMapper roleMapper = new RoleMapperImpl();
+    private final transient RoleServiceImpl roleService;
+    private final transient RoleMapper roleMapper;
 
     public RoleServlet() {
         this.roleService = new RoleServiceImpl(ROLE_REPOSITORY);
@@ -52,15 +49,9 @@ public class RoleServlet extends HttpServlet {
             out.println(gson.toJson(createdRoleDTO));
             out.flush();
             resp.setStatus(HttpServletResponse.SC_CREATED);
-        } catch (IOException e) {
+        } catch (IOException | JsonIOException | JsonSyntaxException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
-        } catch (JsonSyntaxException e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
-        } catch (JsonIOException e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
@@ -94,7 +85,7 @@ public class RoleServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_OK);
         } catch (IOException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
@@ -109,12 +100,9 @@ public class RoleServlet extends HttpServlet {
             out.println(gson.toJson(foundRoleDTO));
             out.flush();
             resp.setStatus(HttpServletResponse.SC_OK);
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException | IOException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
@@ -135,18 +123,9 @@ public class RoleServlet extends HttpServlet {
             out.println(gson.toJson(updatedRoleDTO));
             out.flush();
             resp.setStatus(HttpServletResponse.SC_OK);
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException | IOException | JsonSyntaxException | JsonIOException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
-        } catch (JsonSyntaxException e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
-        } catch (JsonIOException e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
@@ -163,7 +142,7 @@ public class RoleServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_OK);
         } catch (NumberFormatException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 }

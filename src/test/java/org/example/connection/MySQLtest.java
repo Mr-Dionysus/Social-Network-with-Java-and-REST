@@ -1,6 +1,6 @@
 package org.example.connection;
 
-import org.example.DataSource;
+import org.example.db.DataSource;
 import org.example.repositories.PostRepository;
 import org.example.repositories.RoleRepository;
 import org.example.repositories.UserRepository;

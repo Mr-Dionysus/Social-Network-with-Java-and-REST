@@ -1,7 +1,7 @@
 package org.example.repositories;
 
 import org.example.connection.MySQLtest;
-import org.example.DataSource;
+import org.example.db.DataSource;
 import org.example.entities.Post;
 import org.example.entities.User;
 import org.junit.jupiter.api.AfterAll;
@@ -126,11 +126,11 @@ class PostRepositoryTest {
 
     @Test
     @DisplayName("Find a Post by ID without its Users")
-    void findPostByIdWithoutUser() throws SQLException {
+    void getPostByIdWithoutUser() throws SQLException {
         Post expectedPost = this.createExpectedPost(1);
         int expectedPostId = expectedPost.getId();
 
-        Post actualPost = postRepository.findPostByIdWithoutUser(expectedPostId);
+        Post actualPost = postRepository.getPostByIdWithoutUser(expectedPostId);
 
         assertEquals(expectedPost, actualPost);
     }

@@ -1,7 +1,7 @@
 package org.example.repositories;
 
 import org.example.connection.MySQLtest;
-import org.example.DataSource;
+import org.example.db.DataSource;
 import org.example.entities.Post;
 import org.example.entities.Role;
 import org.example.entities.User;

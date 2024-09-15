@@ -12,7 +12,6 @@ import org.example.entities.Post;
 import org.example.mappers.PostMapper;
 import org.example.mappers.PostMapperImpl;
 import org.example.repositories.PostRepository;
-import org.example.services.PostService;
 import org.example.services.PostServiceImpl;
 
 import java.io.IOException;
@@ -21,8 +20,8 @@ import java.io.PrintWriter;
 @WebServlet(name = "PostServlet", urlPatterns = "/users/posts/*")
 public class PostServlet extends HttpServlet {
     private static final PostRepository POST_REPOSITORY = new PostRepository();
-    private PostServiceImpl postService = new PostServiceImpl(POST_REPOSITORY);
-    private PostMapper postMapper = new PostMapperImpl();
+    private final transient PostServiceImpl postService;
+    private final transient PostMapper postMapper;
 
     public PostServlet() {
         this.postService = new PostServiceImpl(POST_REPOSITORY);
@@ -51,18 +50,9 @@ public class PostServlet extends HttpServlet {
             out.println(gson.toJson(postDTO));
             out.flush();
             resp.setStatus(HttpServletResponse.SC_CREATED);
-        } catch (IOException e) {
+        } catch (IOException | NumberFormatException | JsonSyntaxException | JsonIOException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
-        } catch (NumberFormatException e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
-        } catch (JsonSyntaxException e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
-        } catch (JsonIOException e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
@@ -82,18 +72,9 @@ public class PostServlet extends HttpServlet {
             out.println(gson.toJson(postDTO));
             out.flush();
             resp.setStatus(HttpServletResponse.SC_OK);
-        } catch (IOException e) {
+        } catch (IOException | NumberFormatException | JsonSyntaxException | JsonIOException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
-        } catch (NumberFormatException e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
-        } catch (JsonSyntaxException e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
-        } catch (JsonIOException e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
@@ -114,18 +95,9 @@ public class PostServlet extends HttpServlet {
             out.println(gson.toJson(postDTO));
             out.flush();
             resp.setStatus(HttpServletResponse.SC_OK);
-        } catch (IOException e) {
+        } catch (IOException | NumberFormatException | JsonSyntaxException | JsonIOException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
-        } catch (NumberFormatException e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
-        } catch (JsonSyntaxException e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
-        } catch (JsonIOException e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
@@ -142,7 +114,7 @@ public class PostServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_OK);
         } catch (NumberFormatException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 }

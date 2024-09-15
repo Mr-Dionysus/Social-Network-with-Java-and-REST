@@ -54,7 +54,7 @@ public class UserServlet extends HttpServlet {
         resp.setContentType("text/html");
         String cssTag = "<link href='" + req.getContextPath() + "/css/style.css' rel='stylesheet' type='text/css'>";
 
-        try (PrintWriter out = resp.getWriter();) {
+        try (PrintWriter out = resp.getWriter()) {
             User createdUser = userService.createUser(login, password);
             UserDTO createdUserDTO = userMapper.userToUserDTO(createdUser);
 
@@ -66,7 +66,7 @@ public class UserServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_CREATED);
         } catch (IOException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
@@ -84,15 +84,9 @@ public class UserServlet extends HttpServlet {
             out.println(gson.toJson(createdUserDTO));
             out.flush();
             resp.setStatus(HttpServletResponse.SC_CREATED);
-        } catch (IOException e) {
+        } catch (IOException | JsonSyntaxException | JsonIOException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
-        } catch (JsonSyntaxException e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
-        } catch (JsonIOException e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
@@ -115,12 +109,9 @@ public class UserServlet extends HttpServlet {
             dispatcher.forward(req, resp);
 
             resp.setStatus(HttpServletResponse.SC_OK);
-        } catch (ServletException e) {
+        } catch (ServletException | IOException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
@@ -162,12 +153,9 @@ public class UserServlet extends HttpServlet {
             out.flush();
 
             resp.setStatus(HttpServletResponse.SC_OK);
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException | IOException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
@@ -204,12 +192,9 @@ public class UserServlet extends HttpServlet {
             out.println(gson.toJson(updatedUserDTO));
             out.flush();
             resp.setStatus(HttpServletResponse.SC_OK);
-        } catch (IOException e) {
+        } catch (IOException | NumberFormatException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
-        } catch (NumberFormatException e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
@@ -228,18 +213,9 @@ public class UserServlet extends HttpServlet {
             out.println(gson.toJson(updatedUserDTO));
             out.flush();
             resp.setStatus(HttpServletResponse.SC_OK);
-        } catch (IOException e) {
+        } catch (IOException | JsonSyntaxException | JsonIOException | NumberFormatException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
-        } catch (JsonSyntaxException e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
-        } catch (JsonIOException e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
-        } catch (NumberFormatException e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
@@ -264,12 +240,9 @@ public class UserServlet extends HttpServlet {
             out.println("</html>");
             out.flush();
             resp.setStatus(HttpServletResponse.SC_OK);
-        } catch (IOException e) {
+        } catch (IOException | NumberFormatException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
-        } catch (NumberFormatException e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 }

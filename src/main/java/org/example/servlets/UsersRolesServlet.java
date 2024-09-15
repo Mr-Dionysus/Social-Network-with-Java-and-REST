@@ -57,12 +57,9 @@ public class UsersRolesServlet extends HttpServlet {
             out.println(gson.toJson(updatedRoleDTO));
             out.println(gson.toJson(updatedRoleDTO.getUsers()));
             resp.setStatus(HttpServletResponse.SC_OK);
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException | IOException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 }

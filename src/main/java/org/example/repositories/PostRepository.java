@@ -1,10 +1,9 @@
 package org.example.repositories;
 
-import org.example.DataSource;
+import org.example.db.DataSource;
 import org.example.db.PostsSQL;
 import org.example.entities.Post;
 import org.example.entities.User;
-import org.example.exceptions.PostNotFoundException;
 import org.example.services.UserServiceImpl;
 
 import java.sql.Connection;
@@ -89,7 +88,7 @@ public class PostRepository {
         return null;
     }
 
-    public Post findPostByIdWithoutUser(int postId) throws SQLException {
+    public Post getPostByIdWithoutUser(int postId) throws SQLException {
         try (Connection connection = dataSource.connect();
              PreparedStatement prepStmtSelectPostById = connection.prepareStatement(PostsSQL.SELECT_BY_ID.getQuery())
         ) {

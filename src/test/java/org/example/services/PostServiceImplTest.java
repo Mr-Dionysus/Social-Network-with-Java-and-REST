@@ -3,7 +3,6 @@ package org.example.services;
 import org.example.entities.Post;
 import org.example.entities.User;
 import org.example.exceptions.PostNotFoundException;
-import org.example.exceptions.UserNotFoundException;
 import org.example.repositories.PostRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -85,14 +84,14 @@ class PostServiceImplTest {
         int dislikes = 0;
 
         Post mockPost = new Post(postId, text, likes, dislikes);
-        when(postRepository.findPostByIdWithoutUser(postId)).thenReturn(mockPost);
+        when(postRepository.getPostByIdWithoutUser(postId)).thenReturn(mockPost);
 
         Post actualPost = postService.getPostByIdWithoutUser(postId);
 
         assertNotNull(actualPost);
         assertEquals(mockPost, actualPost);
 
-        verify(postRepository, times(1)).findPostByIdWithoutUser(postId);
+        verify(postRepository, times(1)).getPostByIdWithoutUser(postId);
     }
 
     @Test
