@@ -148,7 +148,7 @@ public class RoleRepository {
             prepStmtUpdateRoleById.setInt(3, roleId);
             prepStmtUpdateRoleById.executeUpdate();
 
-            RoleRepository roleRepository = new RoleRepository();
+            RoleRepository roleRepository = new RoleRepository(dataSource);
             RoleServiceImpl roleService = new RoleServiceImpl(roleRepository);
             Role updatedRole = roleService.getRoleById(roleId);
 

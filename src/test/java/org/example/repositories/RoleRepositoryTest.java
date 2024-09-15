@@ -4,6 +4,7 @@ import org.example.connection.TestSQL;
 import org.example.db.DataSource;
 import org.example.entities.Role;
 import org.example.entities.User;
+import org.example.exceptions.RoleNotFoundException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -28,8 +29,6 @@ class RoleRepositoryTest {
         mySQLcontainer = new MySQLContainer<>("mysql:8.0");
         mySQLcontainer.start();
         dataSource = new DataSource(mySQLcontainer.getJdbcUrl(), mySQLcontainer.getUsername(), mySQLcontainer.getPassword());
-
-
 
         try (Connection connection = dataSource.connect()) {
             TestSQL.createAllTablesWithTestEntities(connection, dataSource);
@@ -100,7 +99,7 @@ class RoleRepositoryTest {
     void getAllRoles() throws SQLException {
         Role expectedRole1 = this.createExpectedRole();
         ArrayList<Role> expectedRoles = new ArrayList<>(List.of(expectedRole1));
-        ArrayList<Role> actualRoles =  (ArrayList<Role>) roleRepository.getAllRoles();
+        ArrayList<Role> actualRoles = (ArrayList<Role>) roleRepository.getAllRoles();
         boolean areArraysEqual = true;
 
         for (int i = 0; i < expectedRoles.size(); i++) {
@@ -134,9 +133,7 @@ class RoleRepositoryTest {
         int expectedRoleId = 2;
         roleRepository.deleteRoleById(expectedRoleId);
 
-        Role actualRole = roleRepository.getRoleById(expectedRoleId);
-
-        assertNull(actualRole);
+        assertThrows(RoleNotFoundException.class, () -> roleRepository.getRoleById(expectedRoleId));
     }
 
     @Test

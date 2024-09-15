@@ -19,6 +19,7 @@ public class DataSource {
         String dbUser;
         String dbPassword;
         String jdbcUrl;
+        System.out.println(propertiesPath);
 
         try (InputStream inputStream = DataSource.class.getClassLoader()
                                                        .getResourceAsStream(propertiesPath);
