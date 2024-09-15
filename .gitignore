@@ -44,3 +44,6 @@ build/
 !/.smarttomcat/Aston_REST/
 !/.smarttomcat/Aston_REST/conf/web.xml
 /.smarttomcat/
+/.smarttomcat
+.smarttomcat/
+.smarttomcat
