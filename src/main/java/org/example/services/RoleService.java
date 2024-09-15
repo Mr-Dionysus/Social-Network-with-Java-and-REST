@@ -7,6 +7,7 @@ import org.example.validators.UserValidator;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public interface RoleService {
     Role createRole(String roleName, String description) throws SQLException;
@@ -15,7 +16,7 @@ public interface RoleService {
 
     Role getRoleByIdWithoutItsUsers(int id) throws SQLException;
 
-    ArrayList<Role> getAllRoles() throws SQLException;
+    List<Role> getAllRoles() throws SQLException;
 
     Role updateRoleById(int id, String newRoleName, String newDescription) throws SQLException;
 

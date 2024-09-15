@@ -8,6 +8,7 @@ import org.example.validators.UserValidator;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class RoleServiceImpl implements RoleService {
     private final RoleRepository roleRepository;
@@ -60,9 +61,9 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public ArrayList<Role> getAllRoles() {
+    public List<Role> getAllRoles() {
         try {
-            ArrayList<Role> listFoundRoles = roleRepository.getAllRoles();
+            List<Role> listFoundRoles = roleRepository.getAllRoles();
             RoleValidator.listFoundRoles(listFoundRoles);
 
             return listFoundRoles;

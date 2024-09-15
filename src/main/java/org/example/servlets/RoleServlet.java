@@ -70,7 +70,7 @@ public class RoleServlet extends HttpServlet {
 
         try {
             PrintWriter out = resp.getWriter();
-            ArrayList<Role> listRoles = roleService.getAllRoles();
+            ArrayList<Role> listRoles = (ArrayList<Role>) roleService.getAllRoles();
             ArrayList<RoleDTO> listRolesDTO = new ArrayList<>();
 
             for (Role role : listRoles) {

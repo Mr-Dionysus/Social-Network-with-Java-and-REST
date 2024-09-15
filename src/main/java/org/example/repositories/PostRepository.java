@@ -4,6 +4,8 @@ import org.example.db.DataSource;
 import org.example.db.PostsSQL;
 import org.example.entities.Post;
 import org.example.entities.User;
+import org.example.exceptions.PostNotFoundException;
+import org.example.exceptions.UserNotFoundException;
 import org.example.services.UserServiceImpl;
 
 import java.sql.Connection;
@@ -113,12 +115,23 @@ public class PostRepository {
         try (Connection connection = dataSource.connect();
              PreparedStatement prepStmtUpdatePostById = connection.prepareStatement(PostsSQL.UPDATE_BY_ID.getQuery())
         ) {
+
+            this.isPostFound(postId);
+
             prepStmtUpdatePostById.setString(1, newText);
             prepStmtUpdatePostById.setInt(2, postId);
             prepStmtUpdatePostById.executeUpdate();
             Post updatedPost = this.getPostById(postId);
 
             return updatedPost;
+        }
+    }
+
+    private void isPostFound(int postId) throws SQLException {
+        Post foundPost = this.getPostById(postId);
+
+        if (foundPost == null) {
+            throw new PostNotFoundException("Error while updating a Post. Can't find a Post " + "with ID '" + postId + "'.");
         }
     }
 

@@ -105,10 +105,10 @@ class RoleServiceImplTest {
         String description2 = "do staff";
 
         Role mockRole2 = new Role(roleId2, roleName2, description2);
-        ArrayList<Role> mockListRoles = new ArrayList<>(Arrays.asList(mockRole1, mockRole2));
+        List<Role> mockListRoles = new ArrayList<>(Arrays.asList(mockRole1, mockRole2));
         when(roleRepository.getAllRoles()).thenReturn(mockListRoles);
 
-        ArrayList<Role> actualListRoles = roleService.getAllRoles();
+        List<Role> actualListRoles = roleService.getAllRoles();
 
         assertNotNull(actualListRoles);
         assertEquals(mockListRoles, actualListRoles);

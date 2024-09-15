@@ -7,6 +7,7 @@ import org.example.db.UsersSQL;
 import org.example.entities.Post;
 import org.example.entities.Role;
 import org.example.entities.User;
+import org.example.exceptions.UserNotFoundException;
 import org.example.services.PostServiceImpl;
 import org.example.services.RoleServiceImpl;
 
@@ -27,6 +28,14 @@ public class UserRepository {
         this.dataSource = dataSource;
     }
 
+    private void isUserFound(int userId) throws SQLException {
+        User foundUser = this.getUserById(userId);
+
+        if (foundUser == null) {
+            throw new UserNotFoundException("Error while updating a User. Can't find a User " + "with ID '" + userId + "'.");
+        }
+    }
+
     public User createUser(String login, String password) throws SQLException {
         try (Connection connection = dataSource.connect();
              PreparedStatement prepStmtInsertUser = connection.prepareStatement(UsersSQL.INSERT.getQuery())
@@ -35,20 +44,29 @@ public class UserRepository {
             prepStmtInsertUser.setString(2, password);
             prepStmtInsertUser.executeUpdate();
 
-            try (PreparedStatement prepStmtSelectUserIdByLogin = connection.prepareStatement(UsersSQL.SELECT_USER_ID_BY_LOGIN.getQuery())) {
-                prepStmtSelectUserIdByLogin.setString(1, login);
+            User foundUser = getUserByLogin(login, password, connection);
 
-                try (ResultSet rsFoundUser = prepStmtSelectUserIdByLogin.executeQuery()) {
-                    if (rsFoundUser.next()) {
-                        int userId = rsFoundUser.getInt("id");
-                        User foundUser = new User(userId, login, password);
+            if (foundUser != null) {
+                return foundUser;
+            }
+        }
+        return null;
+    }
 
-                        return foundUser;
-                    }
+    private static User getUserByLogin(String login, String password, Connection connection) throws SQLException {
+        try (PreparedStatement prepStmtSelectUserIdByLogin = connection.prepareStatement(UsersSQL.SELECT_USER_ID_BY_LOGIN.getQuery())) {
+
+            prepStmtSelectUserIdByLogin.setString(1, login);
+
+            try (ResultSet rsFoundUser = prepStmtSelectUserIdByLogin.executeQuery()) {
+                if (rsFoundUser.next()) {
+                    int userId = rsFoundUser.getInt("id");
+                    User foundUser = new User(userId, login, password);
+
+                    return foundUser;
                 }
             }
         }
-
         return null;
     }
 
@@ -72,7 +90,6 @@ public class UserRepository {
                 }
             }
         }
-
         return null;
     }
 
@@ -136,16 +153,18 @@ public class UserRepository {
         return null;
     }
 
-    public User updateUserById(int id, String newLogin, String newPassword) throws SQLException {
+    public User updateUserById(int userId, String newLogin, String newPassword) throws SQLException {
         try (Connection connection = dataSource.connect();
              PreparedStatement prepStmtUpdateUserById = connection.prepareStatement(UsersSQL.SQL_UPDATE_USER_BY_ID.getQuery())
         ) {
+            isUserFound(userId);
+
             prepStmtUpdateUserById.setString(1, newLogin);
             prepStmtUpdateUserById.setString(2, newPassword);
-            prepStmtUpdateUserById.setInt(3, id);
+            prepStmtUpdateUserById.setInt(3, userId);
             prepStmtUpdateUserById.executeUpdate();
 
-            User foundUser = new User(id, newLogin, newPassword);
+            User foundUser = new User(userId, newLogin, newPassword);
             return foundUser;
         }
     }
@@ -163,6 +182,7 @@ public class UserRepository {
 
     private void deleteAllPostsByUserId(Connection connection, int userId) throws SQLException {
         try (PreparedStatement prepStmtDeleteAllPostsByUserId = connection.prepareStatement(PostsSQL.DELETE_ALL_POSTS_BY_USER_ID.getQuery())) {
+
             prepStmtDeleteAllPostsByUserId.setInt(1, userId);
             prepStmtDeleteAllPostsByUserId.executeUpdate();
         }

@@ -100,7 +100,7 @@ class RoleRepositoryTest {
     void getAllRoles() throws SQLException {
         Role expectedRole1 = this.createExpectedRole();
         ArrayList<Role> expectedRoles = new ArrayList<>(List.of(expectedRole1));
-        ArrayList<Role> actualRoles = roleRepository.getAllRoles();
+        ArrayList<Role> actualRoles =  (ArrayList<Role>) roleRepository.getAllRoles();
         boolean areArraysEqual = true;
 
         for (int i = 0; i < expectedRoles.size(); i++) {

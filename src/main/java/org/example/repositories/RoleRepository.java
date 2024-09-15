@@ -5,6 +5,7 @@ import org.example.db.RolesSQL;
 import org.example.db.UsersRolesSQL;
 import org.example.entities.Role;
 import org.example.entities.User;
+import org.example.exceptions.PostNotFoundException;
 import org.example.services.RoleServiceImpl;
 import org.example.services.UserServiceImpl;
 
@@ -13,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class RoleRepository {
     private final DataSource dataSource;
@@ -117,7 +119,7 @@ public class RoleRepository {
         return null;
     }
 
-    public ArrayList<Role> getAllRoles() throws SQLException {
+    public List<Role> getAllRoles() throws SQLException {
         try (Connection connection = dataSource.connect();
              PreparedStatement prepStmtSelectRoles = connection.prepareStatement(RolesSQL.SELECT_ALL_ROLES.getQuery());
              ResultSet rsFoundRoles = prepStmtSelectRoles.executeQuery()
@@ -136,20 +138,30 @@ public class RoleRepository {
         }
     }
 
-    public Role updateRoleById(int id, String newRoleName, String newDescription) throws SQLException {
+    public Role updateRoleById(int roleId, String newRoleName, String newDescription) throws SQLException {
         try (Connection connection = dataSource.connect();
              PreparedStatement prepStmtUpdateRoleById = connection.prepareStatement(RolesSQL.UPDATE_BY_ID.getQuery())
         ) {
+            this.isRoleFound(roleId);
+
             prepStmtUpdateRoleById.setString(1, newRoleName);
             prepStmtUpdateRoleById.setString(2, newDescription);
-            prepStmtUpdateRoleById.setInt(3, id);
+            prepStmtUpdateRoleById.setInt(3, roleId);
             prepStmtUpdateRoleById.executeUpdate();
 
             RoleRepository roleRepository = new RoleRepository();
             RoleServiceImpl roleService = new RoleServiceImpl(roleRepository);
-            Role updatedRole = roleService.getRoleById(id);
+            Role updatedRole = roleService.getRoleById(roleId);
 
             return updatedRole;
+        }
+    }
+
+    private void isRoleFound(int roleId) throws SQLException {
+        Role foundRole = this.getRoleById(roleId);
+
+        if (foundRole == null) {
+            throw new PostNotFoundException("Error while updating a Role. Can't find a Role " + "with ID '" + roleId + "'.");
         }
     }
 

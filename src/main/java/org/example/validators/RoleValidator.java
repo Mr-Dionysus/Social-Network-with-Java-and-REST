@@ -4,6 +4,7 @@ import org.example.entities.Role;
 import org.example.exceptions.RoleNotFoundException;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class RoleValidator {
     private RoleValidator() {
@@ -28,7 +29,7 @@ public class RoleValidator {
         }
     }
 
-    public static void listFoundRoles(ArrayList<Role> listFoundRoles) {
+    public static void listFoundRoles(List<Role> listFoundRoles) {
         if (listFoundRoles == null) {
             throw new RoleNotFoundException("Can't find any roles");
         }
