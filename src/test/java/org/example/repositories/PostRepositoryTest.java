@@ -31,9 +31,7 @@ class PostRepositoryTest {
     static void setUpContainer() throws SQLException {
         mySQLcontainer = new MySQLContainer<>("mysql:8.0");
         mySQLcontainer.start();
-
-        DataSource.setTestConfiguration(mySQLcontainer.getJdbcUrl(), mySQLcontainer.getUsername(), mySQLcontainer.getPassword());
-        dataSource = new DataSource();
+        dataSource = new DataSource(mySQLcontainer.getJdbcUrl(), mySQLcontainer.getUsername(), mySQLcontainer.getPassword());
 
         try (Connection connection = dataSource.connect()) {
             TestSQL.createAllTablesWithTestEntities(connection, dataSource);
@@ -47,8 +45,7 @@ class PostRepositoryTest {
 
     private User findTestUser() throws SQLException {
         try (Connection connection = dataSource.connect();
-             PreparedStatement prepStmtSelectUserById =
-                     connection.prepareStatement(UsersSQL.SELECT_BY_ID.getQuery())
+             PreparedStatement prepStmtSelectUserById = connection.prepareStatement(UsersSQL.SELECT_BY_ID.getQuery())
         ) {
             int userId = 1;
             prepStmtSelectUserById.setInt(1, userId);
@@ -157,8 +154,7 @@ class PostRepositoryTest {
 
     private Post checkIfPostDeleted() throws SQLException {
         try (Connection connection = dataSource.connect();
-             PreparedStatement prepStmtSelectPostById =
-                     connection.prepareStatement(PostsSQL.SELECT_BY_ID.getQuery())
+             PreparedStatement prepStmtSelectPostById = connection.prepareStatement(PostsSQL.SELECT_BY_ID.getQuery())
         ) {
             int postId = 2;
             prepStmtSelectPostById.setInt(1, postId);

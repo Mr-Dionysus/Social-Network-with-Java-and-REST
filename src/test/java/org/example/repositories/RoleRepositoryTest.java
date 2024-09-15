@@ -27,9 +27,9 @@ class RoleRepositoryTest {
     static void setUpContainer() throws SQLException {
         mySQLcontainer = new MySQLContainer<>("mysql:8.0");
         mySQLcontainer.start();
+        dataSource = new DataSource(mySQLcontainer.getJdbcUrl(), mySQLcontainer.getUsername(), mySQLcontainer.getPassword());
 
-        DataSource.setTestConfiguration(mySQLcontainer.getJdbcUrl(), mySQLcontainer.getUsername(), mySQLcontainer.getPassword());
-        dataSource = new DataSource();
+
 
         try (Connection connection = dataSource.connect()) {
             TestSQL.createAllTablesWithTestEntities(connection, dataSource);

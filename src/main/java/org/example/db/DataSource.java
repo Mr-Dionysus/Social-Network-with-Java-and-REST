@@ -6,6 +6,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
@@ -14,20 +15,19 @@ public class DataSource {
     private static HikariConfig config = new HikariConfig();
     private static HikariDataSource ds;
 
-    static {
-        initializeDataSource("jdbc:mysql://localhost:3306/aston-rest", "C:/Denis/Projects/Java/Aston_REST/src/main/resources/config.properties");
-    }
-
-    private static void initializeDataSource(String jdbcUrl, String propertiesPath) {
+    private void initializeDataSource(String propertiesPath) {
         String dbUser;
         String dbPassword;
+        String jdbcUrl;
 
-        try (FileInputStream fileInputStream = new FileInputStream(propertiesPath)) {
+        try (InputStream inputStream = DataSource.class.getClassLoader()
+                                                       .getResourceAsStream(propertiesPath);
+        ) {
             Properties props = new Properties();
-            props.load(fileInputStream);
-
+            props.load(inputStream);
             dbUser = props.getProperty("dbUser");
             dbPassword = props.getProperty("dbPassword");
+            jdbcUrl = props.getProperty("jdbcUrl");
         } catch (FileNotFoundException e) {
             throw new RuntimeException("File with login and password isn't found", e);
         } catch (IOException e) {
@@ -45,7 +45,6 @@ public class DataSource {
     }
 
     public DataSource(String jdbcURL, String username, String password) {
-        config = new HikariConfig();
         config.setJdbcUrl(jdbcURL);
         config.setUsername(username);
         config.setPassword(password);
@@ -56,6 +55,8 @@ public class DataSource {
     }
 
     public DataSource() {
+        String propertiesPath = "/config.properties";
+        initializeDataSource(propertiesPath);
     }
 
     public Connection connect() throws SQLException {
