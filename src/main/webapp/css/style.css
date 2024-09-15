@@ -1,0 +1,32 @@
+* {
+    color: white;
+}
+
+body {
+    height: 100vh;
+    background: #0d1b2a;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+}
+
+form {
+    display: grid;
+    flex-flow: column;
+}
+
+input {
+    background: #415a77;
+    outline: 0px solid black;
+    border: 2px solid;
+    border-radius: 5px;
+}
+
+input[type="submit"] {
+    cursor: pointer;
+    width: 60px;
+    justify-self: center;
+}
+
+
