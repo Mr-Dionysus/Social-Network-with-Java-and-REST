@@ -1,6 +1,7 @@
 package org.example.repositories;
 
 import org.example.db.DataSource;
+import org.example.db.PostsSQL;
 import org.example.db.UsersRolesSQL;
 import org.example.db.UsersSQL;
 import org.example.entities.Post;
@@ -16,21 +17,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class UserRepository {
-    private DataSource dataSource;
-    private RoleRepository roleRepository = new RoleRepository(dataSource);
-    private RoleServiceImpl roleService = new RoleServiceImpl(roleRepository);
+    private final DataSource dataSource;
 
     public UserRepository() {
         this.dataSource = new DataSource();
-        this.roleRepository = new RoleRepository(dataSource);
-        this.roleService = new RoleServiceImpl(roleRepository);
     }
 
     public UserRepository(DataSource dataSource) {
         this.dataSource = dataSource;
     }
-
-    private static final String SQL_SELECT_POST_ID_BY_USER_ID = "SELECT id FROM posts WHERE user_id = ?";
 
     public User createUser(String login, String password) throws SQLException {
         try (Connection connection = dataSource.connect();
@@ -57,7 +52,7 @@ public class UserRepository {
         return null;
     }
 
-    public User findUserById(int userId) throws SQLException {
+    public User getUserById(int userId) throws SQLException {
         try (Connection connection = dataSource.connect();
              PreparedStatement prepStmtSelectUserById = connection.prepareStatement(UsersSQL.SELECT_BY_ID.getQuery())
         ) {
@@ -68,8 +63,8 @@ public class UserRepository {
                     String login = rsFoundUser.getString("login");
                     String password = rsFoundUser.getString("password");
 
-                    ArrayList<Role> listFoundRoles = this.findListOfRoles(connection, userId);
-                    ArrayList<Post> listFoundPosts = this.findListOfPosts(connection, userId);
+                    ArrayList<Role> listFoundRoles = this.getListOfRoles(connection, userId);
+                    ArrayList<Post> listFoundPosts = this.getListOfPosts(connection, userId);
 
                     User foundUser = new User(userId, login, password, listFoundRoles, listFoundPosts);
 
@@ -81,7 +76,7 @@ public class UserRepository {
         return null;
     }
 
-    private ArrayList<Role> findListOfRoles(Connection connection, int userId) throws SQLException {
+    private ArrayList<Role> getListOfRoles(Connection connection, int userId) throws SQLException {
         try (PreparedStatement prepStmtSelectAllRoleIdsByUserId = connection.prepareStatement(UsersRolesSQL.SELECT_ALL_ROLE_IDS_BY_USER_ID.getQuery())) {
             prepStmtSelectAllRoleIdsByUserId.setInt(1, userId);
 
@@ -90,6 +85,8 @@ public class UserRepository {
 
                 while (rsFoundAllRoleIds.next()) {
                     int roleId = rsFoundAllRoleIds.getInt("role_id");
+                    RoleRepository roleRepository = new RoleRepository(dataSource);
+                    RoleServiceImpl roleService = new RoleServiceImpl(roleRepository);
                     Role foundRole = roleService.getRoleByIdWithoutUsers(roleId);
                     listFoundRoles.add(foundRole);
                 }
@@ -99,8 +96,8 @@ public class UserRepository {
         }
     }
 
-    private ArrayList<Post> findListOfPosts(Connection connection, int userId) throws SQLException {
-        try (PreparedStatement prepStmtSelectPostIdByUserId = connection.prepareStatement(SQL_SELECT_POST_ID_BY_USER_ID)) {
+    private ArrayList<Post> getListOfPosts(Connection connection, int userId) throws SQLException {
+        try (PreparedStatement prepStmtSelectPostIdByUserId = connection.prepareStatement(PostsSQL.SELECT_POST_ID_BY_USER_ID.getQuery())) {
             prepStmtSelectPostIdByUserId.setInt(1, userId);
 
             try (ResultSet rsFoundAllPostIds = prepStmtSelectPostIdByUserId.executeQuery()) {
@@ -119,7 +116,7 @@ public class UserRepository {
         }
     }
 
-    public User findUserWithoutHisRoles(int userId) throws SQLException {
+    public User getUserWithoutHisRoles(int userId) throws SQLException {
         try (Connection connection = dataSource.connect();
              PreparedStatement prepStmtSelectUserById = connection.prepareStatement(UsersSQL.SELECT_BY_ID.getQuery())
         ) {
@@ -139,7 +136,7 @@ public class UserRepository {
         return null;
     }
 
-    public User updateUser(int id, String newLogin, String newPassword) throws SQLException {
+    public User updateUserById(int id, String newLogin, String newPassword) throws SQLException {
         try (Connection connection = dataSource.connect();
              PreparedStatement prepStmtUpdateUserById = connection.prepareStatement(UsersSQL.SQL_UPDATE_USER_BY_ID.getQuery())
         ) {
@@ -153,12 +150,22 @@ public class UserRepository {
         }
     }
 
-    public void deleteUser(int id) throws SQLException {
+    public void deleteUserById(int userId) throws SQLException {
         try (Connection connection = dataSource.connect();
              PreparedStatement prepStmtDeleteUserById = connection.prepareStatement(UsersSQL.SQL_DELETE_USER_BY_ID.getQuery())
         ) {
-            prepStmtDeleteUserById.setInt(1, id);
+            this.deleteAllPostsByUserId(connection, userId);
+
+            prepStmtDeleteUserById.setInt(1, userId);
             prepStmtDeleteUserById.executeUpdate();
+        }
+    }
+
+    private void deleteAllPostsByUserId(Connection connection, int userId) throws SQLException {
+        try (PreparedStatement prepStmtDeleteAllPostsByUserId =
+                     connection.prepareStatement(PostsSQL.DELETE_ALL_POSTS_BY_USER_ID.getQuery())) {
+            prepStmtDeleteAllPostsByUserId.setInt(1, userId);
+            prepStmtDeleteAllPostsByUserId.executeUpdate();
         }
     }
 }

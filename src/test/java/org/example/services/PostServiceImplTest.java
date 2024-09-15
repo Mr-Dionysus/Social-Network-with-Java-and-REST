@@ -65,14 +65,14 @@ class PostServiceImplTest {
         String password = "password";
         User user = new User(userId, login, password);
         Post mockPost = new Post(postId, text, likes, dislikes, user);
-        when(postRepository.findPostById(postId)).thenReturn(mockPost);
+        when(postRepository.getPostById(postId)).thenReturn(mockPost);
 
         Post actualPost = postService.getPostById(postId);
 
         assertNotNull(actualPost);
         assertEquals(mockPost, actualPost);
 
-        verify(postRepository, times(1)).findPostById(postId);
+        verify(postRepository, times(1)).getPostById(postId);
     }
 
     @Test
@@ -84,14 +84,14 @@ class PostServiceImplTest {
         int dislikes = 0;
 
         Post mockPost = new Post(postId, text, likes, dislikes);
-        when(postRepository.getPostByIdWithoutUser(postId)).thenReturn(mockPost);
+        when(postRepository.getPostByIdWithoutItsUser(postId)).thenReturn(mockPost);
 
         Post actualPost = postService.getPostByIdWithoutUser(postId);
 
         assertNotNull(actualPost);
         assertEquals(mockPost, actualPost);
 
-        verify(postRepository, times(1)).getPostByIdWithoutUser(postId);
+        verify(postRepository, times(1)).getPostByIdWithoutItsUser(postId);
     }
 
     @Test

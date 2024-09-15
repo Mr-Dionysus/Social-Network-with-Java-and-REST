@@ -15,7 +15,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class RoleRepository {
-    private DataSource dataSource;
+    private final DataSource dataSource;
 
     public RoleRepository() {
         this.dataSource = new DataSource();
@@ -33,15 +33,14 @@ public class RoleRepository {
             prepStmtInsertRole.setString(2, description);
             prepStmtInsertRole.executeUpdate();
 
-            Role createdRole = this.findRoleId(connection, roleName, description);
+            Role createdRole = this.getRoleId(connection, roleName, description);
 
             return createdRole;
         }
     }
 
-    private Role findRoleId(Connection connection, String roleName, String description) throws SQLException {
-        try (PreparedStatement prepStmtFindId =
-                     connection.prepareStatement(RolesSQL.SELECT_ROLE_ID_BY_ROLE.getQuery())) {
+    private Role getRoleId(Connection connection, String roleName, String description) throws SQLException {
+        try (PreparedStatement prepStmtFindId = connection.prepareStatement(RolesSQL.SELECT_ROLE_ID_BY_ROLE.getQuery())) {
             prepStmtFindId.setString(1, roleName);
 
             try (ResultSet rsFoundRoleId = prepStmtFindId.executeQuery()) {
@@ -57,10 +56,9 @@ public class RoleRepository {
         return null;
     }
 
-    public Role readRole(int roleId) throws SQLException {
+    public Role getRoleById(int roleId) throws SQLException {
         try (Connection connection = dataSource.connect();
-             PreparedStatement prepStmtSelectRoleById =
-                     connection.prepareStatement(RolesSQL.SELECT_BY_ID.getQuery())
+             PreparedStatement prepStmtSelectRoleById = connection.prepareStatement(RolesSQL.SELECT_BY_ID.getQuery())
         ) {
             prepStmtSelectRoleById.setInt(1, roleId);
 
@@ -68,7 +66,7 @@ public class RoleRepository {
                 if (rsFoundRole.next()) {
                     String roleName = rsFoundRole.getString("role");
                     String description = rsFoundRole.getString("description");
-                    Role foundRole = this.findRoleWithAllUsers(connection, roleId, roleName, description);
+                    Role foundRole = this.getRoleWithItsUsers(connection, roleId, roleName, description);
 
                     return foundRole;
                 }
@@ -78,11 +76,10 @@ public class RoleRepository {
         return null;
     }
 
-    private Role findRoleWithAllUsers(Connection connection, int roleId, String roleName, String description) throws SQLException {
+    private Role getRoleWithItsUsers(Connection connection, int roleId, String roleName, String description) throws SQLException {
         ArrayList<User> listUsers = new ArrayList<>();
 
-        try (PreparedStatement prepStmtSelectAllUserIdsByRoleId =
-                     connection.prepareStatement(UsersRolesSQL.SELECT_ALL_USER_IDS_BY_ROLE_ID.getQuery())) {
+        try (PreparedStatement prepStmtSelectAllUserIdsByRoleId = connection.prepareStatement(UsersRolesSQL.SELECT_ALL_USER_IDS_BY_ROLE_ID.getQuery())) {
             prepStmtSelectAllUserIdsByRoleId.setInt(1, roleId);
             UserRepository userRepository = new UserRepository(dataSource);
             UserServiceImpl userService = new UserServiceImpl(userRepository);
@@ -101,10 +98,9 @@ public class RoleRepository {
         }
     }
 
-    public Role readRoleWithoutArray(int roleId) throws SQLException {
+    public Role getRoleWithoutItsUsers(int roleId) throws SQLException {
         try (Connection connection = dataSource.connect();
-             PreparedStatement prepStmtSelectRoleById =
-                     connection.prepareStatement(RolesSQL.SELECT_BY_ID.getQuery())
+             PreparedStatement prepStmtSelectRoleById = connection.prepareStatement(RolesSQL.SELECT_BY_ID.getQuery())
         ) {
             prepStmtSelectRoleById.setInt(1, roleId);
             ResultSet rsFoundRole = prepStmtSelectRoleById.executeQuery();
@@ -121,10 +117,9 @@ public class RoleRepository {
         return null;
     }
 
-    public ArrayList<Role> readAllRoles() throws SQLException {
+    public ArrayList<Role> getAllRoles() throws SQLException {
         try (Connection connection = dataSource.connect();
-             PreparedStatement prepStmtSelectRoles =
-                     connection.prepareStatement(RolesSQL.SELECT_ALL_ROLES.getQuery());
+             PreparedStatement prepStmtSelectRoles = connection.prepareStatement(RolesSQL.SELECT_ALL_ROLES.getQuery());
              ResultSet rsFoundRoles = prepStmtSelectRoles.executeQuery()
         ) {
             ArrayList<Role> listFoundRoles = new ArrayList<>();
@@ -141,10 +136,9 @@ public class RoleRepository {
         }
     }
 
-    public Role updateRole(int id, String newRoleName, String newDescription) throws SQLException {
+    public Role updateRoleById(int id, String newRoleName, String newDescription) throws SQLException {
         try (Connection connection = dataSource.connect();
-             PreparedStatement prepStmtUpdateRoleById =
-                     connection.prepareStatement(RolesSQL.UPDATE_BY_ID.getQuery())
+             PreparedStatement prepStmtUpdateRoleById = connection.prepareStatement(RolesSQL.UPDATE_BY_ID.getQuery())
         ) {
             prepStmtUpdateRoleById.setString(1, newRoleName);
             prepStmtUpdateRoleById.setString(2, newDescription);
@@ -161,8 +155,7 @@ public class RoleRepository {
 
     public void deleteRoleById(int id) throws SQLException {
         try (Connection connection = dataSource.connect();
-             PreparedStatement prepStmtDeleteRoleById =
-                     connection.prepareStatement(RolesSQL.DELETE_BY_ID.getQuery())
+             PreparedStatement prepStmtDeleteRoleById = connection.prepareStatement(RolesSQL.DELETE_BY_ID.getQuery())
         ) {
             prepStmtDeleteRoleById.setInt(1, id);
             prepStmtDeleteRoleById.executeUpdate();

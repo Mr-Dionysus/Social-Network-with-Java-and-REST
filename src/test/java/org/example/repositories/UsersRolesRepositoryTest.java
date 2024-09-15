@@ -57,7 +57,7 @@ class UsersRolesRepositoryTest {
         Role expectedRole = new Role(expectedRoleId, expectedRoleName, expectedDescription, expectedListUsers);
 
         usersRolesRepository.assignRoleToUser(expectedUserId, expectedRoleId);
-        Role actualRole = roleRepository.readRole(expectedRoleId);
+        Role actualRole = roleRepository.getRoleById(expectedRoleId);
 
         assertEquals(expectedRole, actualRole);
     }

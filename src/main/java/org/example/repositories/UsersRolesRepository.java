@@ -8,7 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class UsersRolesRepository {
-    private DataSource dataSource;
+    private final DataSource dataSource;
 
     public UsersRolesRepository() {
         this.dataSource = new DataSource();

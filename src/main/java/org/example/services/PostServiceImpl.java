@@ -35,7 +35,7 @@ public class PostServiceImpl implements PostService {
         PostValidator.postId(postId);
 
         try {
-            Post foundPost = postRepository.findPostById(postId);
+            Post foundPost = postRepository.getPostById(postId);
             PostValidator.foundPost(foundPost, postId);
 
             return foundPost;
@@ -49,7 +49,7 @@ public class PostServiceImpl implements PostService {
         PostValidator.postId(postId);
 
         try {
-            Post foundPost = postRepository.getPostByIdWithoutUser(postId);
+            Post foundPost = postRepository.getPostByIdWithoutItsUser(postId);
             PostValidator.foundPost(foundPost, postId);
 
             return foundPost;

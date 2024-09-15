@@ -112,25 +112,25 @@ class PostRepositoryTest {
 
     @Test
     @DisplayName("Find a Post by ID")
-    void findPostById() throws SQLException {
+    void getPostById() throws SQLException {
         User expectedUser = this.findTestUser();
         Post testPost = this.createExpectedPost(1);
         expectedUser.setPosts(new ArrayList<>(List.of(testPost)));
         Post expectedPost = this.createExpectedPost(1);
         expectedPost.setUser(expectedUser);
 
-        Post actualPost = postRepository.findPostById(1);
+        Post actualPost = postRepository.getPostById(1);
 
         assertEquals(expectedPost, actualPost);
     }
 
     @Test
     @DisplayName("Find a Post by ID without its Users")
-    void getPostByIdWithoutUser() throws SQLException {
+    void getPostByIdWithoutItsUser() throws SQLException {
         Post expectedPost = this.createExpectedPost(1);
         int expectedPostId = expectedPost.getId();
 
-        Post actualPost = postRepository.getPostByIdWithoutUser(expectedPostId);
+        Post actualPost = postRepository.getPostByIdWithoutItsUser(expectedPostId);
 
         assertEquals(expectedPost, actualPost);
     }

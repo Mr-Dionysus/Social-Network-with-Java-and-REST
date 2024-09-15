@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
         UserValidator.userId(userId);
 
         try {
-            User foundUser = userRepository.findUserById(userId);
+            User foundUser = userRepository.getUserById(userId);
             UserValidator.foundUser(foundUser, userId);
 
             return foundUser;
@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
         UserValidator.userId(userId);
 
         try {
-            User foundUser = userRepository.findUserWithoutHisRoles(userId);
+            User foundUser = userRepository.getUserWithoutHisRoles(userId);
             UserValidator.foundUser(foundUser, userId);
 
             return foundUser;
@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService {
         UserValidator.password(newPassword);
 
         try {
-            User updatedUser = userRepository.updateUser(userId, newLogin, newPassword);
+            User updatedUser = userRepository.updateUserById(userId, newLogin, newPassword);
             UserValidator.foundUser(updatedUser, userId);
 
             return updatedUser;
@@ -78,11 +78,11 @@ public class UserServiceImpl implements UserService {
         UserValidator.userId(userId);
 
         if (this.getUserById(userId) == null) {
-            throw new UserNotFoundException("Error while deleting the User. User with ID '" + userId + "' can't " + "be" + " " + "found");
+            throw new UserNotFoundException("Error while deleting the User. User with ID '" + userId + "' can't be found");
         }
 
         try {
-            userRepository.deleteUser(userId);
+            userRepository.deleteUserById(userId);
         } catch (SQLException e) {
             throw new DeleteUserException("Error while deleting a User by ID", e);
         }

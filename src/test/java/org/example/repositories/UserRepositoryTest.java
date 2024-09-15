@@ -56,7 +56,7 @@ class UserRepositoryTest {
 
     @Test
     @DisplayName("Find a User by ID")
-    void findUserById() throws SQLException {
+    void getUserById() throws SQLException {
         String expectedLogin = "testLogin";
         String expectedPassword = "testPassword";
         ArrayList<Role> expectedRoles = new ArrayList<>();
@@ -70,14 +70,14 @@ class UserRepositoryTest {
         expectedPosts.add(expectedPost);
         User expectedUser = new User(1, expectedLogin, expectedPassword, expectedRoles, expectedPosts);
 
-        User actualUser = userRepository.findUserById(1);
+        User actualUser = userRepository.getUserById(1);
 
         assertEquals(expectedUser, actualUser);
     }
 
     @Test
     @DisplayName("Find a User without his Roles")
-    void findUserWithoutHisRoles() throws SQLException {
+    void getUserWithoutHisRoles() throws SQLException {
         String expectedLogin = "testLogin";
         String expectedPassword = "testPassword";
         ArrayList<Role> expectedRoles = new ArrayList<>();
@@ -86,27 +86,27 @@ class UserRepositoryTest {
         expectedPosts.add(expectedPost);
         User expectedUser = new User(1, expectedLogin, expectedPassword, expectedRoles, expectedPosts);
 
-        User actualUser = userRepository.findUserById(1);
+        User actualUser = userRepository.getUserById(1);
 
         assertEquals(expectedUser, actualUser);
     }
 
     @Test
     @DisplayName("Update a User")
-    void updateUser() throws SQLException {
+    void updateUserById() throws SQLException {
         String expectedLogin = "testLogin2";
         String expectedPassword = "testPassword2";
         User expectedUser = new User(2, expectedLogin, expectedPassword);
 
-        User actualUser = userRepository.updateUser(2, expectedLogin, expectedPassword);
+        User actualUser = userRepository.updateUserById(2, expectedLogin, expectedPassword);
 
         assertEquals(expectedUser, actualUser);
     }
 
     @Test
     @DisplayName("Delete a User")
-    void deleteUser() throws SQLException {
-        userRepository.deleteUser(1);
+    void deleteUserById() throws SQLException {
+        userRepository.deleteUserById(1);
         User actualUser = findTestUser();
 
         assertNull(actualUser);

@@ -32,13 +32,13 @@ public class PostRepository {
             prepStmtCreatePost.setInt(4, user_id);
             prepStmtCreatePost.executeUpdate();
 
-            Post createdPost = this.findPostId(connection, text, user_id);
+            Post createdPost = this.getPostId(connection, text, user_id);
 
             return createdPost;
         }
     }
 
-    private Post findPostId(Connection connection, String text, int user_id) throws SQLException {
+    private Post getPostId(Connection connection, String text, int user_id) throws SQLException {
         try (PreparedStatement prepStmtSelectCreatedPostId = connection.prepareStatement(PostsSQL.SELECT_POST_ID_BY_FIELDS.getQuery())) {
             prepStmtSelectCreatedPostId.setString(1, text);
             prepStmtSelectCreatedPostId.setInt(2, 0);
@@ -62,7 +62,7 @@ public class PostRepository {
         return null;
     }
 
-    public Post findPostById(int postId) throws SQLException {
+    public Post getPostById(int postId) throws SQLException {
         try (Connection connection = dataSource.connect();
              PreparedStatement prepStmtSelectPostById = connection.prepareStatement(PostsSQL.SELECT_BY_ID.getQuery())
         ) {
@@ -88,7 +88,7 @@ public class PostRepository {
         return null;
     }
 
-    public Post getPostByIdWithoutUser(int postId) throws SQLException {
+    public Post getPostByIdWithoutItsUser(int postId) throws SQLException {
         try (Connection connection = dataSource.connect();
              PreparedStatement prepStmtSelectPostById = connection.prepareStatement(PostsSQL.SELECT_BY_ID.getQuery())
         ) {
@@ -116,7 +116,7 @@ public class PostRepository {
             prepStmtUpdatePostById.setString(1, newText);
             prepStmtUpdatePostById.setInt(2, postId);
             prepStmtUpdatePostById.executeUpdate();
-            Post updatedPost = this.findPostById(postId);
+            Post updatedPost = this.getPostById(postId);
 
             return updatedPost;
         }

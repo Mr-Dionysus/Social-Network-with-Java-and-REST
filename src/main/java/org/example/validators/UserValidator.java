@@ -16,7 +16,7 @@ public class UserValidator {
 
     public static void foundUser(User foundUser, int userId) {
         if (foundUser == null) {
-            throw new UserNotFoundException("User with ID '" + userId + " can't be found");
+            throw new UserNotFoundException("User with ID '" + userId + "' can't be found");
         }
     }
 

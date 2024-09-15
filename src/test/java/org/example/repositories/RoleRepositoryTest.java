@@ -63,33 +63,33 @@ class RoleRepositoryTest {
 
     @Test
     @DisplayName("Read a Role")
-    void readRole() throws SQLException {
+    void getRoleById() throws SQLException {
         String expectedRoleName = "admin";
         String expectedDescription = "manage stuff";
         int expectedRoleId = 1;
         Role expectedRole = new Role(expectedRoleId, expectedRoleName, expectedDescription);
 
-        Role actualRole = roleRepository.readRole(expectedRoleId);
+        Role actualRole = roleRepository.getRoleById(expectedRoleId);
 
         assertEquals(expectedRole, actualRole);
     }
 
     @Test
     @DisplayName("Read a Role without its Users")
-    void readRoleWithoutArray() throws SQLException {
+    void getRoleByIdWithoutArray() throws SQLException {
         String expectedRoleName = "user";
         String expectedDescription = "read stuff";
         int expectedRoleId = 3;
         Role expectedRole = new Role(expectedRoleId, expectedRoleName, expectedDescription);
 
-        Role actualRole = roleRepository.readRole(expectedRoleId);
+        Role actualRole = roleRepository.getRoleById(expectedRoleId);
 
         assertEquals(expectedRole, actualRole);
     }
 
     @Test
     @DisplayName("Read all Roles")
-    void readAllRoles() throws SQLException {
+    void getAllRoles() throws SQLException {
         Role expectedRole1 = this.createExpectedRole();
         int expectedRoleId2 = 2;
         String expectedRoleName2 = "hacker";
@@ -98,7 +98,7 @@ class RoleRepositoryTest {
 
         ArrayList<Role> expectedRoles = new ArrayList<>(Arrays.asList(expectedRole1, expectedRole2));
 
-        ArrayList<Role> actualRoles = roleRepository.readAllRoles();
+        ArrayList<Role> actualRoles = roleRepository.getAllRoles();
         boolean areArraysEqual = true;
 
         for (int i = 0; i < expectedRoles.size(); i++) {
@@ -116,14 +116,14 @@ class RoleRepositoryTest {
 
     @Test
     @DisplayName("Update a Role")
-    void updateRole() throws SQLException {
+    void updateRoleById() throws SQLException {
         int expectedRoleId = 2;
         String expectedRoleName = "hacker";
         String expectedDescription = "hack stuff";
         Role expectedRole = new Role(expectedRoleId, expectedRoleName, expectedDescription);
 
         roleRepository.createRole(expectedRoleName, expectedDescription);
-        Role actualRole = roleRepository.updateRole(expectedRoleId, expectedRoleName, expectedDescription);
+        Role actualRole = roleRepository.updateRoleById(expectedRoleId, expectedRoleName, expectedDescription);
 
         assertEquals(expectedRole, actualRole);
     }
@@ -134,7 +134,7 @@ class RoleRepositoryTest {
         int expectedRoleId = 2;
         roleRepository.deleteRoleById(expectedRoleId);
 
-        Role actualRole = roleRepository.readRole(expectedRoleId);
+        Role actualRole = roleRepository.getRoleById(expectedRoleId);
 
         assertNull(actualRole);
     }

@@ -1,8 +1,6 @@
 package org.example.services;
 
-import org.example.entities.Role;
 import org.example.entities.User;
-import org.example.exceptions.PostNotFoundException;
 import org.example.exceptions.UserNotFoundException;
 import org.example.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -53,14 +51,14 @@ class UserServiceImplTest {
         String login = "root";
         String password = "password";
         User mockUser = new User(userId, login, password);
-        when(userRepository.findUserById(userId)).thenReturn(mockUser);
+        when(userRepository.getUserById(userId)).thenReturn(mockUser);
 
         User actualUser = userService.getUserById(userId);
 
         assertNotNull(actualUser);
         assertEquals(mockUser, actualUser);
 
-        verify(userRepository, times(1)).findUserById(userId);
+        verify(userRepository, times(1)).getUserById(userId);
     }
 
     @Test
@@ -70,14 +68,14 @@ class UserServiceImplTest {
         String login = "root";
         String password = "password";
         User mockUser = new User(userId, login, password);
-        when(userRepository.findUserWithoutHisRoles(userId)).thenReturn(mockUser);
+        when(userRepository.getUserWithoutHisRoles(userId)).thenReturn(mockUser);
 
         User actualUser = userService.getUserByIdWithoutHisRoles(userId);
 
         assertNotNull(actualUser);
         assertEquals(mockUser, actualUser);
 
-        verify(userRepository, times(1)).findUserWithoutHisRoles(userId);
+        verify(userRepository, times(1)).getUserWithoutHisRoles(userId);
     }
 
     @Test
@@ -92,23 +90,23 @@ class UserServiceImplTest {
         String newPassword = "p@ssw@rd";
         mockUser.setLogin(newLogin);
         mockUser.setPassword(newPassword);
-        when(userRepository.updateUser(userId, newLogin, newPassword)).thenReturn(mockUser);
+        when(userRepository.updateUserById(userId, newLogin, newPassword)).thenReturn(mockUser);
 
         User actualUser = userService.updateUserById(userId, newLogin, newPassword);
 
         assertNotNull(actualUser);
         assertEquals(mockUser, actualUser);
 
-        verify(userRepository, times(1)).updateUser(userId, newLogin, newPassword);
+        verify(userRepository, times(1)).updateUserById(userId, newLogin, newPassword);
     }
 
     @Test
     @DisplayName("Delete a User by ID")
     void deleteUserById() throws SQLException {
         int userId = 1;
-        String expectedMessage = "User with ID '1 can't be found";
+        String expectedMessage = "User with ID '1' can't be found";
         doThrow(new UserNotFoundException(expectedMessage)).when(userRepository)
-                                                           .deleteUser(userId);
+                                                           .deleteUserById(userId);
 
         UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
             userService.deleteUserById(userId);

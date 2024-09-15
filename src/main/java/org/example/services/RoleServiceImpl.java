@@ -1,10 +1,7 @@
 package org.example.services;
 
 import org.example.entities.Role;
-import org.example.exceptions.CreateRoleException;
-import org.example.exceptions.DeleteRoleException;
-import org.example.exceptions.GetRoleException;
-import org.example.exceptions.UpdateRoleException;
+import org.example.exceptions.*;
 import org.example.repositories.RoleRepository;
 import org.example.validators.RoleValidator;
 
@@ -38,7 +35,7 @@ public class RoleServiceImpl implements RoleService {
         RoleValidator.roleId(roleId);
 
         try {
-            Role foundRole = roleRepository.readRole(roleId);
+            Role foundRole = roleRepository.getRoleById(roleId);
             RoleValidator.foundRole(foundRole, roleId);
 
             return foundRole;
@@ -52,7 +49,7 @@ public class RoleServiceImpl implements RoleService {
         RoleValidator.roleId(roleId);
 
         try {
-            Role foundRole = roleRepository.readRoleWithoutArray(roleId);
+            Role foundRole = roleRepository.getRoleWithoutItsUsers(roleId);
             RoleValidator.foundRole(foundRole, roleId);
 
             return foundRole;
@@ -64,7 +61,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public ArrayList<Role> getAllRoles() {
         try {
-            ArrayList<Role> listFoundRoles = roleRepository.readAllRoles();
+            ArrayList<Role> listFoundRoles = roleRepository.getAllRoles();
             RoleValidator.listFoundRoles(listFoundRoles);
 
             return listFoundRoles;
@@ -80,7 +77,7 @@ public class RoleServiceImpl implements RoleService {
         RoleValidator.description(newDescription);
 
         try {
-            Role updatedRole = roleRepository.updateRole(roleId, newRoleName, newDescription);
+            Role updatedRole = roleRepository.updateRoleById(roleId, newRoleName, newDescription);
             RoleValidator.foundRole(updatedRole, roleId);
 
             return updatedRole;
@@ -93,10 +90,14 @@ public class RoleServiceImpl implements RoleService {
     public void deleteRoleById(int roleId) {
         RoleValidator.roleId(roleId);
 
+        if (this.getRoleById(roleId) == null) {
+            throw new RoleNotFoundException("Error while deleting the Role. Role with ID '" + roleId + "' " + "can't be found");
+        }
+
         try {
             roleRepository.deleteRoleById(roleId);
         } catch (SQLException e) {
-            throw new DeleteRoleException("Error while deliting a Role", e);
+            throw new DeleteRoleException("Error while deleting a Role", e);
         }
     }
 }
