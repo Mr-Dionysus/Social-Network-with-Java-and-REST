@@ -40,3 +40,6 @@ build/
 !/src/main/resources/config.properties
 !/src/main/resources/
 !/.smarttomcat/
+!/.smarttomcat/Aston_REST/conf/
+!/.smarttomcat/Aston_REST/
+!/.smarttomcat/Aston_REST/conf/web.xml
