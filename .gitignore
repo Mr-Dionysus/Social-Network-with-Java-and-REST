@@ -39,3 +39,4 @@ build/
 .DS_Store!/.idea/
 !/src/main/resources/config.properties
 !/src/main/resources/
+!/.smarttomcat/
