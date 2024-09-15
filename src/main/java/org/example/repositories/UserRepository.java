@@ -44,16 +44,13 @@ public class UserRepository {
             prepStmtInsertUser.setString(2, password);
             prepStmtInsertUser.executeUpdate();
 
-            User foundUser = getUserByLogin(login, password, connection);
+            User foundUser = this.getUserByLogin(login, password, connection);
 
-            if (foundUser != null) {
-                return foundUser;
-            }
+            return foundUser;
         }
-        return null;
     }
 
-    private static User getUserByLogin(String login, String password, Connection connection) throws SQLException {
+    private User getUserByLogin(String login, String password, Connection connection) throws SQLException {
         try (PreparedStatement prepStmtSelectUserIdByLogin = connection.prepareStatement(UsersSQL.SELECT_USER_ID_BY_LOGIN.getQuery())) {
 
             prepStmtSelectUserIdByLogin.setString(1, login);
@@ -67,7 +64,7 @@ public class UserRepository {
                 }
             }
         }
-        return null;
+        throw new UserNotFoundException("User with a login '" + login + "' can't be created");
     }
 
     public User getUserById(int userId) throws SQLException {
@@ -90,7 +87,7 @@ public class UserRepository {
                 }
             }
         }
-        return null;
+        throw new UserNotFoundException("User with ID '" + userId + "' isn't found");
     }
 
     private ArrayList<Role> getListOfRoles(Connection connection, int userId) throws SQLException {
@@ -149,8 +146,7 @@ public class UserRepository {
                 }
             }
         }
-
-        return null;
+        throw new UserNotFoundException("User with ID '" + userId + "' isn't found");
     }
 
     public User updateUserById(int userId, String newLogin, String newPassword) throws SQLException {
@@ -165,6 +161,7 @@ public class UserRepository {
             prepStmtUpdateUserById.executeUpdate();
 
             User foundUser = new User(userId, newLogin, newPassword);
+
             return foundUser;
         }
     }

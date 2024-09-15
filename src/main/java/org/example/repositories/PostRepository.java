@@ -61,7 +61,7 @@ public class PostRepository {
             }
         }
 
-        return null;
+        throw new PostNotFoundException("Post ID not found");
     }
 
     public Post getPostById(int postId) throws SQLException {
@@ -86,8 +86,7 @@ public class PostRepository {
                 }
             }
         }
-
-        return null;
+        throw new PostNotFoundException("Post with ID '" + postId + "' not found");
     }
 
     public Post getPostByIdWithoutItsUser(int postId) throws SQLException {
@@ -108,7 +107,7 @@ public class PostRepository {
             }
         }
 
-        return null;
+        throw new PostNotFoundException("Post with ID '" + postId + "' not found");
     }
 
     public Post updatePostById(int postId, String newText) throws SQLException {

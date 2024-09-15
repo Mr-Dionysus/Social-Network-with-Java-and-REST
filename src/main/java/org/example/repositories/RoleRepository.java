@@ -6,6 +6,8 @@ import org.example.db.UsersRolesSQL;
 import org.example.entities.Role;
 import org.example.entities.User;
 import org.example.exceptions.PostNotFoundException;
+import org.example.exceptions.RoleNotFoundException;
+import org.example.exceptions.UserNotFoundException;
 import org.example.services.RoleServiceImpl;
 import org.example.services.UserServiceImpl;
 
@@ -54,8 +56,7 @@ public class RoleRepository {
                 }
             }
         }
-
-        return null;
+        throw new RoleNotFoundException("Role ID with a name '" + roleName + "' isn't found");
     }
 
     public Role getRoleById(int roleId) throws SQLException {
@@ -74,8 +75,7 @@ public class RoleRepository {
                 }
             }
         }
-
-        return null;
+        throw new RoleNotFoundException("Role with ID '" + roleId + "' isn't found");
     }
 
     private Role getRoleWithItsUsers(Connection connection, int roleId, String roleName, String description) throws SQLException {
@@ -115,8 +115,7 @@ public class RoleRepository {
                 return foundRole;
             }
         }
-
-        return null;
+        throw new RoleNotFoundException("Role with ID '" + roleId + "' isn't found");
     }
 
     public List<Role> getAllRoles() throws SQLException {
