@@ -20,10 +20,16 @@ import java.util.ArrayList;
 
 @WebServlet(name = "RoleServlet", urlPatterns = "/roles/*")
 public class RoleServlet extends HttpServlet {
-    private RoleServiceImpl roleService = new RoleServiceImpl(new RoleRepository());
-    private RoleMapper roleMapper = new RoleMapperImpl();
+    private final RoleServiceImpl roleService;
+    private final RoleMapper roleMapper;
 
     public RoleServlet() {
+        this.roleService = createRoleService();
+        this.roleMapper = new RoleMapperImpl();
+    }
+
+    protected RoleServiceImpl createRoleService() {
+        return new RoleServiceImpl(new RoleRepository());
     }
 
     public RoleServlet(RoleServiceImpl roleService, RoleMapper roleMapper) {

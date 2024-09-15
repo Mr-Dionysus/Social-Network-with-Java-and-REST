@@ -19,10 +19,16 @@ import java.io.PrintWriter;
 
 @WebServlet(name = "PostServlet", urlPatterns = "/users/posts/*")
 public class PostServlet extends HttpServlet {
-    private PostServiceImpl postService = new PostServiceImpl(new PostRepository());
-    private PostMapper postMapper = new PostMapperImpl();
+    private final PostServiceImpl postService;
+    private final PostMapper postMapper;
 
     public PostServlet() {
+        this.postService = createPostService();
+        this.postMapper = new PostMapperImpl();
+    }
+
+    protected PostServiceImpl createPostService() {
+        return new PostServiceImpl(new PostRepository());
     }
 
     public PostServlet(PostServiceImpl postService, PostMapper postMapper) {

@@ -24,10 +24,16 @@ import java.io.PrintWriter;
 
 @WebServlet(name = "UserServlet", urlPatterns = "/users/*")
 public class UserServlet extends HttpServlet {
-    private UserServiceImpl userService = new UserServiceImpl(new UserRepository());
-    private UserMapper userMapper = new UserMapperImpl();
+    private final UserServiceImpl userService;
+    private final UserMapper userMapper;
 
     public UserServlet() {
+        this.userService = createUserService();
+        this.userMapper = new UserMapperImpl();
+    }
+
+    protected UserServiceImpl createUserService() {
+        return new UserServiceImpl(new UserRepository());
     }
 
     public UserServlet(UserServiceImpl userService, UserMapper userMapper) {
