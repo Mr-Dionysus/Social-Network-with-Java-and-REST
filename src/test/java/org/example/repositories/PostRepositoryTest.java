@@ -1,6 +1,6 @@
 package org.example.repositories;
 
-import org.example.connection.MySQLtest;
+import org.example.connection.TestSQL;
 import org.example.db.DataSource;
 import org.example.db.PostsSQL;
 import org.example.db.UsersSQL;
@@ -36,7 +36,7 @@ class PostRepositoryTest {
         dataSource = new DataSource();
 
         try (Connection connection = dataSource.connect()) {
-            MySQLtest.createAllTablesWithTestEntities(connection, dataSource);
+            TestSQL.createAllTablesWithTestEntities(connection, dataSource);
         }
     }
 

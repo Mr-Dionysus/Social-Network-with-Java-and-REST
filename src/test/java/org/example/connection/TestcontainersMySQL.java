@@ -2,6 +2,7 @@ package org.example.connection;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.MySQLContainer;
 
@@ -13,7 +14,7 @@ import java.sql.Statement;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class MySQLtestContainer {
+class TestcontainersMySQL {
     private static final MySQLContainer<?> SELF_MY_SQL_CONTAINER = new MySQLContainer<>("mysql:8.0");
 
     @BeforeAll
@@ -27,6 +28,7 @@ class MySQLtestContainer {
     }
 
     @Test
+    @DisplayName("Try to connect to a testcontainers")
     void connection() throws Exception {
         Connection connection = DriverManager.getConnection(SELF_MY_SQL_CONTAINER.getJdbcUrl(), SELF_MY_SQL_CONTAINER.getUsername(), SELF_MY_SQL_CONTAINER.getPassword());
         Statement stmt = connection.createStatement();

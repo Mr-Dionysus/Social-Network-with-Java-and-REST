@@ -10,7 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class MySQLtest {
+public class TestSQL {
     public static void createAllTablesWithTestEntities(Connection connection, DataSource dataSource) throws SQLException {
         try (PreparedStatement prepStmtCreateTableUsers = connection.prepareStatement(TablesSQL.CREATE_USERS.getQuery());
              PreparedStatement prepStmtCreateTableRoles = connection.prepareStatement(TablesSQL.CREATE_ROLES.getQuery());

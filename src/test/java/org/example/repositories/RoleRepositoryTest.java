@@ -1,6 +1,6 @@
 package org.example.repositories;
 
-import org.example.connection.MySQLtest;
+import org.example.connection.TestSQL;
 import org.example.db.DataSource;
 import org.example.entities.Role;
 import org.junit.jupiter.api.AfterAll;
@@ -30,7 +30,7 @@ class RoleRepositoryTest {
         dataSource = new DataSource();
 
         try (Connection connection = dataSource.connect()) {
-            MySQLtest.createAllTablesWithTestEntities(connection, dataSource);
+            TestSQL.createAllTablesWithTestEntities(connection, dataSource);
         }
     }
 
