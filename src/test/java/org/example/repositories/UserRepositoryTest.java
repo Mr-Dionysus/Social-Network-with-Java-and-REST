@@ -2,6 +2,7 @@ package org.example.repositories;
 
 import org.example.connection.MySQLtest;
 import org.example.db.DataSource;
+import org.example.db.UsersSQL;
 import org.example.entities.Post;
 import org.example.entities.Role;
 import org.example.entities.User;
@@ -114,7 +115,8 @@ class UserRepositoryTest {
 
     private User findTestUser() throws SQLException {
         try (Connection connection = dataSource.connect();
-             PreparedStatement prepStmtSelectUserById = connection.prepareStatement(MySQLtest.SQL_SELECT_USER_BY_ID)
+             PreparedStatement prepStmtSelectUserById =
+                     connection.prepareStatement(UsersSQL.SELECT_BY_ID.getQuery())
         ) {
             int userId = 1;
             prepStmtSelectUserById.setInt(1, userId);

@@ -45,7 +45,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Role getRoleByIdWithoutUsers(int roleId) {
+    public Role getRoleByIdWithoutItsUsers(int roleId) {
         RoleValidator.roleId(roleId);
 
         try {

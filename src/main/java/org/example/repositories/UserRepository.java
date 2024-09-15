@@ -87,7 +87,7 @@ public class UserRepository {
                     int roleId = rsFoundAllRoleIds.getInt("role_id");
                     RoleRepository roleRepository = new RoleRepository(dataSource);
                     RoleServiceImpl roleService = new RoleServiceImpl(roleRepository);
-                    Role foundRole = roleService.getRoleByIdWithoutUsers(roleId);
+                    Role foundRole = roleService.getRoleByIdWithoutItsUsers(roleId);
                     listFoundRoles.add(foundRole);
                 }
 
@@ -107,7 +107,7 @@ public class UserRepository {
 
                 while (rsFoundAllPostIds.next()) {
                     int postId = rsFoundAllPostIds.getInt("id");
-                    Post foundPost = postService.getPostByIdWithoutUser(postId);
+                    Post foundPost = postService.getPostByIdWithoutItsUser(postId);
                     listFoundPosts.add(foundPost);
                 }
 

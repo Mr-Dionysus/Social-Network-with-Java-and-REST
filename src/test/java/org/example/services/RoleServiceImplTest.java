@@ -3,7 +3,6 @@ package org.example.services;
 import org.example.entities.Role;
 import org.example.entities.User;
 import org.example.exceptions.RoleNotFoundException;
-import org.example.exceptions.UserNotFoundException;
 import org.example.repositories.RoleRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -76,7 +75,7 @@ class RoleServiceImplTest {
 
     @Test
     @DisplayName("Get a Role by ID without its Users")
-    void getRoleByIdWithoutUsers() throws SQLException {
+    void getRoleByIdWithoutItsUsers() throws SQLException {
         int roleId = 1;
         String roleName = "admin";
         String description = "manage stuff";
@@ -84,7 +83,7 @@ class RoleServiceImplTest {
         Role mockRole = new Role(roleId, roleName, description);
         when(roleRepository.getRoleWithoutItsUsers(roleId)).thenReturn(mockRole);
 
-        Role actualRole = roleService.getRoleByIdWithoutUsers(roleId);
+        Role actualRole = roleService.getRoleByIdWithoutItsUsers(roleId);
 
         assertNotNull(actualRole);
         assertEquals(mockRole, actualRole);
@@ -148,9 +147,7 @@ class RoleServiceImplTest {
         doThrow(new RoleNotFoundException(expectedMessage)).when(roleRepository)
                                                            .deleteRoleById(roleId);
 
-        RoleNotFoundException exception = assertThrows(RoleNotFoundException.class, () -> {
-            roleService.deleteRoleById(roleId);
-        });
+        RoleNotFoundException exception = assertThrows(RoleNotFoundException.class, () -> roleService.deleteRoleById(roleId));
 
         assertEquals(expectedMessage, exception.getMessage());
     }

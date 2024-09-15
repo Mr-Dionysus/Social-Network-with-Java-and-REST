@@ -3,23 +3,18 @@ package org.example.servlets;
 import com.google.gson.Gson;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.example.dtos.PostDTO;
 import org.example.dtos.UserCredentialsDTO;
 import org.example.dtos.UserDTO;
-import org.example.entities.Post;
 import org.example.entities.User;
-import org.example.mappers.PostMapper;
 import org.example.mappers.UserMapper;
-import org.example.services.PostService;
-import org.example.services.UserService;
 import org.example.services.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.io.*;
-import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -35,13 +30,7 @@ class UserServletTest {
     private UserServiceImpl userService;
 
     @Mock
-    private PostService postService;
-
-    @Mock
     private UserMapper userMapper;
-
-    @Mock
-    private PostMapper postMapper;
 
     private Gson gson;
     private UserServlet userServlet;
@@ -54,6 +43,7 @@ class UserServletTest {
     }
 
     @Test
+    @DisplayName("Create a User")
     void doPost() throws IOException {
         int userId = 1;
         String login = "admin4";
@@ -85,6 +75,7 @@ class UserServletTest {
     }
 
     @Test
+    @DisplayName("Get a User")
     void doGet() throws IOException {
         int userId = 1;
         String login = "admin4";
@@ -111,6 +102,7 @@ class UserServletTest {
     }
 
     @Test
+    @DisplayName("Update a User")
     void doPut() throws IOException {
         int userId = 1;
         String newLogin = "newLogin";
@@ -141,6 +133,7 @@ class UserServletTest {
     }
 
     @Test
+    @DisplayName("Delete a User")
     void doDelete() throws IOException {
         int userId = 1;
         String login = "admin4";

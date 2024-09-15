@@ -77,7 +77,7 @@ class PostServiceImplTest {
 
     @Test
     @DisplayName("Get a Post by ID without its Users")
-    void getPostByIdWithoutUser() throws SQLException {
+    void getPostByIdWithoutItsUser() throws SQLException {
         int postId = 1;
         String text = "Hello there";
         int likes = 0;
@@ -86,7 +86,7 @@ class PostServiceImplTest {
         Post mockPost = new Post(postId, text, likes, dislikes);
         when(postRepository.getPostByIdWithoutItsUser(postId)).thenReturn(mockPost);
 
-        Post actualPost = postService.getPostByIdWithoutUser(postId);
+        Post actualPost = postService.getPostByIdWithoutItsUser(postId);
 
         assertNotNull(actualPost);
         assertEquals(mockPost, actualPost);
@@ -124,9 +124,7 @@ class PostServiceImplTest {
         doThrow(new PostNotFoundException(expectedMessage)).when(postRepository)
                                                            .deletePostById(postId);
 
-        PostNotFoundException exception = assertThrows(PostNotFoundException.class, () -> {
-            postService.deletePostById(postId);
-        });
+        PostNotFoundException exception = assertThrows(PostNotFoundException.class, () -> postService.deletePostById(postId));
 
         assertEquals(expectedMessage, exception.getMessage());
     }

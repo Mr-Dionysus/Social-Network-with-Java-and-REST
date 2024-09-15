@@ -9,7 +9,7 @@ public interface PostService {
 
     Post getPostById(int postId) throws SQLException;
 
-    Post getPostByIdWithoutUser(int postId) throws SQLException;
+    Post getPostByIdWithoutItsUser(int postId) throws SQLException;
 
     Post updatePostById(int postId, String newText) throws SQLException;
 

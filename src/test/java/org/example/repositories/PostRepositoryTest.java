@@ -2,6 +2,8 @@ package org.example.repositories;
 
 import org.example.connection.MySQLtest;
 import org.example.db.DataSource;
+import org.example.db.PostsSQL;
+import org.example.db.UsersSQL;
 import org.example.entities.Post;
 import org.example.entities.User;
 import org.junit.jupiter.api.AfterAll;
@@ -45,7 +47,8 @@ class PostRepositoryTest {
 
     private User findTestUser() throws SQLException {
         try (Connection connection = dataSource.connect();
-             PreparedStatement prepStmtSelectUserById = connection.prepareStatement(MySQLtest.SQL_SELECT_USER_BY_ID)
+             PreparedStatement prepStmtSelectUserById =
+                     connection.prepareStatement(UsersSQL.SELECT_BY_ID.getQuery())
         ) {
             int userId = 1;
             prepStmtSelectUserById.setInt(1, userId);
@@ -154,7 +157,8 @@ class PostRepositoryTest {
 
     private Post checkIfPostDeleted() throws SQLException {
         try (Connection connection = dataSource.connect();
-             PreparedStatement prepStmtSelectPostById = connection.prepareStatement(MySQLtest.SQL_SELECT_POST_BY_ID)
+             PreparedStatement prepStmtSelectPostById =
+                     connection.prepareStatement(PostsSQL.SELECT_BY_ID.getQuery())
         ) {
             int postId = 2;
             prepStmtSelectPostById.setInt(1, postId);

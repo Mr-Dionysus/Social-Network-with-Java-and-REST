@@ -108,9 +108,7 @@ class UserServiceImplTest {
         doThrow(new UserNotFoundException(expectedMessage)).when(userRepository)
                                                            .deleteUserById(userId);
 
-        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
-            userService.deleteUserById(userId);
-        });
+        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> userService.deleteUserById(userId));
 
         assertEquals(expectedMessage, exception.getMessage());
     }

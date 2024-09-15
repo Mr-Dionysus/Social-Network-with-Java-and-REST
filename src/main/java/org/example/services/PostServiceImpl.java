@@ -45,7 +45,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post getPostByIdWithoutUser(int postId) {
+    public Post getPostByIdWithoutItsUser(int postId) {
         PostValidator.postId(postId);
 
         try {

@@ -6,7 +6,6 @@ import org.example.entities.Post;
 import org.example.entities.Role;
 import org.example.entities.User;
 import org.junit.jupiter.api.Test;
-import org.junit.rules.ExpectedException;
 
 import java.util.ArrayList;
 

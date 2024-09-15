@@ -4,24 +4,17 @@ import com.google.gson.Gson;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.dtos.PostDTO;
-import org.example.dtos.UserCredentialsDTO;
-import org.example.dtos.UserDTO;
 import org.example.entities.Post;
-import org.example.entities.User;
 import org.example.mappers.PostMapper;
-import org.example.mappers.PostMapperImpl;
-import org.example.services.PostService;
 import org.example.services.PostServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.io.*;
-import java.sql.SQLException;
-import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 class PostServletTest {
@@ -48,6 +41,7 @@ class PostServletTest {
     }
 
     @Test
+    @DisplayName("Create a Post")
     void doPost() throws IOException {
         int postId = 1;
         String text = "hello there";
@@ -79,7 +73,8 @@ class PostServletTest {
     }
 
     @Test
-    void doGet() throws IOException, SQLException {
+    @DisplayName("Get a Post")
+    void doGet() throws IOException {
         int postId = 1;
         String text = "hello there";
         int likes = 0;
@@ -105,6 +100,7 @@ class PostServletTest {
     }
 
     @Test
+    @DisplayName("Update a Post")
     void doPut() throws IOException {
         int postId = 1;
         String text = "hello there";
@@ -136,6 +132,7 @@ class PostServletTest {
     }
 
     @Test
+    @DisplayName("Delete a Post")
     void doDelete() {
         int userId = 1;
 

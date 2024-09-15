@@ -3,13 +3,12 @@ package org.example.servlets;
 import com.google.gson.Gson;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.example.dtos.PostDTO;
 import org.example.dtos.RoleDTO;
-import org.example.entities.Post;
 import org.example.entities.Role;
 import org.example.mappers.RoleMapper;
 import org.example.services.RoleServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -45,6 +44,7 @@ class RoleServletTest {
     }
 
     @Test
+    @DisplayName("Create a Role")
     void doPost() throws IOException {
         int roleId = 1;
         String roleName = "admin";
@@ -73,6 +73,7 @@ class RoleServletTest {
     }
 
     @Test
+    @DisplayName("Get a Role")
     void doGet() throws IOException {
         int roleId = 1;
         String roleName = "admin";
@@ -101,6 +102,7 @@ class RoleServletTest {
     }
 
     @Test
+    @DisplayName("Update a Role")
     void doPut() throws IOException {
         int roleId = 1;
         String roleName = "admin";
@@ -129,6 +131,7 @@ class RoleServletTest {
     }
 
     @Test
+    @DisplayName("Delete a Role")
     void doDelete() {
         int roleId = 1;
         when(req.getPathInfo()).thenReturn("/" + roleId);

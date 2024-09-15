@@ -10,7 +10,7 @@ public interface RoleService {
 
     Role getRoleById(int id) throws SQLException;
 
-    Role getRoleByIdWithoutUsers(int id) throws SQLException;
+    Role getRoleByIdWithoutItsUsers(int id) throws SQLException;
 
     ArrayList<Role> getAllRoles() throws SQLException;
 

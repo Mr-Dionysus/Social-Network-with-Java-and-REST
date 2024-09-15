@@ -10,6 +10,7 @@ import org.example.mappers.RoleMapper;
 import org.example.services.RoleServiceImpl;
 import org.example.services.UsersRolesServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -48,6 +49,7 @@ class UsersRolesServletTest {
     }
 
     @Test
+    @DisplayName("Assign a Role to a User")
     void doPut() throws IOException {
         int userId = 1;
         String login = "admin";
