@@ -2,7 +2,6 @@ package org.example.services;
 
 import org.example.entities.Role;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public interface RoleService {

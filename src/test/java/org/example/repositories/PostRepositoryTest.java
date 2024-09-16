@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class PostRepositoryTest {
     private static MySQLContainer<?> mySQLcontainer;
@@ -183,8 +184,7 @@ class PostRepositoryTest {
     void deletePostById() throws SQLException {
         postRepository.deletePostById(2);
         Post actualPost = this.checkIfPostDeleted();
-        Post expectedPost = null;
 
-        assertEquals(expectedPost, actualPost);
+        assertNull(actualPost);
     }
 }
