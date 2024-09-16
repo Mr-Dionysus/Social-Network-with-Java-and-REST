@@ -1,4 +1,4 @@
-package org.example.connection;
+package org.example.db;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;

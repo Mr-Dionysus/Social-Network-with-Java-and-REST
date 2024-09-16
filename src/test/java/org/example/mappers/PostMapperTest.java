@@ -1,5 +1,6 @@
 package org.example.mappers;
 
+import org.example.builder.GenericBuilder;
 import org.example.dtos.PostDTO;
 import org.example.entities.Post;
 import org.example.entities.User;
@@ -23,11 +24,12 @@ class PostMapperTest {
         String expectedPassword = "password";
         User expectedUser = new User(expectedUserId, expectedLogin, expectedPassword);
 
-        Post beforeDTOpost = new Post();
-        beforeDTOpost.setText(expectedText);
-        beforeDTOpost.setLikes(expectedLikes);
-        beforeDTOpost.setDislikes(expectedDislikes);
-        beforeDTOpost.setAuthor(expectedUser);
+        Post beforeDTOpost = GenericBuilder.of(Post::new)
+                                           .with(Post::setText, expectedText)
+                                           .with(Post::setLikes, expectedLikes)
+                                           .with(Post::setDislikes, expectedDislikes)
+                                           .with(Post::setAuthor, expectedUser)
+                                           .build();
 
         PostDTO expectedPost = new PostDTO();
         expectedPost.setText(expectedText);

@@ -1,6 +1,6 @@
 package org.example.repositories;
 
-import org.example.connection.TestSQL;
+import org.example.db.TestSQL;
 import org.example.db.DataSource;
 import org.example.db.UsersSQL;
 import org.example.entities.Post;

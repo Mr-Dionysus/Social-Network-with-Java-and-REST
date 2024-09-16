@@ -1,6 +1,6 @@
 package org.example.repositories;
 
-import org.example.connection.TestSQL;
+import org.example.db.TestSQL;
 import org.example.db.DataSource;
 import org.example.entities.Role;
 import org.example.entities.User;
@@ -14,7 +14,6 @@ import org.testcontainers.containers.MySQLContainer;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;

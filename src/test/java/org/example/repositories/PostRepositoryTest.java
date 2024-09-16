@@ -1,6 +1,7 @@
 package org.example.repositories;
 
-import org.example.connection.TestSQL;
+import org.example.builder.GenericBuilder;
+import org.example.db.TestSQL;
 import org.example.db.DataSource;
 import org.example.db.PostsSQL;
 import org.example.db.UsersSQL;
@@ -143,6 +144,7 @@ class PostRepositoryTest {
         String expectedText = "test updated test";
         int expectedLikes = 0;
         int expectedDislikes = 0;
+//        Post testPost2 = GenericBuilder.of(Post)
         Post testPost2 = new Post(2, expectedText, null);
         expectedUser.setPosts(new ArrayList<>(Arrays.asList(testPost1, testPost2)));
         Post expectedPost = new Post(2, expectedText, expectedLikes, expectedDislikes, expectedUser);

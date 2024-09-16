@@ -54,7 +54,11 @@ public class PostRepository {
                     UserRepository userRepository = new UserRepository(dataSource);
                     UserServiceImpl userService = new UserServiceImpl(userRepository);
                     User userOfPost = userService.getUserById(user_id);
-                    Post foundPost = new Post(postId, text, userOfPost);
+                    Post foundPost = GenericBuilder.of(Post::new)
+                                                   .with(Post::setId, postId)
+                                                   .with(Post::setText, text)
+                                                   .with(Post::setAuthor, userOfPost)
+                                                   .build();
 
                     return foundPost;
                 }
@@ -80,11 +84,13 @@ public class PostRepository {
                     UserRepository userRepository = new UserRepository(dataSource);
                     UserServiceImpl userService = new UserServiceImpl(userRepository);
                     User userOfPost = userService.getUserById(userId);
-                    Post foundPost = GenericBuilder.of(Post::new).with(Post::setId,
-                            postId).with(Post::setText, text).with(Post::setLikes,
-                            likes).with(Post::setDislikes, dislikes).with(Post::setAuthor
-                    , userOfPost).build();
-//                    Post foundPost = new Post(postId, text, likes, dislikes, userOfPost);
+                    Post foundPost = GenericBuilder.of(Post::new)
+                                                   .with(Post::setId, postId)
+                                                   .with(Post::setText, text)
+                                                   .with(Post::setLikes, likes)
+                                                   .with(Post::setDislikes, dislikes)
+                                                   .with(Post::setAuthor, userOfPost)
+                                                   .build();
 
                     return foundPost;
                 }
