@@ -96,7 +96,8 @@ class UserServletTest {
 
         userServlet.doGet(req, resp);
 
-        verify(resp).setContentType("text/html");
+        verify(resp).setContentType("application/json");
+        verify(resp).setCharacterEncoding("UTF-8");
         verify(resp).setStatus(HttpServletResponse.SC_OK);
         verify(out).println(gson.toJson(mockUserDTO));
     }
@@ -147,7 +148,8 @@ class UserServletTest {
 
         userServlet.doDelete(req, resp);
 
-        verify(resp).setContentType("text/html");
+        verify(resp).setContentType("application/json");
+        verify(resp).setCharacterEncoding("UTF-8");
         verify(resp).setStatus(HttpServletResponse.SC_OK);
     }
 }
