@@ -1,11 +1,11 @@
 package org.example.repositories;
 
+import org.example.builder.GenericBuilder;
 import org.example.db.DataSource;
 import org.example.db.PostsSQL;
 import org.example.entities.Post;
 import org.example.entities.User;
 import org.example.exceptions.PostNotFoundException;
-import org.example.exceptions.UserNotFoundException;
 import org.example.services.UserServiceImpl;
 
 import java.sql.Connection;
@@ -80,7 +80,11 @@ public class PostRepository {
                     UserRepository userRepository = new UserRepository(dataSource);
                     UserServiceImpl userService = new UserServiceImpl(userRepository);
                     User userOfPost = userService.getUserById(userId);
-                    Post foundPost = new Post(postId, text, likes, dislikes, userOfPost);
+                    Post foundPost = GenericBuilder.of(Post::new).with(Post::setId,
+                            postId).with(Post::setText, text).with(Post::setLikes,
+                            likes).with(Post::setDislikes, dislikes).with(Post::setAuthor
+                    , userOfPost).build();
+//                    Post foundPost = new Post(postId, text, likes, dislikes, userOfPost);
 
                     return foundPost;
                 }

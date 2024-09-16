@@ -117,7 +117,7 @@ class PostRepositoryTest {
         Post testPost = this.createExpectedPost(1);
         expectedUser.setPosts(new ArrayList<>(List.of(testPost)));
         Post expectedPost = this.createExpectedPost(1);
-        expectedPost.setUser(expectedUser);
+        expectedPost.setAuthor(expectedUser);
 
         Post actualPost = postRepository.getPostById(1);
 

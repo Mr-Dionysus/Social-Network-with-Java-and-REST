@@ -8,7 +8,7 @@ public class PostDTO {
     private String text;
     private int likes;
     private int dislikes;
-    private User user;
+    private User author;
 
     public PostDTO() {
     }
@@ -17,13 +17,6 @@ public class PostDTO {
         this.text = text;
         this.likes = likes;
         this.dislikes = dislikes;
-    }
-
-    public PostDTO(String text, int likes, int dislikes, User user) {
-        this.text = text;
-        this.likes = likes;
-        this.dislikes = dislikes;
-        this.user = user;
     }
 
     public String getText() {
@@ -50,17 +43,17 @@ public class PostDTO {
         this.dislikes = dislikes;
     }
 
-    public User getUser() {
-        return user;
+    public User getAuthor() {
+        return author;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setAuthor(User author) {
+        this.author = author;
     }
 
     @Override
     public String toString() {
-        return "Post{" + ", text='" + text + '\'' + ", likes=" + likes + ", dislikes=" + dislikes + ", user=" + user + '}';
+        return "Post{" + ", text='" + text + '\'' + ", likes=" + likes + ", dislikes=" + dislikes + ", author=" + author + '}';
     }
 
     @Override
@@ -70,11 +63,11 @@ public class PostDTO {
         if (o == null || getClass() != o.getClass())
             return false;
         PostDTO postDTO = (PostDTO) o;
-        return likes == postDTO.likes && dislikes == postDTO.dislikes && Objects.equals(text, postDTO.text) && Objects.equals(user, postDTO.user);
+        return likes == postDTO.likes && dislikes == postDTO.dislikes && Objects.equals(text, postDTO.text) && Objects.equals(author, postDTO.author);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(text, likes, dislikes, user);
+        return Objects.hash(text, likes, dislikes, author);
     }
 }

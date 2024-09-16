@@ -7,6 +7,4 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface PostMapper {
     PostDTO postToPostDTO(Post post);
-
-    Post postDTOtoPost(PostDTO postDTO);
 }

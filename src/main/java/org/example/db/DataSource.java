@@ -12,17 +12,16 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 public class DataSource {
-    private static HikariConfig config = new HikariConfig();
+    private static final HikariConfig config = new HikariConfig();
     private static HikariDataSource ds;
 
     private void initializeDataSource(String propertiesPath) {
         String dbUser;
         String dbPassword;
         String jdbcUrl;
-        System.out.println(propertiesPath);
 
         try (InputStream inputStream = DataSource.class.getClassLoader()
-                                                       .getResourceAsStream(propertiesPath);
+                                                       .getResourceAsStream(propertiesPath)
         ) {
             Properties props = new Properties();
             props.load(inputStream);

@@ -7,28 +7,15 @@ public class Post {
     private String text;
     private int likes;
     private int dislikes;
-    private User user;
+    private User author;
 
     public Post() {
     }
 
-    public Post(int id, String text, User user) {
+    public Post(int id, String text, User author) {
         this.id = id;
         this.text = text;
-        this.user = user;
-    }
-
-    public Post(String text, int likes, int dislikes) {
-        this.text = text;
-        this.likes = likes;
-        this.dislikes = dislikes;
-    }
-
-    public Post(String text, int likes, int dislikes, User user) {
-        this.text = text;
-        this.likes = likes;
-        this.dislikes = dislikes;
-        this.user = user;
+        this.author = author;
     }
 
     public Post(int id, String text, int likes, int dislikes) {
@@ -38,12 +25,12 @@ public class Post {
         this.dislikes = dislikes;
     }
 
-    public Post(int id, String text, int likes, int dislikes, User user) {
+    public Post(int id, String text, int likes, int dislikes, User author) {
         this.id = id;
         this.text = text;
         this.likes = likes;
         this.dislikes = dislikes;
-        this.user = user;
+        this.author = author;
     }
 
     public int getId() {
@@ -78,17 +65,17 @@ public class Post {
         this.dislikes = dislikes;
     }
 
-    public User getUser() {
-        return user;
+    public User getAuthor() {
+        return author;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setAuthor(User author) {
+        this.author = author;
     }
 
     @Override
     public String toString() {
-        return "Post{" + "id=" + id + ", text='" + text + '\'' + ", likes=" + likes + ", dislikes=" + dislikes + ", user=" + user + '}';
+        return "Post{" + "id=" + id + ", text='" + text + '\'' + ", likes=" + likes + ", dislikes" + "=" + dislikes + ", author=" + author + '}';
     }
 
     @Override
@@ -98,11 +85,11 @@ public class Post {
         if (o == null || getClass() != o.getClass())
             return false;
         Post post = (Post) o;
-        return id == post.id && likes == post.likes && dislikes == post.dislikes && Objects.equals(text, post.text) && Objects.equals(user, post.user);
+        return id == post.id && likes == post.likes && dislikes == post.dislikes && Objects.equals(text, post.text) && Objects.equals(author, post.author);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, text, likes, dislikes, user);
+        return Objects.hash(id, text, likes, dislikes, author);
     }
 }

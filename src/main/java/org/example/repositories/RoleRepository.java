@@ -7,7 +7,6 @@ import org.example.entities.Role;
 import org.example.entities.User;
 import org.example.exceptions.PostNotFoundException;
 import org.example.exceptions.RoleNotFoundException;
-import org.example.exceptions.UserNotFoundException;
 import org.example.services.RoleServiceImpl;
 import org.example.services.UserServiceImpl;
 
@@ -182,27 +181,4 @@ public class RoleRepository {
             prepStmtInsertUserIdAndRoleId.executeUpdate();
         }
     }
-
-    //    public ArrayList<Role> getRolesForUser(int userId) throws SQLException {
-    //        try (Connection connection = dataSource.connect();
-    //             PreparedStatement prepStmtSelectAllRolesByUserId = connection.prepareStatement
-    //             (UsersRolesSQL.SELECT_ALL_ROLES_BY_USER_ID.getQuery())
-    //        ) {
-    //            prepStmtSelectAllRolesByUserId.setInt(1, userId);
-    //
-    //            try (ResultSet rsAllFoundRoles = prepStmtSelectAllRolesByUserId.executeQuery()) {
-    //                ArrayList<Role> roles = new ArrayList<>();
-    //
-    //                while (rsAllFoundRoles.next()) {
-    //                    int roleId = rsAllFoundRoles.getInt("id");
-    //                    String roleName = rsAllFoundRoles.getString("role");
-    //                    String description = rsAllFoundRoles.getString("description");
-    //                    Role foundRole = new Role(roleId, roleName, description);
-    //                    roles.add(foundRole);
-    //                }
-    //
-    //                return roles;
-    //            }
-    //        }
-    //    }
 }

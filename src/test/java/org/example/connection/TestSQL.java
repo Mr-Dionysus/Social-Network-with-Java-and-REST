@@ -2,6 +2,7 @@ package org.example.connection;
 
 import org.example.db.DataSource;
 import org.example.db.TablesSQL;
+import org.example.entities.User;
 import org.example.repositories.PostRepository;
 import org.example.repositories.RoleRepository;
 import org.example.repositories.UserRepository;
