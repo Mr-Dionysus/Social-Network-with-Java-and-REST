@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class UserRepositoryTest {
     private static MySQLContainer<?> mySQLcontainer;
     private static DataSource dataSource;
-    public UserRepository userRepository = new UserRepository(dataSource);
+    public final UserRepository userRepository = new UserRepository(dataSource);
 
     @BeforeAll
     static void setUpContainer() throws SQLException {

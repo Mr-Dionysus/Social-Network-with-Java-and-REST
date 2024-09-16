@@ -14,7 +14,6 @@ import org.mockito.MockitoAnnotations;
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.*;
 
 class PostServiceImplTest {

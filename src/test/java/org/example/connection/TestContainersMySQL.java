@@ -14,7 +14,7 @@ import java.sql.Statement;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class TestcontainersMySQL {
+class TestContainersMySQL {
     private static final MySQLContainer<?> SELF_MY_SQL_CONTAINER = new MySQLContainer<>("mysql:8.0");
 
     @BeforeAll

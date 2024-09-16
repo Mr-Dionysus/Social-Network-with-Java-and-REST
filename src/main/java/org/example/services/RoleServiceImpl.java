@@ -7,7 +7,6 @@ import org.example.validators.RoleValidator;
 import org.example.validators.UserValidator;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class RoleServiceImpl implements RoleService {

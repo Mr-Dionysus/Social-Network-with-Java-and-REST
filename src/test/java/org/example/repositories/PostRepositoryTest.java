@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class PostRepositoryTest {
     private static MySQLContainer<?> mySQLcontainer;
     private static DataSource dataSource;
-    public PostRepository postRepository = new PostRepository(dataSource);
+    public final PostRepository postRepository = new PostRepository(dataSource);
 
     @BeforeAll
     static void setUpContainer() throws SQLException {

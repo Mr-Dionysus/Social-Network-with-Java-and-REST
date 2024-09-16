@@ -3,7 +3,6 @@ package org.example.validators;
 import org.example.entities.Role;
 import org.example.exceptions.RoleNotFoundException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class RoleValidator {

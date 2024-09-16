@@ -14,7 +14,6 @@ import org.testcontainers.containers.MySQLContainer;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class RoleRepositoryTest {
     private static MySQLContainer<?> mySQLcontainer;
     private static DataSource dataSource;
-    public RoleRepository roleRepository = new RoleRepository(dataSource);
+    public final RoleRepository roleRepository = new RoleRepository(dataSource);
 
     @BeforeAll
     static void setUpContainer() throws SQLException {
