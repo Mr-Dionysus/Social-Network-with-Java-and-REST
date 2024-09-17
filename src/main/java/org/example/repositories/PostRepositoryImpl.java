@@ -5,6 +5,7 @@ import org.example.db.PostsSQL;
 import org.example.entities.Post;
 import org.example.entities.User;
 import org.example.exceptions.PostNotFoundException;
+import org.example.services.UserService;
 import org.example.services.UserServiceImpl;
 
 import java.sql.Connection;
@@ -51,7 +52,7 @@ public class PostRepositoryImpl implements PostRepository {
                     int postId = rsFoundPostId.getInt("id");
 
                     UserRepository userRepository = new UserRepositoryImpl(dataSource);
-                    UserServiceImpl userService = new UserServiceImpl(userRepository);
+                    UserService userService = new UserServiceImpl(userRepository);
                     User userOfPost = userService.getUserById(user_id);
                     Post foundPost = new Post(postId, text, userOfPost);
 
@@ -77,7 +78,7 @@ public class PostRepositoryImpl implements PostRepository {
                     int userId = rsFoundPost.getInt("user_id");
 
                     UserRepository userRepository = new UserRepositoryImpl(dataSource);
-                    UserServiceImpl userService = new UserServiceImpl(userRepository);
+                    UserService userService = new UserServiceImpl(userRepository);
                     User userOfPost = userService.getUserById(userId);
                     Post foundPost = new Post(postId, text, likes, dislikes, userOfPost);
 

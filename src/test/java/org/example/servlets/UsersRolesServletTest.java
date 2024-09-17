@@ -7,7 +7,7 @@ import org.example.dtos.RoleDTO;
 import org.example.entities.Role;
 import org.example.entities.User;
 import org.example.mappers.RoleMapper;
-import org.example.services.RoleServiceImpl;
+import org.example.services.RoleService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,7 +29,7 @@ class UsersRolesServletTest {
     private HttpServletResponse resp;
 
     @Mock
-    private RoleServiceImpl roleService;
+    private RoleService roleService;
 
     @Mock
     private RoleMapper roleMapper;

@@ -11,6 +11,7 @@ import org.example.dtos.RoleDTO;
 import org.example.entities.Role;
 import org.example.mappers.RoleMapper;
 import org.example.mappers.RoleMapperImpl;
+import org.example.services.RoleService;
 import org.example.services.RoleServiceImpl;
 
 import java.io.IOException;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 
 @WebServlet(name = "RoleServlet", urlPatterns = "/roles/*")
 public class RoleServlet extends HttpServlet {
-    private final RoleServiceImpl roleService;
+    private final RoleService roleService;
     private final RoleMapper roleMapper;
 
     public RoleServlet() {
@@ -27,7 +28,7 @@ public class RoleServlet extends HttpServlet {
         this.roleMapper = new RoleMapperImpl();
     }
 
-    public RoleServlet(RoleServiceImpl roleService, RoleMapper roleMapper) {
+    public RoleServlet(RoleService roleService, RoleMapper roleMapper) {
         this.roleService = roleService;
         this.roleMapper = roleMapper;
     }

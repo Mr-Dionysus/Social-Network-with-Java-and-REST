@@ -7,7 +7,7 @@ import org.example.dtos.UserCredentialsDTO;
 import org.example.dtos.UserDTO;
 import org.example.entities.User;
 import org.example.mappers.UserMapper;
-import org.example.services.UserServiceImpl;
+import org.example.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,7 +27,7 @@ class UserServletTest {
     private HttpServletResponse resp;
 
     @Mock
-    private UserServiceImpl userService;
+    private UserService userService;
 
     @Mock
     private UserMapper userMapper;

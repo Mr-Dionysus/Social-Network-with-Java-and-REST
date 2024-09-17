@@ -6,7 +6,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.example.dtos.PostDTO;
 import org.example.entities.Post;
 import org.example.mappers.PostMapper;
-import org.example.services.PostServiceImpl;
+import org.example.services.PostService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ class PostServletTest {
     private HttpServletResponse resp;
 
     @Mock
-    private PostServiceImpl postService;
+    private PostService postService;
 
     @Mock
     private PostMapper postMapper;

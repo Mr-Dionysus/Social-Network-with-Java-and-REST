@@ -4,7 +4,6 @@ import org.example.entities.Role;
 import org.example.entities.User;
 import org.example.exceptions.RoleNotFoundException;
 import org.example.repositories.RoleRepository;
-import org.example.repositories.RoleRepositoryImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

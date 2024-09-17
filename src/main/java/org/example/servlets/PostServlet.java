@@ -11,6 +11,7 @@ import org.example.dtos.PostDTO;
 import org.example.entities.Post;
 import org.example.mappers.PostMapper;
 import org.example.mappers.PostMapperImpl;
+import org.example.services.PostService;
 import org.example.services.PostServiceImpl;
 
 import java.io.IOException;
@@ -18,7 +19,7 @@ import java.io.PrintWriter;
 
 @WebServlet(name = "PostServlet", urlPatterns = "/users/posts/*")
 public class PostServlet extends HttpServlet {
-    private final PostServiceImpl postService;
+    private final PostService postService;
     private final PostMapper postMapper;
 
     public PostServlet() {
@@ -26,7 +27,7 @@ public class PostServlet extends HttpServlet {
         this.postMapper = new PostMapperImpl();
     }
 
-    public PostServlet(PostServiceImpl postService, PostMapper postMapper) {
+    public PostServlet(PostService postService, PostMapper postMapper) {
         this.postService = postService;
         this.postMapper = postMapper;
     }

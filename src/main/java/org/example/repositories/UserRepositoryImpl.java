@@ -8,7 +8,9 @@ import org.example.entities.Post;
 import org.example.entities.Role;
 import org.example.entities.User;
 import org.example.exceptions.UserNotFoundException;
+import org.example.services.PostService;
 import org.example.services.PostServiceImpl;
+import org.example.services.RoleService;
 import org.example.services.RoleServiceImpl;
 
 import java.sql.Connection;
@@ -100,7 +102,7 @@ public class UserRepositoryImpl implements UserRepository {
                 while (rsFoundAllRoleIds.next()) {
                     int roleId = rsFoundAllRoleIds.getInt("role_id");
                     RoleRepository roleRepository = new RoleRepositoryImpl(dataSource);
-                    RoleServiceImpl roleService = new RoleServiceImpl(roleRepository);
+                    RoleService roleService = new RoleServiceImpl(roleRepository);
                     Role foundRole = roleService.getRoleByIdWithoutItsUsers(roleId);
                     listFoundRoles.add(foundRole);
                 }
@@ -116,7 +118,7 @@ public class UserRepositoryImpl implements UserRepository {
 
             try (ResultSet rsFoundAllPostIds = prepStmtSelectPostIdByUserId.executeQuery()) {
                 PostRepository postRepositoryImpl = new PostRepositoryImpl(dataSource);
-                PostServiceImpl postService = new PostServiceImpl(postRepositoryImpl);
+                PostService postService = new PostServiceImpl(postRepositoryImpl);
                 ArrayList<Post> listFoundPosts = new ArrayList<>();
 
                 while (rsFoundAllPostIds.next()) {

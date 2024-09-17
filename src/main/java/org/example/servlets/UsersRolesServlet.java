@@ -9,6 +9,7 @@ import org.example.dtos.RoleDTO;
 import org.example.entities.Role;
 import org.example.mappers.RoleMapper;
 import org.example.mappers.RoleMapperImpl;
+import org.example.services.RoleService;
 import org.example.services.RoleServiceImpl;
 
 import java.io.IOException;
@@ -16,7 +17,7 @@ import java.io.PrintWriter;
 
 @WebServlet(name = "UsersRolesServlet", urlPatterns = "/roles/users/*")
 public class UsersRolesServlet extends HttpServlet {
-    private final RoleServiceImpl roleService;
+    private final RoleService roleService;
     private final RoleMapper roleMapper;
 
     public UsersRolesServlet() {
@@ -24,7 +25,7 @@ public class UsersRolesServlet extends HttpServlet {
         this.roleMapper = new RoleMapperImpl();
     }
 
-    public UsersRolesServlet(RoleServiceImpl roleService, RoleMapper roleMapper) {
+    public UsersRolesServlet(RoleService roleService, RoleMapper roleMapper) {
         this.roleService = roleService;
         this.roleMapper = roleMapper;
     }

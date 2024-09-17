@@ -12,6 +12,7 @@ import org.example.dtos.UserDTO;
 import org.example.entities.User;
 import org.example.mappers.UserMapper;
 import org.example.mappers.UserMapperImpl;
+import org.example.services.UserService;
 import org.example.services.UserServiceImpl;
 
 import java.io.IOException;
@@ -19,7 +20,7 @@ import java.io.PrintWriter;
 
 @WebServlet(name = "UserServlet", urlPatterns = "/users/*")
 public class UserServlet extends HttpServlet {
-    private final UserServiceImpl userService;
+    private final UserService userService;
     private final UserMapper userMapper;
 
     public UserServlet() {
@@ -27,7 +28,7 @@ public class UserServlet extends HttpServlet {
         this.userMapper = new UserMapperImpl();
     }
 
-    public UserServlet(UserServiceImpl userService, UserMapper userMapper) {
+    public UserServlet(UserService userService, UserMapper userMapper) {
         this.userService = userService;
         this.userMapper = userMapper;
     }
