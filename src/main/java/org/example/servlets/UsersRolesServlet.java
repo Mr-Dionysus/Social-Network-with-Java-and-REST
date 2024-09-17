@@ -9,7 +9,6 @@ import org.example.dtos.RoleDTO;
 import org.example.entities.Role;
 import org.example.mappers.RoleMapper;
 import org.example.mappers.RoleMapperImpl;
-import org.example.repositories.RoleRepository;
 import org.example.services.RoleServiceImpl;
 
 import java.io.IOException;

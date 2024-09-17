@@ -12,7 +12,6 @@ import org.example.dtos.UserDTO;
 import org.example.entities.User;
 import org.example.mappers.UserMapper;
 import org.example.mappers.UserMapperImpl;
-import org.example.repositories.UserRepository;
 import org.example.services.UserServiceImpl;
 
 import java.io.IOException;

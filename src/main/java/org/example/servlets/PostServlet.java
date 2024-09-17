@@ -11,7 +11,6 @@ import org.example.dtos.PostDTO;
 import org.example.entities.Post;
 import org.example.mappers.PostMapper;
 import org.example.mappers.PostMapperImpl;
-import org.example.repositories.PostRepository;
 import org.example.services.PostServiceImpl;
 
 import java.io.IOException;
