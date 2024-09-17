@@ -17,6 +17,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.Mockito.*;
 
@@ -99,6 +101,51 @@ class RoleServletTest {
         verify(resp).setCharacterEncoding("UTF-8");
         verify(resp).setStatus(HttpServletResponse.SC_OK);
         verify(out).println(gson.toJson(mockRoleDTO));
+    }
+
+    @Test
+    @DisplayName("Get all Roles")
+    void doGetAllRoles() throws IOException {
+        int roleId = 1;
+        String roleName1 = "admin";
+        String description1 = "do stuff";
+        Role mockRole1 = new Role(roleId, roleName1, description1);
+
+        int roleId2 = 2;
+        String roleName2 = "user";
+        String description2 = "use stuff";
+        Role mockRole2 = new Role(roleId2, roleName2, description2);
+
+        RoleDTO mockRoleDTO1 = new RoleDTO();
+        mockRoleDTO1.setRoleName(roleName1);
+        mockRoleDTO1.setDescription(description1);
+
+        RoleDTO mockRoleDTO2 = new RoleDTO();
+        mockRoleDTO2.setRoleName(roleName2);
+        mockRoleDTO2.setDescription(description2);
+
+        List<Role> listRoles = new ArrayList<>();
+        listRoles.add(mockRole1);
+        listRoles.add(mockRole2);
+
+        when(roleService.getAllRoles()).thenReturn(listRoles);
+        when(roleMapper.roleToRoleDTO(mockRole1)).thenReturn(mockRoleDTO1);
+        when(roleMapper.roleToRoleDTO(mockRole2)).thenReturn(mockRoleDTO2);
+
+        List<RoleDTO> listRoleDTOs = new ArrayList<>();
+        listRoleDTOs.add(mockRoleDTO1);
+        listRoleDTOs.add(mockRoleDTO2);
+
+        when(req.getReader()).thenReturn(new BufferedReader(new StringReader(gson.toJson(listRoleDTOs))));
+        PrintWriter out = mock(PrintWriter.class);
+        when(resp.getWriter()).thenReturn(out);
+
+        roleServlet.doGet(req, resp);
+
+        verify(resp).setContentType("application/json");
+        verify(resp).setCharacterEncoding("UTF-8");
+        verify(resp).setStatus(HttpServletResponse.SC_OK);
+        verify(out).println(gson.toJson(listRoleDTOs));
     }
 
     @Test

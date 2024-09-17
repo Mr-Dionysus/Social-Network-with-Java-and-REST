@@ -16,6 +16,10 @@ public class RoleServiceImpl implements RoleService {
         this.roleRepository = roleRepository;
     }
 
+    public static RoleServiceImpl createRoleService() {
+        return new RoleServiceImpl(new RoleRepository());
+    }
+
     @Override
     public Role createRole(String roleName, String description) {
         RoleValidator.roleName(roleName);

@@ -15,41 +15,48 @@ public class DataSource {
     private static HikariDataSource ds;
 
     private void initializeDataSource(String propertiesPath) {
-        String dbUser;
-        String dbPassword;
-        String jdbcUrl;
-
         try (InputStream inputStream = DataSource.class.getClassLoader()
                                                        .getResourceAsStream(propertiesPath)
         ) {
             Properties props = new Properties();
             props.load(inputStream);
-            dbUser = props.getProperty("dbUser");
-            dbPassword = props.getProperty("dbPassword");
-            jdbcUrl = props.getProperty("jdbcUrl");
+
+            String dbUser = props.getProperty("dbUser");
+            String dbPassword = props.getProperty("dbPassword");
+            String jdbcUrl = props.getProperty("jdbcUrl");
+            String driverClassName = props.getProperty("driverClassName");
+
+            String cachePrepStmtsName = props.getProperty("cachePrepStmtsName");
+            String cachePrepStmtsValue = props.getProperty("cachePrepStmtsValue");
+            String[] cachePrepStmts = new String[]{cachePrepStmtsName, cachePrepStmtsValue};
+
+            String prepStmtCacheSizeName = props.getProperty("prepStmtCacheSizeName");
+            String prepStmtCacheSizeValue = props.getProperty("prepStmtCacheSizeValue");
+            String[] prepStmtCacheSize = new String[]{prepStmtCacheSizeName, prepStmtCacheSizeValue};
+
+            String prepStmtCacheSqlLimitName = props.getProperty("prepStmtCacheSqlLimitName");
+            String prepStmtCacheSqlLimitValue = props.getProperty("prepStmtCacheSqlLimitValue");
+            String[] prepStmtCacheSqlLimit = new String[]{prepStmtCacheSqlLimitName, prepStmtCacheSqlLimitValue};
+
+            config.setJdbcUrl(jdbcUrl);
+            config.setDriverClassName(driverClassName);
+            config.setUsername(dbUser);
+            config.setPassword(dbPassword);
+            config.addDataSourceProperty(cachePrepStmts[0], cachePrepStmts[1]);
+            config.addDataSourceProperty(prepStmtCacheSize[0], prepStmtCacheSize[1]);
+            config.addDataSourceProperty(prepStmtCacheSqlLimit[0], prepStmtCacheSqlLimit[1]);
+            ds = new HikariDataSource(config);
         } catch (FileNotFoundException e) {
             throw new RuntimeException("File with login and password isn't found", e);
         } catch (IOException e) {
             throw new RuntimeException("Error loading database properties", e);
         }
-
-        config.setJdbcUrl(jdbcUrl);
-        config.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        config.setUsername(dbUser);
-        config.setPassword(dbPassword);
-        config.addDataSourceProperty("cachePrepStmts", "true");
-        config.addDataSourceProperty("prepStmtCacheSize", "250");
-        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
-        ds = new HikariDataSource(config);
     }
 
     public DataSource(String jdbcURL, String username, String password) {
         config.setJdbcUrl(jdbcURL);
         config.setUsername(username);
         config.setPassword(password);
-        config.addDataSourceProperty("cachePrepStmts", "true");
-        config.addDataSourceProperty("prepStmtCacheSize", "250");
-        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
         ds = new HikariDataSource(config);
     }
 

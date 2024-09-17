@@ -14,6 +14,10 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
     }
 
+    public static UserServiceImpl createUserService() {
+        return new UserServiceImpl(new UserRepository());
+    }
+
     @Override
     public User createUser(String login, String password) {
         UserValidator.login(login);

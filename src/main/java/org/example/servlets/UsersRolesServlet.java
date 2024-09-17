@@ -21,12 +21,8 @@ public class UsersRolesServlet extends HttpServlet {
     private final RoleMapper roleMapper;
 
     public UsersRolesServlet() {
-        this.roleService = createRoleService();
+        this.roleService = RoleServiceImpl.createRoleService();
         this.roleMapper = new RoleMapperImpl();
-    }
-
-    protected RoleServiceImpl createRoleService() {
-        return new RoleServiceImpl(new RoleRepository());
     }
 
     public UsersRolesServlet(RoleServiceImpl roleService, RoleMapper roleMapper) {
@@ -55,7 +51,7 @@ public class UsersRolesServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_OK);
         } catch (NumberFormatException | IOException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 }

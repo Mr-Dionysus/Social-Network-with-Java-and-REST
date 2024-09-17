@@ -15,6 +15,10 @@ public class PostServiceImpl implements PostService {
         this.postRepository = postRepository;
     }
 
+    public static PostServiceImpl createPostService() {
+        return new PostServiceImpl(new PostRepository());
+    }
+
     @Override
     public Post createPost(String text, int userId) {
         PostValidator.text(text);

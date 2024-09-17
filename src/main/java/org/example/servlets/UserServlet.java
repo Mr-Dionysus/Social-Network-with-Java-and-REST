@@ -24,12 +24,8 @@ public class UserServlet extends HttpServlet {
     private final UserMapper userMapper;
 
     public UserServlet() {
-        this.userService = createUserService();
+        this.userService = UserServiceImpl.createUserService();
         this.userMapper = new UserMapperImpl();
-    }
-
-    protected UserServiceImpl createUserService() {
-        return new UserServiceImpl(new UserRepository());
     }
 
     public UserServlet(UserServiceImpl userService, UserMapper userMapper) {
@@ -54,7 +50,7 @@ public class UserServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_CREATED);
         } catch (IOException | JsonSyntaxException | JsonIOException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -77,7 +73,7 @@ public class UserServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_OK);
         } catch (NumberFormatException | IOException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -100,7 +96,7 @@ public class UserServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_OK);
         } catch (IOException | JsonSyntaxException | JsonIOException | NumberFormatException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -117,7 +113,7 @@ public class UserServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_OK);
         } catch (NumberFormatException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 }

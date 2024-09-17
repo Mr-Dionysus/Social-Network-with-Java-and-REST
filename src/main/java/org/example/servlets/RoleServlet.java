@@ -11,7 +11,6 @@ import org.example.dtos.RoleDTO;
 import org.example.entities.Role;
 import org.example.mappers.RoleMapper;
 import org.example.mappers.RoleMapperImpl;
-import org.example.repositories.RoleRepository;
 import org.example.services.RoleServiceImpl;
 
 import java.io.IOException;
@@ -24,12 +23,8 @@ public class RoleServlet extends HttpServlet {
     private final RoleMapper roleMapper;
 
     public RoleServlet() {
-        this.roleService = createRoleService();
+        this.roleService = RoleServiceImpl.createRoleService();
         this.roleMapper = new RoleMapperImpl();
-    }
-
-    protected RoleServiceImpl createRoleService() {
-        return new RoleServiceImpl(new RoleRepository());
     }
 
     public RoleServlet(RoleServiceImpl roleService, RoleMapper roleMapper) {
@@ -54,7 +49,7 @@ public class RoleServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_CREATED);
         } catch (IOException | JsonIOException | JsonSyntaxException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -88,7 +83,7 @@ public class RoleServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_OK);
         } catch (IOException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -105,7 +100,7 @@ public class RoleServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_OK);
         } catch (NumberFormatException | IOException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -128,7 +123,7 @@ public class RoleServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_OK);
         } catch (NumberFormatException | IOException | JsonSyntaxException | JsonIOException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -145,7 +140,7 @@ public class RoleServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_OK);
         } catch (NumberFormatException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 }

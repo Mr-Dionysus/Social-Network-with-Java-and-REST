@@ -23,12 +23,8 @@ public class PostServlet extends HttpServlet {
     private final PostMapper postMapper;
 
     public PostServlet() {
-        this.postService = createPostService();
+        this.postService = PostServiceImpl.createPostService();
         this.postMapper = new PostMapperImpl();
-    }
-
-    protected PostServiceImpl createPostService() {
-        return new PostServiceImpl(new PostRepository());
     }
 
     public PostServlet(PostServiceImpl postService, PostMapper postMapper) {
@@ -55,7 +51,7 @@ public class PostServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_CREATED);
         } catch (IOException | NumberFormatException | JsonSyntaxException | JsonIOException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -77,7 +73,7 @@ public class PostServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_OK);
         } catch (IOException | NumberFormatException | JsonSyntaxException | JsonIOException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -100,7 +96,7 @@ public class PostServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_OK);
         } catch (IOException | NumberFormatException | JsonSyntaxException | JsonIOException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -117,7 +113,7 @@ public class PostServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_OK);
         } catch (NumberFormatException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 }
