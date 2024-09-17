@@ -18,10 +18,10 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class RoleRepositoryTest {
+class RoleRepositoryImplTest {
     private static MySQLContainer<?> mySQLcontainer;
     private static DataSource dataSource;
-    public final RoleRepository roleRepository = new RoleRepository(dataSource);
+    public final RoleRepository roleRepository = new RoleRepositoryImpl(dataSource);
 
     @BeforeAll
     static void setUpContainer() throws SQLException {

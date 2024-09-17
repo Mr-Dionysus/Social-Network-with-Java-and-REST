@@ -3,6 +3,7 @@ package org.example.services;
 import org.example.entities.User;
 import org.example.exceptions.*;
 import org.example.repositories.UserRepository;
+import org.example.repositories.UserRepositoryImpl;
 import org.example.validators.UserValidator;
 
 import java.sql.SQLException;
@@ -15,7 +16,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public static UserServiceImpl createUserService() {
-        return new UserServiceImpl(new UserRepository());
+        return new UserServiceImpl(new UserRepositoryImpl());
     }
 
     @Override

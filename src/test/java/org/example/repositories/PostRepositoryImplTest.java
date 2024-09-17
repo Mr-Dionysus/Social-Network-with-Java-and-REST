@@ -23,10 +23,10 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-class PostRepositoryTest {
+class PostRepositoryImplTest {
     private static MySQLContainer<?> mySQLcontainer;
     private static DataSource dataSource;
-    public final PostRepository postRepository = new PostRepository(dataSource);
+    public final PostRepository postRepositoryImpl = new PostRepositoryImpl(dataSource);
 
     @BeforeAll
     static void setUpContainer() throws SQLException {
@@ -100,7 +100,7 @@ class PostRepositoryTest {
         int expectedDislikes = 0;
         int expectedUserId = expectedUser.getId();
 
-        Post actualPost = postRepository.createPost(expectedText, expectedUserId);
+        Post actualPost = postRepositoryImpl.createPost(expectedText, expectedUserId);
         ArrayList<Post> testListPosts = new ArrayList<>();
         testListPosts.add(expectedPost1);
         testListPosts.add(expectedPost2);
@@ -120,7 +120,7 @@ class PostRepositoryTest {
         Post expectedPost = this.createExpectedPost(1);
         expectedPost.setAuthor(expectedUser);
 
-        Post actualPost = postRepository.getPostById(1);
+        Post actualPost = postRepositoryImpl.getPostById(1);
 
         assertEquals(expectedPost, actualPost);
     }
@@ -131,7 +131,7 @@ class PostRepositoryTest {
         Post expectedPost = this.createExpectedPost(1);
         int expectedPostId = expectedPost.getId();
 
-        Post actualPost = postRepository.getPostByIdWithoutItsUser(expectedPostId);
+        Post actualPost = postRepositoryImpl.getPostByIdWithoutItsUser(expectedPostId);
 
         assertEquals(expectedPost, actualPost);
     }
@@ -148,7 +148,7 @@ class PostRepositoryTest {
         expectedUser.setPosts(new ArrayList<>(Arrays.asList(testPost1, testPost2)));
         Post expectedPost = new Post(2, expectedText, expectedLikes, expectedDislikes, expectedUser);
 
-        Post actualPost = postRepository.updatePostById(2, expectedText);
+        Post actualPost = postRepositoryImpl.updatePostById(2, expectedText);
 
         assertEquals(expectedPost, actualPost);
     }
@@ -182,7 +182,7 @@ class PostRepositoryTest {
     @Test
     @DisplayName("Delete a Post by ID")
     void deletePostById() throws SQLException {
-        postRepository.deletePostById(2);
+        postRepositoryImpl.deletePostById(2);
         Post actualPost = this.checkIfPostDeleted();
 
         assertNull(actualPost);

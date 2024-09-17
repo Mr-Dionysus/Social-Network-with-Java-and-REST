@@ -2,9 +2,7 @@ package org.example.connection;
 
 import org.example.db.DataSource;
 import org.example.db.TablesSQL;
-import org.example.repositories.PostRepository;
-import org.example.repositories.RoleRepository;
-import org.example.repositories.UserRepository;
+import org.example.repositories.*;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -22,7 +20,7 @@ public class TestSQL {
             prepStmtCreateTablePosts.executeUpdate();
             prepStmtCreateTableUsersRoles.executeUpdate();
 
-            UserRepository userRepository = new UserRepository(dataSource);
+            UserRepository userRepository = new UserRepositoryImpl(dataSource);
             String testLogin = "testLogin";
             String testPassword = "testPassword";
             userRepository.createUser(testLogin, testPassword);
@@ -31,12 +29,12 @@ public class TestSQL {
             String testPassword2 = "testPassword2";
             userRepository.createUser(testLogin2, testPassword2);
 
-            PostRepository postRepository = new PostRepository(dataSource);
+            PostRepository postRepositoryImpl = new PostRepositoryImpl(dataSource);
             String testText = "test text";
             int testUserId = 1;
-            postRepository.createPost(testText, testUserId);
+            postRepositoryImpl.createPost(testText, testUserId);
 
-            RoleRepository roleRepository = new RoleRepository(dataSource);
+            RoleRepository roleRepository = new RoleRepositoryImpl(dataSource);
             String expectedRoleName = "admin";
             String expectedDescription = "manage stuff";
             roleRepository.createRole(expectedRoleName, expectedDescription);

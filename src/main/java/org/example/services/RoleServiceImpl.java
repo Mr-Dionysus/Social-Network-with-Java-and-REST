@@ -3,6 +3,7 @@ package org.example.services;
 import org.example.entities.Role;
 import org.example.exceptions.*;
 import org.example.repositories.RoleRepository;
+import org.example.repositories.RoleRepositoryImpl;
 import org.example.validators.RoleValidator;
 import org.example.validators.UserValidator;
 
@@ -17,7 +18,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     public static RoleServiceImpl createRoleService() {
-        return new RoleServiceImpl(new RoleRepository());
+        return new RoleServiceImpl(new RoleRepositoryImpl());
     }
 
     @Override

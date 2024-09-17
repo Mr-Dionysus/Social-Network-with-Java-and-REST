@@ -3,20 +3,21 @@ package org.example.services;
 import org.example.entities.Post;
 import org.example.exceptions.*;
 import org.example.repositories.PostRepository;
+import org.example.repositories.PostRepositoryImpl;
 import org.example.validators.PostValidator;
 import org.example.validators.UserValidator;
 
 import java.sql.SQLException;
 
 public class PostServiceImpl implements PostService {
-    private final PostRepository postRepository;
+    private final PostRepository postRepositoryImpl;
 
-    public PostServiceImpl(PostRepository postRepository) {
-        this.postRepository = postRepository;
+    public PostServiceImpl(PostRepository postRepositoryImpl) {
+        this.postRepositoryImpl = postRepositoryImpl;
     }
 
     public static PostServiceImpl createPostService() {
-        return new PostServiceImpl(new PostRepository());
+        return new PostServiceImpl(new PostRepositoryImpl());
     }
 
     @Override
@@ -25,7 +26,7 @@ public class PostServiceImpl implements PostService {
         UserValidator.userId(userId);
 
         try {
-            Post createdPost = postRepository.createPost(text, userId);
+            Post createdPost = postRepositoryImpl.createPost(text, userId);
             PostValidator.createdPost(createdPost, text);
 
             return createdPost;
@@ -39,7 +40,7 @@ public class PostServiceImpl implements PostService {
         PostValidator.postId(postId);
 
         try {
-            Post foundPost = postRepository.getPostById(postId);
+            Post foundPost = postRepositoryImpl.getPostById(postId);
             PostValidator.foundPost(foundPost, postId);
 
             return foundPost;
@@ -53,7 +54,7 @@ public class PostServiceImpl implements PostService {
         PostValidator.postId(postId);
 
         try {
-            Post foundPost = postRepository.getPostByIdWithoutItsUser(postId);
+            Post foundPost = postRepositoryImpl.getPostByIdWithoutItsUser(postId);
             PostValidator.foundPost(foundPost, postId);
 
             return foundPost;
@@ -68,7 +69,7 @@ public class PostServiceImpl implements PostService {
         PostValidator.text(newText);
 
         try {
-            Post updatedPost = postRepository.updatePostById(postId, newText);
+            Post updatedPost = postRepositoryImpl.updatePostById(postId, newText);
             PostValidator.foundPost(updatedPost, postId);
 
             return updatedPost;
@@ -86,7 +87,7 @@ public class PostServiceImpl implements PostService {
         }
 
         try {
-            postRepository.deletePostById(postId);
+            postRepositoryImpl.deletePostById(postId);
         } catch (SQLException e) {
             throw new DeletePostException("Error while deleting a post", e);
         }

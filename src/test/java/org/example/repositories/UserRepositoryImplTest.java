@@ -20,10 +20,10 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class UserRepositoryTest {
+class UserRepositoryImplTest {
     private static MySQLContainer<?> mySQLcontainer;
     private static DataSource dataSource;
-    public final UserRepository userRepository = new UserRepository(dataSource);
+    public final UserRepository userRepository = new UserRepositoryImpl(dataSource);
 
     @BeforeAll
     static void setUpContainer() throws SQLException {

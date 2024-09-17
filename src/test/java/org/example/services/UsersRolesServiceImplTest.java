@@ -3,6 +3,7 @@ package org.example.services;
 import org.example.entities.Role;
 import org.example.entities.User;
 import org.example.repositories.RoleRepository;
+import org.example.repositories.RoleRepositoryImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,7 @@ import static org.mockito.Mockito.*;
 
 class UsersRolesServiceImplTest {
     @Mock
-    private RoleRepository roleRepository;
+    private RoleRepository roleRepositoryImpl;
 
     @InjectMocks
     private RoleServiceImpl roleService;
@@ -53,6 +54,6 @@ class UsersRolesServiceImplTest {
         assertNotNull(mockRole);
         assertNotNull(mockUser);
 
-        verify(roleRepository, times(1)).assignRoleToUser(userId, roleId);
+        verify(roleRepositoryImpl, times(1)).assignRoleToUser(userId, roleId);
     }
 }

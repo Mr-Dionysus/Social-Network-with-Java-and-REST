@@ -4,6 +4,7 @@ import org.example.entities.Role;
 import org.example.entities.User;
 import org.example.exceptions.RoleNotFoundException;
 import org.example.repositories.RoleRepository;
+import org.example.repositories.RoleRepositoryImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,7 @@ import static org.mockito.Mockito.*;
 
 class RoleServiceImplTest {
     @Mock
-    private RoleRepository roleRepository;
+    private RoleRepository roleRepositoryImpl;
 
     @InjectMocks
     private RoleServiceImpl roleService;
@@ -39,14 +40,14 @@ class RoleServiceImplTest {
         String description = "manage stuff";
 
         Role mockRole = new Role(roleId, roleName, description);
-        when(roleRepository.createRole(roleName, description)).thenReturn(mockRole);
+        when(roleRepositoryImpl.createRole(roleName, description)).thenReturn(mockRole);
 
         Role actualRole = roleService.createRole(roleName, description);
 
         assertNotNull(actualRole);
         assertEquals(mockRole, actualRole);
 
-        verify(roleRepository, times(1)).createRole(roleName, description);
+        verify(roleRepositoryImpl, times(1)).createRole(roleName, description);
     }
 
     @Test
@@ -63,14 +64,14 @@ class RoleServiceImplTest {
         ArrayList<User> listUsers = new ArrayList<>(List.of(user));
 
         Role mockRole = new Role(roleId, roleName, description, listUsers);
-        when(roleRepository.getRoleById(roleId)).thenReturn(mockRole);
+        when(roleRepositoryImpl.getRoleById(roleId)).thenReturn(mockRole);
 
         Role actualRole = roleService.getRoleById(roleId);
 
         assertNotNull(actualRole);
         assertEquals(mockRole, actualRole);
 
-        verify(roleRepository, times(1)).getRoleById(roleId);
+        verify(roleRepositoryImpl, times(1)).getRoleById(roleId);
     }
 
     @Test
@@ -81,14 +82,14 @@ class RoleServiceImplTest {
         String description = "manage stuff";
 
         Role mockRole = new Role(roleId, roleName, description);
-        when(roleRepository.getRoleWithoutItsUsers(roleId)).thenReturn(mockRole);
+        when(roleRepositoryImpl.getRoleWithoutItsUsers(roleId)).thenReturn(mockRole);
 
         Role actualRole = roleService.getRoleByIdWithoutItsUsers(roleId);
 
         assertNotNull(actualRole);
         assertEquals(mockRole, actualRole);
 
-        verify(roleRepository, times(1)).getRoleWithoutItsUsers(roleId);
+        verify(roleRepositoryImpl, times(1)).getRoleWithoutItsUsers(roleId);
     }
 
     @Test
@@ -106,14 +107,14 @@ class RoleServiceImplTest {
 
         Role mockRole2 = new Role(roleId2, roleName2, description2);
         List<Role> mockListRoles = new ArrayList<>(Arrays.asList(mockRole1, mockRole2));
-        when(roleRepository.getAllRoles()).thenReturn(mockListRoles);
+        when(roleRepositoryImpl.getAllRoles()).thenReturn(mockListRoles);
 
         List<Role> actualListRoles = roleService.getAllRoles();
 
         assertNotNull(actualListRoles);
         assertEquals(mockListRoles, actualListRoles);
 
-        verify(roleRepository, times(1)).getAllRoles();
+        verify(roleRepositoryImpl, times(1)).getAllRoles();
     }
 
     @Test
@@ -129,14 +130,14 @@ class RoleServiceImplTest {
         mockRole.setRoleName(newRoleName);
         mockRole.setDescription(newDescription);
 
-        when(roleRepository.updateRoleById(roleId, newRoleName, newDescription)).thenReturn(mockRole);
+        when(roleRepositoryImpl.updateRoleById(roleId, newRoleName, newDescription)).thenReturn(mockRole);
 
         Role actualRole = roleService.updateRoleById(roleId, newRoleName, newDescription);
 
         assertNotNull(actualRole);
         assertEquals(mockRole, actualRole);
 
-        verify(roleRepository, times(1)).updateRoleById(roleId, newRoleName, newDescription);
+        verify(roleRepositoryImpl, times(1)).updateRoleById(roleId, newRoleName, newDescription);
     }
 
     @Test
@@ -144,7 +145,7 @@ class RoleServiceImplTest {
     void deleteRoleById() throws SQLException {
         int roleId = 1;
         String expectedMessage = "Role with ID '1' can't be found";
-        doThrow(new RoleNotFoundException(expectedMessage)).when(roleRepository)
+        doThrow(new RoleNotFoundException(expectedMessage)).when(roleRepositoryImpl)
                                                            .deleteRoleById(roleId);
 
         RoleNotFoundException exception = assertThrows(RoleNotFoundException.class, () -> roleService.deleteRoleById(roleId));
