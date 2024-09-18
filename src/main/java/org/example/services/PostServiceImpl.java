@@ -31,7 +31,7 @@ public class PostServiceImpl implements PostService {
 
             return createdPost;
         } catch (SQLException e) {
-            throw new CreatePostException("Error while creating a post", e);
+            throw new PostException("Error while creating a post", e);
         }
     }
 
@@ -45,7 +45,7 @@ public class PostServiceImpl implements PostService {
 
             return foundPost;
         } catch (SQLException e) {
-            throw new GetPostException("Error while getting a post", e);
+            throw new RoleException("Error while getting a post", e);
         }
     }
 
@@ -59,7 +59,7 @@ public class PostServiceImpl implements PostService {
 
             return foundPost;
         } catch (SQLException e) {
-            throw new GetPostException("Error while getting a post without user", e);
+            throw new RoleException("Error while getting a post without user", e);
         }
     }
 
@@ -74,7 +74,7 @@ public class PostServiceImpl implements PostService {
 
             return updatedPost;
         } catch (SQLException e) {
-            throw new UpdatePostException("Error while updating a post", e);
+            throw new RoleException("Error while updating a post", e);
         }
     }
 
@@ -89,7 +89,7 @@ public class PostServiceImpl implements PostService {
         try {
             postRepositoryImpl.deletePostById(postId);
         } catch (SQLException e) {
-            throw new DeletePostException("Error while deleting a post", e);
+            throw new RoleException("Error while deleting a post", e);
         }
     }
 }

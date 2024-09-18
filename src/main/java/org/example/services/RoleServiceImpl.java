@@ -32,7 +32,7 @@ public class RoleServiceImpl implements RoleService {
 
             return createdRole;
         } catch (SQLException e) {
-            throw new CreateRoleException("Error while creating a Role", e);
+            throw new RoleException("Error while creating a Role", e);
         }
     }
 
@@ -46,7 +46,7 @@ public class RoleServiceImpl implements RoleService {
 
             return foundRole;
         } catch (SQLException e) {
-            throw new GetRoleException("Error while getting a Role by ID", e);
+            throw new RoleException("Error while getting a Role by ID", e);
         }
     }
 
@@ -60,7 +60,7 @@ public class RoleServiceImpl implements RoleService {
 
             return foundRole;
         } catch (SQLException e) {
-            throw new GetRoleException("Error while getting a Role by ID without Users array", e);
+            throw new RoleException("Error while getting a Role by ID without Users array", e);
         }
     }
 
@@ -72,7 +72,7 @@ public class RoleServiceImpl implements RoleService {
 
             return listFoundRoles;
         } catch (SQLException e) {
-            throw new GetRoleException("Error while getting all Roles", e);
+            throw new RoleException("Error while getting all Roles", e);
         }
     }
 
@@ -88,7 +88,7 @@ public class RoleServiceImpl implements RoleService {
 
             return updatedRole;
         } catch (SQLException e) {
-            throw new UpdateRoleException("Error while updating a Role", e);
+            throw new RoleException("Error while updating a Role", e);
         }
     }
 
@@ -103,7 +103,7 @@ public class RoleServiceImpl implements RoleService {
         try {
             roleRepository.deleteRoleById(roleId);
         } catch (SQLException e) {
-            throw new DeleteRoleException("Error while deleting a Role", e);
+            throw new RoleException("Error while deleting a Role", e);
         }
     }
 
@@ -115,7 +115,7 @@ public class RoleServiceImpl implements RoleService {
         try {
             roleRepository.assignRoleToUser(userId, roleId);
         } catch (SQLException e) {
-            throw new AssignRoleException("Error while assigning a Role to a User", e);
+            throw new RoleException("Error while assigning a Role to a User", e);
         }
     }
 }
