@@ -18,12 +18,6 @@ public class DataSource {
         try (InputStream inputStream = DataSource.class.getClassLoader()
                                                        .getResourceAsStream(propertiesPath)
         ) {
-            if (inputStream == null) {
-                System.out.println((DataSource.class.getClassLoader()
-                                                    .getResources("")));
-                throw new FileNotFoundException("Property file not found: " + propertiesPath);
-            }
-
             Properties props = new Properties();
             props.load(inputStream);
 
@@ -67,7 +61,7 @@ public class DataSource {
     }
 
     public DataSource() {
-        String propertiesPath = "config.properties";
+        String propertiesPath = "/config.properties";
         initializeDataSource(propertiesPath);
     }
 
