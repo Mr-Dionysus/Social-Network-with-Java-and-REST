@@ -1,25 +1,30 @@
 services:
-  mysql-db:
+  app:
+    build: .
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+    ports:
+      - "8083:8080"
+    depends_on:
+      - db
+    networks:
+      - app-network
+    environment:
+      - DB_URL=jdbc:mysql://db:3306/testdb
+      - DB_USER=root
+      - DB_PASSWORD=password
+
+  db:
     image: mysql:8.0
     environment:
-      MYSQL_DATABASE: mydatabase
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
-      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: testdb
     ports:
       - "3307:3306"
-    healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+    networks:
+      - app-network
 
-  java-app:
-    build: .
-    depends_on:
-      mysql-db:
-        condition: service_healthy  # Ensure MySQL is healthy before starting
-    environment:
-      DATABASE_URL: jdbc:mysql://mysql-db:3306/mydatabase
-      DATABASE_USER: user
-      DATABASE_PASSWORD: password
+networks:
+  app-network:
+    driver: bridge

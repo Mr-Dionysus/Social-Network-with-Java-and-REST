@@ -1,12 +1,14 @@
-FROM openjdk:21-jdk-slim
+FROM tomcat:10.1-jdk21-temurin-jammy
 
-WORKDIR /app
+# Set the working directory inside the container
+WORKDIR /usr/local/tomcat/webapps/
 
-COPY target/Aston_REST-1.0-SNAPSHOT.jar /app/app.jar
+# Copy the WAR file from the target directory into Tomcat's webapps directory
+COPY target/ROOT.war /usr/local/tomcat/webapps/
 
+# Expose port 8080 for Tomcat
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
-
-
+# Default command to run Tomcat
+CMD ["catalina.sh", "run"]
 
