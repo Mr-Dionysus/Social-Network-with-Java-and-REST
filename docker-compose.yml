@@ -6,6 +6,11 @@ services:
       - 8.8.4.4
     ports:
       - "8083:8080"
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
     depends_on:
       - db
     networks:
