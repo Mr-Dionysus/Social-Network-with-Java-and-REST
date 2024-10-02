@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
 
             return createdUser;
         } catch (SQLException e) {
-            throw new CreateUserException("Error while creating a User", e);
+            throw new UserException("Error while creating a User", e);
         }
     }
 
@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
 
             return foundUser;
         } catch (SQLException e) {
-            throw new GetUserException("Error while getting a User", e);
+            throw new UserException("Error while getting a User", e);
         }
     }
 
@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
 
             return foundUser;
         } catch (SQLException e) {
-            throw new GetUserException("Error while getting a User without his Roles", e);
+            throw new UserException("Error while getting a User without his Roles", e);
         }
     }
 
@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
 
             return updatedUser;
         } catch (SQLException e) {
-            throw new UpdateUserException("Error while updating a User by ID", e);
+            throw new UserException("Error while updating a User by ID", e);
         }
     }
 
@@ -89,7 +89,7 @@ public class UserServiceImpl implements UserService {
         try {
             userRepository.deleteUserById(userId);
         } catch (SQLException e) {
-            throw new DeleteUserException("Error while deleting a User by ID", e);
+            throw new UserException("Error while deleting a User by ID", e);
         }
     }
 }
