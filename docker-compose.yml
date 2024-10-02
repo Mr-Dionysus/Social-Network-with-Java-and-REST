@@ -16,7 +16,7 @@ services:
     networks:
       - app-network
     environment:
-      - DB_URL=jdbc:mysql://db:3306/testdb
+      - DB_URL=jdbc:mysql://db:3306/testdb?useSSL=false&allowPublicKeyRetrieval=true
       - DB_USER=root
       - DB_PASSWORD=password
 
