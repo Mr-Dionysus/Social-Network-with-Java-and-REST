@@ -2,9 +2,7 @@ package org.example.controllers;
 
 import org.example.dtos.UserCredentialsDTO;
 import org.example.dtos.UserDTO;
-import org.example.mappers.UserMapper;
 import org.example.services.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,8 +11,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/users")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping
     public ResponseEntity<UserDTO> createUser(@RequestBody UserCredentialsDTO userCredentialsDTO) {

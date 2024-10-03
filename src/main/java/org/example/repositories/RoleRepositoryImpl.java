@@ -7,6 +7,7 @@ import org.example.entities.Role;
 import org.example.entities.User;
 import org.example.exceptions.PostNotFoundException;
 import org.example.exceptions.RoleNotFoundException;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,6 +16,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class RoleRepositoryImpl implements RoleRepository {
     private final DataSource dataSource;
 

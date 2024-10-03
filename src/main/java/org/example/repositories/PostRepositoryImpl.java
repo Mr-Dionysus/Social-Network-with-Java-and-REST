@@ -5,12 +5,14 @@ import org.example.db.PostsSQL;
 import org.example.entities.Post;
 import org.example.entities.User;
 import org.example.exceptions.PostNotFoundException;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+@Repository
 public class PostRepositoryImpl implements PostRepository {
     private final DataSource dataSource;
 

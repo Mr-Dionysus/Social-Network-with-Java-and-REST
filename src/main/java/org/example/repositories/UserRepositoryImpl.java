@@ -8,6 +8,7 @@ import org.example.entities.Post;
 import org.example.entities.Role;
 import org.example.entities.User;
 import org.example.exceptions.UserNotFoundException;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,6 +16,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+@Repository
 public class UserRepositoryImpl implements UserRepository {
     private final DataSource dataSource;
 

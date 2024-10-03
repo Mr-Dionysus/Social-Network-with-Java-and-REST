@@ -2,7 +2,6 @@ package org.example.controllers;
 
 import org.example.dtos.PostDTO;
 import org.example.services.PostService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,9 +9,11 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/posts")
 public class PostController {
+    private final PostService postService;
 
-    @Autowired
-    private PostService postService;
+    public PostController(PostService postService) {
+        this.postService = postService;
+    }
 
     @PostMapping("/{id}")
     public ResponseEntity<PostDTO> createPost(@PathVariable("id") int userId, @RequestBody PostDTO postDTO) {

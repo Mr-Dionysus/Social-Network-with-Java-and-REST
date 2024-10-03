@@ -2,7 +2,6 @@ package org.example.controllers;
 
 import org.example.dtos.RoleDTO;
 import org.example.services.RoleService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,8 +12,11 @@ import java.util.ArrayList;
 @RequestMapping("/roles")
 public class RoleController {
 
-    @Autowired
-    private RoleService roleService;
+    private final RoleService roleService;
+
+    public RoleController(RoleService roleService) {
+        this.roleService = roleService;
+    }
 
     @PostMapping
     public ResponseEntity<RoleDTO> createRole(@RequestBody RoleDTO roleDTO) {

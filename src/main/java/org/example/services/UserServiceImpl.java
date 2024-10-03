@@ -7,9 +7,11 @@ import org.example.mappers.UserMapper;
 import org.example.mappers.UserMapperImpl;
 import org.example.repositories.UserRepository;
 import org.example.validators.UserValidator;
+import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 
+@Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper = new UserMapperImpl();

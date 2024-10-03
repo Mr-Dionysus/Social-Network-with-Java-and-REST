@@ -8,11 +8,13 @@ import org.example.mappers.RoleMapperImpl;
 import org.example.repositories.RoleRepository;
 import org.example.validators.RoleValidator;
 import org.example.validators.UserValidator;
+import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class RoleServiceImpl implements RoleService {
     private final RoleRepository roleRepository;
     private final RoleMapper roleMapper = new RoleMapperImpl();

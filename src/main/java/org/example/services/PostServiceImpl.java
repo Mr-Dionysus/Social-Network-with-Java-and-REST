@@ -8,9 +8,11 @@ import org.example.mappers.PostMapperImpl;
 import org.example.repositories.PostRepository;
 import org.example.validators.PostValidator;
 import org.example.validators.UserValidator;
+import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 
+@Service
 public class PostServiceImpl implements PostService {
     private final PostRepository postRepositoryImpl;
     private final PostMapper postMapper = new PostMapperImpl();
