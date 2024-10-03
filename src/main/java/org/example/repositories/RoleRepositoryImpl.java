@@ -96,7 +96,7 @@ public class RoleRepositoryImpl implements RoleRepository {
         }
     }
 
-    public Role getRoleWithoutItsUsers(int roleId) throws SQLException {
+    public Role getRoleByIdWithoutItsUsers(int roleId) throws SQLException {
         try (Connection connection = dataSource.connect();
              PreparedStatement prepStmtSelectRoleById = connection.prepareStatement(RolesSQL.SELECT_BY_ID.getQuery())
         ) {

@@ -57,7 +57,7 @@ public class RoleServiceImpl implements RoleService {
         RoleValidator.roleId(roleId);
 
         try {
-            Role foundRole = roleRepository.getRoleWithoutItsUsers(roleId);
+            Role foundRole = roleRepository.getRoleByIdWithoutItsUsers(roleId);
             RoleValidator.foundRole(foundRole, roleId);
             RoleDTO foundRoleDTO = roleMapper.roleToRoleDTO(foundRole);
 

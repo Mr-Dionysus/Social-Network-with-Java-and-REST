@@ -98,7 +98,7 @@ public class UserRepositoryImpl implements UserRepository {
                 while (rsFoundAllRoleIds.next()) {
                     int roleId = rsFoundAllRoleIds.getInt("role_id");
                     RoleRepository roleRepository = new RoleRepositoryImpl(dataSource);
-                    Role foundRole = roleRepository.getRoleWithoutItsUsers(roleId);
+                    Role foundRole = roleRepository.getRoleByIdWithoutItsUsers(roleId);
                     listFoundRoles.add(foundRole);
                 }
 

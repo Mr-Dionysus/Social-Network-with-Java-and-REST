@@ -68,11 +68,4 @@ public class DataSource {
     public Connection connect() throws SQLException {
         return ds.getConnection();
     }
-
-    public static void setTestConfiguration(String jdbcUrl, String username, String password) {
-        config.setJdbcUrl(jdbcUrl);
-        config.setUsername(username);
-        config.setPassword(password);
-        ds = new HikariDataSource(config);
-    }
 }

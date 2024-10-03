@@ -52,11 +52,6 @@ public class PostDTO {
     }
 
     @Override
-    public String toString() {
-        return "Post{" + ", text='" + text + '\'' + ", likes=" + likes + ", dislikes=" + dislikes + ", author=" + author + '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o)
             return true;

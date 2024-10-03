@@ -10,7 +10,7 @@ public interface RoleRepository {
 
     Role getRoleById(int roleId) throws SQLException;
 
-    Role getRoleWithoutItsUsers(int roleId) throws SQLException;
+    Role getRoleByIdWithoutItsUsers(int roleId) throws SQLException;
 
     List<Role> getAllRoles() throws SQLException;
 
