@@ -17,7 +17,7 @@ public class UsersRolesController {
     @Autowired
     private RoleService roleService;
 
-    @PutMapping("/{userId/{roleId")
+    @PutMapping("/{userId}/{roleId}")
     public ResponseEntity<RoleDTO> assignRoleToUser(@PathVariable("userId") int userId, @PathVariable("roleId") int roleId) {
         try {
             roleService.assignRoleToUser(userId, roleId);
