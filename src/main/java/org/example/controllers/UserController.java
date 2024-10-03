@@ -23,8 +23,8 @@ public class UserController {
     @PostMapping
     public ResponseEntity<UserDTO> createUser(@RequestBody UserCredentialsDTO userCredentialsDTO) {
         try {
-            User createUser = userService.createUser(userCredentialsDTO.getLogin(), userCredentialsDTO.getPassword());
-            UserDTO createdUserDTO = userMapper.userToUserDTO(createUser);
+            UserDTO createdUserDTO = userService.createUser(userCredentialsDTO.getLogin(), userCredentialsDTO.getPassword());
+
             return new ResponseEntity<>(createdUserDTO, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -34,8 +34,8 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable("id") int id) {
         try {
-            User foundUser = userService.getUserById(id);
-            UserDTO foundUserDTO = userMapper.userToUserDTO(foundUser);
+            UserDTO foundUserDTO = userService.getUserById(id);
+
             return new ResponseEntity<>(foundUserDTO, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -45,8 +45,8 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<UserDTO> updateUserById(@PathVariable("id") int id, @RequestBody UserCredentialsDTO userCredentialsDTO) {
         try {
-            User updatedUser = userService.updateUserById(id, userCredentialsDTO.getLogin(), userCredentialsDTO.getPassword());
-            UserDTO updatedUserDTO = userMapper.userToUserDTO(updatedUser);
+            UserDTO updatedUserDTO = userService.updateUserById(id, userCredentialsDTO.getLogin(), userCredentialsDTO.getPassword());
+
             return new ResponseEntity<>(updatedUserDTO, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

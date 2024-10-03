@@ -1,5 +1,6 @@
 package org.example.services;
 
+import org.example.dtos.UserDTO;
 import org.example.entities.User;
 import org.example.exceptions.UserNotFoundException;
 import org.example.repositories.UserRepository;
@@ -36,10 +37,13 @@ class UserServiceImplTest {
         User mockUser = new User(userId, login, password);
         when(userRepository.createUser(login, password)).thenReturn(mockUser);
 
-        User actualUser = userService.createUser(login, password);
+        UserDTO mockUserDTO = new UserDTO();
+        mockUserDTO.setLogin(login);
+
+        UserDTO actualUser = userService.createUser(login, password);
 
         assertNotNull(actualUser);
-        assertEquals(mockUser, actualUser);
+        assertEquals(mockUserDTO, actualUser);
 
         verify(userRepository, times(1)).createUser(login, password);
     }
@@ -52,11 +56,13 @@ class UserServiceImplTest {
         String password = "password";
         User mockUser = new User(userId, login, password);
         when(userRepository.getUserById(userId)).thenReturn(mockUser);
+        UserDTO mockUserDTO = new UserDTO();
+        mockUserDTO.setLogin(login);
 
-        User actualUser = userService.getUserById(userId);
+        UserDTO actualUser = userService.getUserById(userId);
 
         assertNotNull(actualUser);
-        assertEquals(mockUser, actualUser);
+        assertEquals(mockUserDTO, actualUser);
 
         verify(userRepository, times(1)).getUserById(userId);
     }
@@ -90,12 +96,16 @@ class UserServiceImplTest {
         String newPassword = "p@ssw@rd";
         mockUser.setLogin(newLogin);
         mockUser.setPassword(newPassword);
+
+        UserDTO mockUserDTO = new UserDTO();
+        mockUserDTO.setLogin(newLogin);
+
         when(userRepository.updateUserById(userId, newLogin, newPassword)).thenReturn(mockUser);
 
-        User actualUser = userService.updateUserById(userId, newLogin, newPassword);
+        UserDTO actualUser = userService.updateUserById(userId, newLogin, newPassword);
 
         assertNotNull(actualUser);
-        assertEquals(mockUser, actualUser);
+        assertEquals(mockUserDTO, actualUser);
 
         verify(userRepository, times(1)).updateUserById(userId, newLogin, newPassword);
     }

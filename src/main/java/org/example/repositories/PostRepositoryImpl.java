@@ -2,9 +2,12 @@ package org.example.repositories;
 
 import org.example.db.DataSource;
 import org.example.db.PostsSQL;
+import org.example.dtos.UserDTO;
 import org.example.entities.Post;
 import org.example.entities.User;
 import org.example.exceptions.PostNotFoundException;
+import org.example.mappers.UserMapper;
+import org.example.mappers.UserMapperImpl;
 import org.example.services.UserService;
 import org.example.services.UserServiceImpl;
 
@@ -52,9 +55,8 @@ public class PostRepositoryImpl implements PostRepository {
                     int postId = rsFoundPostId.getInt("id");
 
                     UserRepository userRepository = new UserRepositoryImpl(dataSource);
-                    UserService userService = new UserServiceImpl(userRepository);
-                    User userOfPost = userService.getUserById(user_id);
-                    Post foundPost = new Post(postId, text, userOfPost);
+                    User author = userRepository.getUserById(user_id);
+                    Post foundPost = new Post(postId, text, author);
 
                     return foundPost;
                 }
@@ -78,9 +80,8 @@ public class PostRepositoryImpl implements PostRepository {
                     int userId = rsFoundPost.getInt("user_id");
 
                     UserRepository userRepository = new UserRepositoryImpl(dataSource);
-                    UserService userService = new UserServiceImpl(userRepository);
-                    User userOfPost = userService.getUserById(userId);
-                    Post foundPost = new Post(postId, text, likes, dislikes, userOfPost);
+                    User author = userRepository.getUserById(userId);
+                    Post foundPost = new Post(postId, text, likes, dislikes, author);
 
                     return foundPost;
                 }

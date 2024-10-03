@@ -1,15 +1,16 @@
 package org.example.services;
 
+import org.example.dtos.UserDTO;
 import org.example.entities.User;
 
 public interface UserService {
-    User createUser(String login, String password);
+    UserDTO createUser(String login, String password);
 
-    User getUserById(int id);
+    UserDTO getUserById(int id);
 
     User getUserByIdWithoutHisRoles(int id);
 
-    User updateUserById(int id, String newLogin, String newPassword);
+    UserDTO updateUserById(int id, String newLogin, String newPassword);
 
     void deleteUserById(int id);
 }

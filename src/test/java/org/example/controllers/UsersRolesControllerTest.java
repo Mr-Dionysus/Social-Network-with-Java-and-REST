@@ -1,9 +1,7 @@
-package org.example.servlets;
+package org.example.controllers;
 
-import com.google.gson.Gson;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.example.dtos.RoleDTO;
+import org.example.dtos.UserDTO;
 import org.example.entities.Role;
 import org.example.entities.User;
 import org.example.mappers.RoleMapper;
@@ -11,22 +9,20 @@ import org.example.services.RoleService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-class UsersRolesServletTest {
-    @Mock
-    private HttpServletRequest req;
-
-    @Mock
-    private HttpServletResponse resp;
+class UsersRolesControllerTest {
 
     @Mock
     private RoleService roleService;
@@ -34,19 +30,17 @@ class UsersRolesServletTest {
     @Mock
     private RoleMapper roleMapper;
 
-    private Gson gson;
-    private UsersRolesServlet usersRolesServlet;
+    @InjectMocks
+    private UsersRolesController usersRolesController;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        gson = new Gson();
-        usersRolesServlet = new UsersRolesServlet(roleService, roleMapper);
     }
 
     @Test
     @DisplayName("Assign a Role to a User")
-    void doPut() throws IOException {
+    void assignRoleToUser() {
         int userId = 1;
         String login = "admin";
         String password = "password";
@@ -61,18 +55,15 @@ class UsersRolesServletTest {
         mockRoleDTO.setDescription(description);
         mockRoleDTO.setUsers(new ArrayList<>(List.of(mockUser)));
 
-        when(req.getPathInfo()).thenReturn("/" + roleId + "/" + userId);
         when(roleService.getRoleById(roleId)).thenReturn(mockRole);
         when(roleMapper.roleToRoleDTO(mockRole)).thenReturn(mockRoleDTO);
-        PrintWriter out = mock(PrintWriter.class);
-        when(resp.getWriter()).thenReturn(out);
 
-        usersRolesServlet.doPut(req, resp);
+        ResponseEntity<RoleDTO> response = usersRolesController.assignRoleToUser(userId, roleId);
 
-        verify(resp).setContentType("application/json");
-        verify(resp).setCharacterEncoding("UTF-8");
-        verify(resp).setStatus(HttpServletResponse.SC_OK);
-        verify(out).println(gson.toJson(mockRoleDTO));
-        verify(out).println(gson.toJson(mockRoleDTO.getUsers()));
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(mockRoleDTO, response.getBody());
+
+        verify(roleService).assignRoleToUser(userId, roleId);
+        verify(roleMapper).roleToRoleDTO(mockRole);
     }
 }

@@ -1,8 +1,5 @@
-package org.example.servlets;
+package org.example.controllers;
 
-import com.google.gson.Gson;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.example.dtos.RoleDTO;
 import org.example.entities.Role;
 import org.example.mappers.RoleMapper;
@@ -10,24 +7,20 @@ import org.example.services.RoleService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-class RoleServletTest {
-    @Mock
-    private HttpServletRequest req;
-
-    @Mock
-    private HttpServletResponse resp;
+class RoleControllerTest {
 
     @Mock
     private RoleService roleService;
@@ -35,24 +28,20 @@ class RoleServletTest {
     @Mock
     private RoleMapper roleMapper;
 
-    private Gson gson;
-    private RoleServlet roleServlet;
+    @InjectMocks
+    private RoleController roleController;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        gson = new Gson();
-        roleServlet = new RoleServlet(roleService, roleMapper);
     }
 
     @Test
     @DisplayName("Create a Role")
-    void doPost() throws IOException {
+    void createRole() {
         int roleId = 1;
         String roleName = "admin";
         String description = "do stuff";
-
-        when(req.getPathInfo()).thenReturn("/" + roleId);
 
         Role mockRole = new Role(roleId, roleName, description);
         RoleDTO mockRoleDTO = new RoleDTO();
@@ -62,26 +51,21 @@ class RoleServletTest {
         when(roleService.createRole(roleName, description)).thenReturn(mockRole);
         when(roleMapper.roleToRoleDTO(mockRole)).thenReturn(mockRoleDTO);
 
-        when(req.getReader()).thenReturn(new BufferedReader(new StringReader(gson.toJson(mockRoleDTO))));
-        PrintWriter out = mock(PrintWriter.class);
-        when(resp.getWriter()).thenReturn(out);
+        ResponseEntity<RoleDTO> response = roleController.createRole(mockRoleDTO);
 
-        roleServlet.doPost(req, resp);
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertEquals(mockRoleDTO, response.getBody());
 
-        verify(resp).setContentType("application/json");
-        verify(resp).setCharacterEncoding("UTF-8");
-        verify(resp).setStatus(HttpServletResponse.SC_CREATED);
-        verify(out).println(gson.toJson(mockRoleDTO));
+        verify(roleService).createRole(roleName, description);
+        verify(roleMapper).roleToRoleDTO(mockRole);
     }
 
     @Test
-    @DisplayName("Get a Role")
-    void doGet() throws IOException {
+    @DisplayName("Get a Role by ID")
+    void getRoleById() {
         int roleId = 1;
         String roleName = "admin";
         String description = "do stuff";
-
-        when(req.getPathInfo()).thenReturn("/" + roleId);
 
         Role mockRole = new Role(roleId, roleName, description);
         RoleDTO mockRoleDTO = new RoleDTO();
@@ -91,21 +75,18 @@ class RoleServletTest {
         when(roleService.getRoleById(roleId)).thenReturn(mockRole);
         when(roleMapper.roleToRoleDTO(mockRole)).thenReturn(mockRoleDTO);
 
-        when(req.getReader()).thenReturn(new BufferedReader(new StringReader(gson.toJson(mockRoleDTO))));
-        PrintWriter out = mock(PrintWriter.class);
-        when(resp.getWriter()).thenReturn(out);
+        ResponseEntity<RoleDTO> response = roleController.getRoleById(roleId);
 
-        roleServlet.doGet(req, resp);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(mockRoleDTO, response.getBody());
 
-        verify(resp).setContentType("application/json");
-        verify(resp).setCharacterEncoding("UTF-8");
-        verify(resp).setStatus(HttpServletResponse.SC_OK);
-        verify(out).println(gson.toJson(mockRoleDTO));
+        verify(roleService).getRoleById(roleId);
+        verify(roleMapper).roleToRoleDTO(mockRole);
     }
 
     @Test
     @DisplayName("Get all Roles")
-    void doGetAllRoles() throws IOException {
+    void getAllRoles() {
         int roleId = 1;
         String roleName1 = "admin";
         String description1 = "do stuff";
@@ -136,26 +117,22 @@ class RoleServletTest {
         listRoleDTOs.add(mockRoleDTO1);
         listRoleDTOs.add(mockRoleDTO2);
 
-        when(req.getReader()).thenReturn(new BufferedReader(new StringReader(gson.toJson(listRoleDTOs))));
-        PrintWriter out = mock(PrintWriter.class);
-        when(resp.getWriter()).thenReturn(out);
+        ResponseEntity<ArrayList<RoleDTO>> response = roleController.getAllRoles();
 
-        roleServlet.doGet(req, resp);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(listRoleDTOs, response.getBody());
 
-        verify(resp).setContentType("application/json");
-        verify(resp).setCharacterEncoding("UTF-8");
-        verify(resp).setStatus(HttpServletResponse.SC_OK);
-        verify(out).println(gson.toJson(listRoleDTOs));
+        verify(roleService).getAllRoles();
+        verify(roleMapper).roleToRoleDTO(mockRole1);
+        verify(roleMapper).roleToRoleDTO(mockRole2);
     }
 
     @Test
-    @DisplayName("Update a Role")
-    void doPut() throws IOException {
+    @DisplayName("Update a Role by ID")
+    void updateRoleById() {
         int roleId = 1;
         String roleName = "admin";
         String description = "do stuff";
-
-        when(req.getPathInfo()).thenReturn("/" + roleId);
 
         Role mockRole = new Role(roleId, roleName, description);
         RoleDTO mockRoleDTO = new RoleDTO();
@@ -165,28 +142,22 @@ class RoleServletTest {
         when(roleService.updateRoleById(roleId, roleName, description)).thenReturn(mockRole);
         when(roleMapper.roleToRoleDTO(mockRole)).thenReturn(mockRoleDTO);
 
-        when(req.getReader()).thenReturn(new BufferedReader(new StringReader(gson.toJson(mockRoleDTO))));
-        PrintWriter out = mock(PrintWriter.class);
-        when(resp.getWriter()).thenReturn(out);
+        ResponseEntity<RoleDTO> response = roleController.updateRoleById(roleId, mockRoleDTO);
 
-        roleServlet.doPut(req, resp);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(mockRoleDTO, response.getBody());
 
-        verify(resp).setContentType("application/json");
-        verify(resp).setCharacterEncoding("UTF-8");
-        verify(resp).setStatus(HttpServletResponse.SC_OK);
-        verify(out).println(gson.toJson(mockRoleDTO));
+        verify(roleService).updateRoleById(roleId,roleName, description);
+        verify(roleMapper).roleToRoleDTO(mockRole);
     }
 
     @Test
-    @DisplayName("Delete a Role")
-    void doDelete() {
+    @DisplayName("Delete a Role by ID")
+    void deleteRoleById() {
         int roleId = 1;
-        when(req.getPathInfo()).thenReturn("/" + roleId);
+        ResponseEntity<Void> response = roleController.deleteRoleById(roleId);
 
-        roleServlet.doDelete(req, resp);
-
-        verify(resp).setContentType("application/json");
-        verify(resp).setCharacterEncoding("UTF-8");
-        verify(resp).setStatus(HttpServletResponse.SC_OK);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        verify(roleService).deleteRoleById(roleId);
     }
 }

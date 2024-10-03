@@ -22,9 +22,6 @@ class UserControllerTest {
     @Mock
     private UserService userService;
 
-    @Mock
-    private UserMapper userMapper;
-
     @InjectMocks
     private UserController userController;
 
@@ -35,7 +32,6 @@ class UserControllerTest {
 
     @Test
     void createUser() {
-        int userId = 1;
         String login = "admin4";
         String password = "password";
 
@@ -43,12 +39,10 @@ class UserControllerTest {
         userCredentialsDTO.setLogin(login);
         userCredentialsDTO.setPassword(password);
 
-        User mockUser = new User(userId, login, password);
         UserDTO mockUserDTO = new UserDTO();
         mockUserDTO.setLogin(login);
 
-        when(userService.createUser(login, password)).thenReturn(mockUser);
-        when(userMapper.userToUserDTO(mockUser)).thenReturn(mockUserDTO);
+        when(userService.createUser(login, password)).thenReturn(mockUserDTO);
 
         ResponseEntity<UserDTO> response = userController.createUser(userCredentialsDTO);
 
@@ -56,22 +50,17 @@ class UserControllerTest {
         assertEquals(mockUserDTO, response.getBody());
 
         verify(userService).createUser(login, password);
-        verify(userMapper).userToUserDTO(mockUser);
     }
 
     @Test
     void getUserById() {
         int userId = 1;
         String login = "admin4";
-        String password = "password";
-
-        User mockUser = new User(userId, login, password);
 
         UserDTO mockUserDTO = new UserDTO();
         mockUserDTO.setLogin(login);
 
-        when(userService.getUserById(userId)).thenReturn(mockUser);
-        when(userMapper.userToUserDTO(mockUser)).thenReturn(mockUserDTO);
+        when(userService.getUserById(userId)).thenReturn(mockUserDTO);
 
         ResponseEntity<UserDTO> response = userController.getUserById(userId);
 
@@ -79,7 +68,6 @@ class UserControllerTest {
         assertEquals(mockUserDTO, response.getBody());
 
         verify(userService).getUserById(userId);
-        verify(userMapper).userToUserDTO(mockUser);
     }
 
     @Test
@@ -88,7 +76,6 @@ class UserControllerTest {
         String newLogin = "newLogin";
         String newPassword = "newPassword";
 
-        User mockUser = new User(userId, newLogin, newPassword);
         UserCredentialsDTO mockUserCredentialsDTO = new UserCredentialsDTO();
         mockUserCredentialsDTO.setLogin(newLogin);
         mockUserCredentialsDTO.setPassword(newPassword);
@@ -96,16 +83,13 @@ class UserControllerTest {
         UserDTO mockUserDTO = new UserDTO();
         mockUserDTO.setLogin(newLogin);
 
-        when(userService.updateUserById(userId, newLogin, newPassword)).thenReturn(mockUser);
-        when(userMapper.userToUserDTO(mockUser)).thenReturn(mockUserDTO);
-
+        when(userService.updateUserById(userId, newLogin, newPassword)).thenReturn(mockUserDTO);
         ResponseEntity<UserDTO> response = userController.updateUserById(userId, mockUserCredentialsDTO);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(mockUserDTO, response.getBody());
 
         verify(userService).updateUserById(userId, mockUserCredentialsDTO.getLogin(), mockUserCredentialsDTO.getPassword());
-        verify(userMapper).userToUserDTO(mockUser);
         assertEquals(mockUserDTO.getLogin(), newLogin);
     }
 
@@ -113,10 +97,10 @@ class UserControllerTest {
     void deleteUserById() {
         int userId = 1;
         String login = "admin4";
-        String password = "password";
-        User mockUser = new User(userId, login, password);
+        UserDTO mockUserDTO = new UserDTO();
+        mockUserDTO.setLogin(login);
 
-        when(userService.getUserById(userId)).thenReturn(mockUser);
+        when(userService.getUserById(userId)).thenReturn(mockUserDTO);
 
         ResponseEntity<Void> response = userController.deleteUserById(userId);
         assertEquals(HttpStatus.OK, response.getStatusCode());
