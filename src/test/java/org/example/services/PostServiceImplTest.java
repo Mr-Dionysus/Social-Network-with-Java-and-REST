@@ -1,5 +1,6 @@
 package org.example.services;
 
+import org.example.dtos.PostDTO;
 import org.example.entities.Post;
 import org.example.entities.User;
 import org.example.exceptions.PostNotFoundException;
@@ -43,10 +44,16 @@ class PostServiceImplTest {
         Post mockPost = new Post(postId, text, likes, dislikes, user);
         when(postRepositoryImpl.createPost(text, userId)).thenReturn(mockPost);
 
-        Post actualPost = postService.createPost(text, userId);
+        PostDTO mockPostDTO = new PostDTO();
+        mockPostDTO.setText(text);
+        mockPostDTO.setLikes(likes);
+        mockPostDTO.setDislikes(dislikes);
+        mockPostDTO.setAuthor(user);
+
+        PostDTO actualPost = postService.createPost(text, userId);
 
         assertNotNull(actualPost);
-        assertEquals(mockPost, actualPost);
+        assertEquals(mockPostDTO, actualPost);
 
         verify(postRepositoryImpl, times(1)).createPost(text, userId);
     }
@@ -66,10 +73,16 @@ class PostServiceImplTest {
         Post mockPost = new Post(postId, text, likes, dislikes, user);
         when(postRepositoryImpl.getPostById(postId)).thenReturn(mockPost);
 
-        Post actualPost = postService.getPostById(postId);
+        PostDTO mockPostDTO = new PostDTO();
+        mockPostDTO.setText(text);
+        mockPostDTO.setLikes(likes);
+        mockPostDTO.setDislikes(dislikes);
+        mockPostDTO.setAuthor(user);
+
+        PostDTO actualPost = postService.getPostById(postId);
 
         assertNotNull(actualPost);
-        assertEquals(mockPost, actualPost);
+        assertEquals(mockPostDTO, actualPost);
 
         verify(postRepositoryImpl, times(1)).getPostById(postId);
     }
@@ -85,10 +98,15 @@ class PostServiceImplTest {
         Post mockPost = new Post(postId, text, likes, dislikes);
         when(postRepositoryImpl.getPostByIdWithoutItsUser(postId)).thenReturn(mockPost);
 
-        Post actualPost = postService.getPostByIdWithoutItsUser(postId);
+        PostDTO mockPostDTO = new PostDTO();
+        mockPostDTO.setText(text);
+        mockPostDTO.setLikes(likes);
+        mockPostDTO.setDislikes(dislikes);
+
+        PostDTO actualPost = postService.getPostByIdWithoutItsUser(postId);
 
         assertNotNull(actualPost);
-        assertEquals(mockPost, actualPost);
+        assertEquals(mockPostDTO, actualPost);
 
         verify(postRepositoryImpl, times(1)).getPostByIdWithoutItsUser(postId);
     }
@@ -106,10 +124,15 @@ class PostServiceImplTest {
         mockPost.setText(newText);
         when(postRepositoryImpl.updatePostById(postId, newText)).thenReturn(mockPost);
 
-        Post actualPost = postService.updatePostById(postId, newText);
+        PostDTO mockPostDTO = new PostDTO();
+        mockPostDTO.setText(newText);
+        mockPostDTO.setLikes(likes);
+        mockPostDTO.setDislikes(dislikes);
+
+        PostDTO actualPost = postService.updatePostById(postId, newText);
 
         assertNotNull(actualPost);
-        assertEquals(mockPost, actualPost);
+        assertEquals(mockPostDTO, actualPost);
 
         verify(postRepositoryImpl, times(1)).updatePostById(postId, newText);
     }

@@ -1,16 +1,15 @@
 package org.example.services;
 
-import org.example.entities.Post;
-
+import org.example.dtos.PostDTO;
 
 public interface PostService {
-    Post createPost(String text, int user_id);
+    PostDTO createPost(String text, int user_id);
 
-    Post getPostById(int postId);
+    PostDTO getPostById(int postId);
 
-    Post getPostByIdWithoutItsUser(int postId);
+    PostDTO getPostByIdWithoutItsUser(int postId);
 
-    Post updatePostById(int postId, String newText);
+    PostDTO updatePostById(int postId, String newText);
 
     void deletePostById(int postId);
 }

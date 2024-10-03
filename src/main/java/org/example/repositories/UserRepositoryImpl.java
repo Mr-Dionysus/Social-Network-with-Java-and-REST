@@ -8,8 +8,6 @@ import org.example.entities.Post;
 import org.example.entities.Role;
 import org.example.entities.User;
 import org.example.exceptions.UserNotFoundException;
-import org.example.services.PostService;
-import org.example.services.PostServiceImpl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -115,12 +113,11 @@ public class UserRepositoryImpl implements UserRepository {
 
             try (ResultSet rsFoundAllPostIds = prepStmtSelectPostIdByUserId.executeQuery()) {
                 PostRepository postRepositoryImpl = new PostRepositoryImpl(dataSource);
-                PostService postService = new PostServiceImpl(postRepositoryImpl);
                 ArrayList<Post> listFoundPosts = new ArrayList<>();
 
                 while (rsFoundAllPostIds.next()) {
                     int postId = rsFoundAllPostIds.getInt("id");
-                    Post foundPost = postService.getPostByIdWithoutItsUser(postId);
+                    Post foundPost = postRepositoryImpl.getPostByIdWithoutItsUser(postId);
                     listFoundPosts.add(foundPost);
                 }
 
