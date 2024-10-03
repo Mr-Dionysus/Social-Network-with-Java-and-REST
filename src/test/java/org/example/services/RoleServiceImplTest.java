@@ -1,5 +1,6 @@
 package org.example.services;
 
+import org.example.dtos.RoleDTO;
 import org.example.entities.Role;
 import org.example.entities.User;
 import org.example.exceptions.RoleNotFoundException;
@@ -40,11 +41,14 @@ class RoleServiceImplTest {
 
         Role mockRole = new Role(roleId, roleName, description);
         when(roleRepositoryImpl.createRole(roleName, description)).thenReturn(mockRole);
+        RoleDTO mockRoleDTO = new RoleDTO();
+        mockRoleDTO.setRoleName(roleName);
+        mockRoleDTO.setDescription(description);
 
-        Role actualRole = roleService.createRole(roleName, description);
+        RoleDTO actualRole = roleService.createRole(roleName, description);
 
         assertNotNull(actualRole);
-        assertEquals(mockRole, actualRole);
+        assertEquals(mockRoleDTO, actualRole);
 
         verify(roleRepositoryImpl, times(1)).createRole(roleName, description);
     }
@@ -64,11 +68,15 @@ class RoleServiceImplTest {
 
         Role mockRole = new Role(roleId, roleName, description, listUsers);
         when(roleRepositoryImpl.getRoleById(roleId)).thenReturn(mockRole);
+        RoleDTO mockRoleDTO = new RoleDTO();
+        mockRoleDTO.setRoleName(roleName);
+        mockRoleDTO.setDescription(description);
+        mockRoleDTO.setUsers(listUsers);
 
-        Role actualRole = roleService.getRoleById(roleId);
+        RoleDTO actualRole = roleService.getRoleById(roleId);
 
         assertNotNull(actualRole);
-        assertEquals(mockRole, actualRole);
+        assertEquals(mockRoleDTO, actualRole);
 
         verify(roleRepositoryImpl, times(1)).getRoleById(roleId);
     }
@@ -82,11 +90,14 @@ class RoleServiceImplTest {
 
         Role mockRole = new Role(roleId, roleName, description);
         when(roleRepositoryImpl.getRoleWithoutItsUsers(roleId)).thenReturn(mockRole);
+        RoleDTO mockRoleDTO = new RoleDTO();
+        mockRoleDTO.setRoleName(roleName);
+        mockRoleDTO.setDescription(description);
 
-        Role actualRole = roleService.getRoleByIdWithoutItsUsers(roleId);
+        RoleDTO actualRole = roleService.getRoleByIdWithoutItsUsers(roleId);
 
         assertNotNull(actualRole);
-        assertEquals(mockRole, actualRole);
+        assertEquals(mockRoleDTO, actualRole);
 
         verify(roleRepositoryImpl, times(1)).getRoleWithoutItsUsers(roleId);
     }
@@ -108,10 +119,22 @@ class RoleServiceImplTest {
         List<Role> mockListRoles = new ArrayList<>(Arrays.asList(mockRole1, mockRole2));
         when(roleRepositoryImpl.getAllRoles()).thenReturn(mockListRoles);
 
-        List<Role> actualListRoles = roleService.getAllRoles();
+        RoleDTO mockRoleDTO1 = new RoleDTO();
+        mockRoleDTO1.setRoleName(roleName1);
+        mockRoleDTO1.setDescription(description1);
+
+        RoleDTO mockRoleDTO2 = new RoleDTO();
+        mockRoleDTO2.setRoleName(roleName2);
+        mockRoleDTO2.setDescription(description2);
+
+        List<RoleDTO> mockListRoleDTOs = new ArrayList<>();
+        mockListRoleDTOs.add(mockRoleDTO1);
+        mockListRoleDTOs.add(mockRoleDTO2);
+
+        List<RoleDTO> actualListRoles = roleService.getAllRoles();
 
         assertNotNull(actualListRoles);
-        assertEquals(mockListRoles, actualListRoles);
+        assertEquals(mockListRoleDTOs, actualListRoles);
 
         verify(roleRepositoryImpl, times(1)).getAllRoles();
     }
@@ -130,11 +153,14 @@ class RoleServiceImplTest {
         mockRole.setDescription(newDescription);
 
         when(roleRepositoryImpl.updateRoleById(roleId, newRoleName, newDescription)).thenReturn(mockRole);
+        RoleDTO mockRoleDTO = new RoleDTO();
+        mockRoleDTO.setRoleName(newRoleName);
+        mockRoleDTO.setDescription(newDescription);
 
-        Role actualRole = roleService.updateRoleById(roleId, newRoleName, newDescription);
+        RoleDTO actualRole = roleService.updateRoleById(roleId, newRoleName, newDescription);
 
         assertNotNull(actualRole);
-        assertEquals(mockRole, actualRole);
+        assertEquals(mockRoleDTO, actualRole);
 
         verify(roleRepositoryImpl, times(1)).updateRoleById(roleId, newRoleName, newDescription);
     }

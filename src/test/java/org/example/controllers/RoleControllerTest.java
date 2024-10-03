@@ -1,8 +1,6 @@
 package org.example.controllers;
 
 import org.example.dtos.RoleDTO;
-import org.example.entities.Role;
-import org.example.mappers.RoleMapper;
 import org.example.services.RoleService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,9 +23,6 @@ class RoleControllerTest {
     @Mock
     private RoleService roleService;
 
-    @Mock
-    private RoleMapper roleMapper;
-
     @InjectMocks
     private RoleController roleController;
 
@@ -39,17 +34,14 @@ class RoleControllerTest {
     @Test
     @DisplayName("Create a Role")
     void createRole() {
-        int roleId = 1;
         String roleName = "admin";
         String description = "do stuff";
 
-        Role mockRole = new Role(roleId, roleName, description);
         RoleDTO mockRoleDTO = new RoleDTO();
         mockRoleDTO.setRoleName(roleName);
         mockRoleDTO.setDescription(description);
 
-        when(roleService.createRole(roleName, description)).thenReturn(mockRole);
-        when(roleMapper.roleToRoleDTO(mockRole)).thenReturn(mockRoleDTO);
+        when(roleService.createRole(roleName, description)).thenReturn(mockRoleDTO);
 
         ResponseEntity<RoleDTO> response = roleController.createRole(mockRoleDTO);
 
@@ -57,7 +49,6 @@ class RoleControllerTest {
         assertEquals(mockRoleDTO, response.getBody());
 
         verify(roleService).createRole(roleName, description);
-        verify(roleMapper).roleToRoleDTO(mockRole);
     }
 
     @Test
@@ -67,35 +58,26 @@ class RoleControllerTest {
         String roleName = "admin";
         String description = "do stuff";
 
-        Role mockRole = new Role(roleId, roleName, description);
         RoleDTO mockRoleDTO = new RoleDTO();
         mockRoleDTO.setRoleName(roleName);
         mockRoleDTO.setDescription(description);
 
-        when(roleService.getRoleById(roleId)).thenReturn(mockRole);
-        when(roleMapper.roleToRoleDTO(mockRole)).thenReturn(mockRoleDTO);
-
+        when(roleService.getRoleById(roleId)).thenReturn(mockRoleDTO);
         ResponseEntity<RoleDTO> response = roleController.getRoleById(roleId);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(mockRoleDTO, response.getBody());
-
         verify(roleService).getRoleById(roleId);
-        verify(roleMapper).roleToRoleDTO(mockRole);
     }
 
     @Test
     @DisplayName("Get all Roles")
     void getAllRoles() {
-        int roleId = 1;
         String roleName1 = "admin";
         String description1 = "do stuff";
-        Role mockRole1 = new Role(roleId, roleName1, description1);
 
-        int roleId2 = 2;
         String roleName2 = "user";
         String description2 = "use stuff";
-        Role mockRole2 = new Role(roleId2, roleName2, description2);
 
         RoleDTO mockRoleDTO1 = new RoleDTO();
         mockRoleDTO1.setRoleName(roleName1);
@@ -105,13 +87,11 @@ class RoleControllerTest {
         mockRoleDTO2.setRoleName(roleName2);
         mockRoleDTO2.setDescription(description2);
 
-        List<Role> listRoles = new ArrayList<>();
-        listRoles.add(mockRole1);
-        listRoles.add(mockRole2);
+        List<RoleDTO> listRolesDTO = new ArrayList<>();
+        listRolesDTO.add(mockRoleDTO1);
+        listRolesDTO.add(mockRoleDTO2);
 
-        when(roleService.getAllRoles()).thenReturn(listRoles);
-        when(roleMapper.roleToRoleDTO(mockRole1)).thenReturn(mockRoleDTO1);
-        when(roleMapper.roleToRoleDTO(mockRole2)).thenReturn(mockRoleDTO2);
+        when(roleService.getAllRoles()).thenReturn(listRolesDTO);
 
         List<RoleDTO> listRoleDTOs = new ArrayList<>();
         listRoleDTOs.add(mockRoleDTO1);
@@ -123,8 +103,6 @@ class RoleControllerTest {
         assertEquals(listRoleDTOs, response.getBody());
 
         verify(roleService).getAllRoles();
-        verify(roleMapper).roleToRoleDTO(mockRole1);
-        verify(roleMapper).roleToRoleDTO(mockRole2);
     }
 
     @Test
@@ -134,21 +112,16 @@ class RoleControllerTest {
         String roleName = "admin";
         String description = "do stuff";
 
-        Role mockRole = new Role(roleId, roleName, description);
         RoleDTO mockRoleDTO = new RoleDTO();
         mockRoleDTO.setRoleName(roleName);
         mockRoleDTO.setDescription(description);
 
-        when(roleService.updateRoleById(roleId, roleName, description)).thenReturn(mockRole);
-        when(roleMapper.roleToRoleDTO(mockRole)).thenReturn(mockRoleDTO);
+        when(roleService.updateRoleById(roleId, roleName, description)).thenReturn(mockRoleDTO);
 
         ResponseEntity<RoleDTO> response = roleController.updateRoleById(roleId, mockRoleDTO);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(mockRoleDTO, response.getBody());
-
-        verify(roleService).updateRoleById(roleId,roleName, description);
-        verify(roleMapper).roleToRoleDTO(mockRole);
     }
 
     @Test

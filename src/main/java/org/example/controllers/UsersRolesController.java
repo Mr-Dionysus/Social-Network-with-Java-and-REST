@@ -1,8 +1,6 @@
 package org.example.controllers;
 
 import org.example.dtos.RoleDTO;
-import org.example.entities.Role;
-import org.example.mappers.RoleMapper;
 import org.example.services.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,15 +17,11 @@ public class UsersRolesController {
     @Autowired
     private RoleService roleService;
 
-    @Autowired
-    private RoleMapper roleMapper;
-
     @PutMapping("/{userId/{roleId")
     public ResponseEntity<RoleDTO> assignRoleToUser(@PathVariable("userId") int userId, @PathVariable("roleId") int roleId) {
         try {
             roleService.assignRoleToUser(userId, roleId);
-            Role updatedRole = roleService.getRoleById(roleId);
-            RoleDTO updatedRoleDTO = roleMapper.roleToRoleDTO(updatedRole);
+            RoleDTO updatedRoleDTO = roleService.getRoleById(roleId);
 
             return new ResponseEntity<>(updatedRoleDTO, HttpStatus.OK);
         } catch (Exception e) {

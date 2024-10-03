@@ -1,19 +1,19 @@
 package org.example.services;
 
-import org.example.entities.Role;
+import org.example.dtos.RoleDTO;
 
 import java.util.List;
 
 public interface RoleService {
-    Role createRole(String roleName, String description);
+    RoleDTO createRole(String roleName, String description);
 
-    Role getRoleById(int id);
+    RoleDTO getRoleById(int id);
 
-    Role getRoleByIdWithoutItsUsers(int id);
+    RoleDTO getRoleByIdWithoutItsUsers(int id);
 
-    List<Role> getAllRoles();
+    List<RoleDTO> getAllRoles();
 
-    Role updateRoleById(int id, String newRoleName, String newDescription);
+    RoleDTO updateRoleById(int id, String newRoleName, String newDescription);
 
     void deleteRoleById(int id);
 

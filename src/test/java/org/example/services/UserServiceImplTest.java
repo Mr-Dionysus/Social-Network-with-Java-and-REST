@@ -75,11 +75,13 @@ class UserServiceImplTest {
         String password = "password";
         User mockUser = new User(userId, login, password);
         when(userRepository.getUserWithoutHisRoles(userId)).thenReturn(mockUser);
+        UserDTO mockUserDTO = new UserDTO();
+        mockUserDTO.setLogin(login);
 
-        User actualUser = userService.getUserByIdWithoutHisRoles(userId);
+        UserDTO actualUser = userService.getUserByIdWithoutHisRoles(userId);
 
         assertNotNull(actualUser);
-        assertEquals(mockUser, actualUser);
+        assertEquals(mockUserDTO, actualUser);
 
         verify(userRepository, times(1)).getUserWithoutHisRoles(userId);
     }

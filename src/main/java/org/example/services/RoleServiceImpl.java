@@ -1,83 +1,92 @@
 package org.example.services;
 
+import org.example.dtos.RoleDTO;
 import org.example.entities.Role;
 import org.example.exceptions.*;
+import org.example.mappers.RoleMapper;
+import org.example.mappers.RoleMapperImpl;
 import org.example.repositories.RoleRepository;
-import org.example.repositories.RoleRepositoryImpl;
 import org.example.validators.RoleValidator;
 import org.example.validators.UserValidator;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class RoleServiceImpl implements RoleService {
     private final RoleRepository roleRepository;
+    private final RoleMapper roleMapper = new RoleMapperImpl();
 
     public RoleServiceImpl(RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
     }
 
-    public static RoleServiceImpl createRoleService() {
-        return new RoleServiceImpl(new RoleRepositoryImpl());
-    }
-
     @Override
-    public Role createRole(String roleName, String description) {
+    public RoleDTO createRole(String roleName, String description) {
         RoleValidator.roleName(roleName);
         RoleValidator.description(description);
 
         try {
             Role createdRole = roleRepository.createRole(roleName, description);
             RoleValidator.createdRole(createdRole, roleName);
+            RoleDTO createdRoleDTO = roleMapper.roleToRoleDTO(createdRole);
 
-            return createdRole;
+            return createdRoleDTO;
         } catch (SQLException e) {
             throw new RoleException("Error while creating a Role", e);
         }
     }
 
     @Override
-    public Role getRoleById(int roleId) {
+    public RoleDTO getRoleById(int roleId) {
         RoleValidator.roleId(roleId);
 
         try {
             Role foundRole = roleRepository.getRoleById(roleId);
             RoleValidator.foundRole(foundRole, roleId);
+            RoleDTO foundRoleDTO = roleMapper.roleToRoleDTO(foundRole);
 
-            return foundRole;
+            return foundRoleDTO;
         } catch (SQLException e) {
             throw new RoleException("Error while getting a Role by ID", e);
         }
     }
 
     @Override
-    public Role getRoleByIdWithoutItsUsers(int roleId) {
+    public RoleDTO getRoleByIdWithoutItsUsers(int roleId) {
         RoleValidator.roleId(roleId);
 
         try {
             Role foundRole = roleRepository.getRoleWithoutItsUsers(roleId);
             RoleValidator.foundRole(foundRole, roleId);
+            RoleDTO foundRoleDTO = roleMapper.roleToRoleDTO(foundRole);
 
-            return foundRole;
+            return foundRoleDTO;
         } catch (SQLException e) {
             throw new RoleException("Error while getting a Role by ID without Users array", e);
         }
     }
 
     @Override
-    public List<Role> getAllRoles() {
+    public List<RoleDTO> getAllRoles() {
         try {
             List<Role> listFoundRoles = roleRepository.getAllRoles();
             RoleValidator.listFoundRoles(listFoundRoles);
+            List<RoleDTO> listFoundRolesDTO = new ArrayList<>();
 
-            return listFoundRoles;
+            for (Role role : listFoundRoles) {
+                RoleDTO roleDTO = roleMapper.roleToRoleDTO(role);
+                listFoundRolesDTO.add(roleDTO);
+            }
+
+            return listFoundRolesDTO;
         } catch (SQLException e) {
             throw new RoleException("Error while getting all Roles", e);
         }
     }
 
     @Override
-    public Role updateRoleById(int roleId, String newRoleName, String newDescription) {
+    public RoleDTO updateRoleById(int roleId, String newRoleName, String newDescription) {
         RoleValidator.roleId(roleId);
         RoleValidator.roleName(newRoleName);
         RoleValidator.description(newDescription);
@@ -85,8 +94,9 @@ public class RoleServiceImpl implements RoleService {
         try {
             Role updatedRole = roleRepository.updateRoleById(roleId, newRoleName, newDescription);
             RoleValidator.foundRole(updatedRole, roleId);
+            RoleDTO updatedRoleDTO = roleMapper.roleToRoleDTO(updatedRole);
 
-            return updatedRole;
+            return updatedRoleDTO;
         } catch (SQLException e) {
             throw new RoleException("Error while updating a Role", e);
         }

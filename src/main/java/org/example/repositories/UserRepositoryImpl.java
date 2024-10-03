@@ -10,8 +10,6 @@ import org.example.entities.User;
 import org.example.exceptions.UserNotFoundException;
 import org.example.services.PostService;
 import org.example.services.PostServiceImpl;
-import org.example.services.RoleService;
-import org.example.services.RoleServiceImpl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -102,8 +100,7 @@ public class UserRepositoryImpl implements UserRepository {
                 while (rsFoundAllRoleIds.next()) {
                     int roleId = rsFoundAllRoleIds.getInt("role_id");
                     RoleRepository roleRepository = new RoleRepositoryImpl(dataSource);
-                    RoleService roleService = new RoleServiceImpl(roleRepository);
-                    Role foundRole = roleService.getRoleByIdWithoutItsUsers(roleId);
+                    Role foundRole = roleRepository.getRoleWithoutItsUsers(roleId);
                     listFoundRoles.add(foundRole);
                 }
 

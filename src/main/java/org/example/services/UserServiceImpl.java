@@ -50,14 +50,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserByIdWithoutHisRoles(int userId) {
+    public UserDTO getUserByIdWithoutHisRoles(int userId) {
         UserValidator.userId(userId);
 
         try {
             User foundUser = userRepository.getUserWithoutHisRoles(userId);
             UserValidator.foundUser(foundUser, userId);
+            UserDTO foundUserDTO = userMapper.userToUserDTO(foundUser);
 
-            return foundUser;
+            return foundUserDTO;
         } catch (SQLException e) {
             throw new UserException("Error while getting a User without his Roles", e);
         }

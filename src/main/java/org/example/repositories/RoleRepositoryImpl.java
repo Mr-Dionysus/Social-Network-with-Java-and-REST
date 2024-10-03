@@ -7,10 +7,6 @@ import org.example.entities.Role;
 import org.example.entities.User;
 import org.example.exceptions.PostNotFoundException;
 import org.example.exceptions.RoleNotFoundException;
-import org.example.services.RoleService;
-import org.example.services.RoleServiceImpl;
-import org.example.services.UserService;
-import org.example.services.UserServiceImpl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -85,12 +81,11 @@ public class RoleRepositoryImpl implements RoleRepository {
         try (PreparedStatement prepStmtSelectAllUserIdsByRoleId = connection.prepareStatement(UsersRolesSQL.SELECT_ALL_USER_IDS_BY_ROLE_ID.getQuery())) {
             prepStmtSelectAllUserIdsByRoleId.setInt(1, roleId);
             UserRepository userRepository = new UserRepositoryImpl(dataSource);
-            UserService userService = new UserServiceImpl(userRepository);
 
             try (ResultSet rsFoundUserIds = prepStmtSelectAllUserIdsByRoleId.executeQuery()) {
                 while (rsFoundUserIds.next()) {
                     int userId = rsFoundUserIds.getInt("user_id");
-                    User user = userService.getUserByIdWithoutHisRoles(userId);
+                    User user = userRepository.getUserWithoutHisRoles(userId);
                     listUsers.add(user);
                 }
 
@@ -150,8 +145,7 @@ public class RoleRepositoryImpl implements RoleRepository {
             prepStmtUpdateRoleById.executeUpdate();
 
             RoleRepository roleRepository = new RoleRepositoryImpl(dataSource);
-            RoleService roleService = new RoleServiceImpl(roleRepository);
-            Role updatedRole = roleService.getRoleById(roleId);
+            Role updatedRole = roleRepository.getRoleById(roleId);
 
             return updatedRole;
         }
