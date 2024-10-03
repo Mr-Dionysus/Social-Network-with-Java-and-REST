@@ -37,11 +37,6 @@ public class UserDTO {
     }
 
     @Override
-    public String toString() {
-        return "UserDTO{" + "login='" + login + '\'' + ", roles=" + roles + ", posts=" + posts + '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o)
             return true;

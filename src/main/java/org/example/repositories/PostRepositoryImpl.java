@@ -2,14 +2,9 @@ package org.example.repositories;
 
 import org.example.db.DataSource;
 import org.example.db.PostsSQL;
-import org.example.dtos.UserDTO;
 import org.example.entities.Post;
 import org.example.entities.User;
 import org.example.exceptions.PostNotFoundException;
-import org.example.mappers.UserMapper;
-import org.example.mappers.UserMapperImpl;
-import org.example.services.UserService;
-import org.example.services.UserServiceImpl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

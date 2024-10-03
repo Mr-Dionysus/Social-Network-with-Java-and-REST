@@ -2,7 +2,6 @@ package org.example.controllers;
 
 import org.example.dtos.UserCredentialsDTO;
 import org.example.dtos.UserDTO;
-import org.example.entities.User;
 import org.example.mappers.UserMapper;
 import org.example.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +15,6 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private UserMapper userMapper;
 
     @PostMapping
     public ResponseEntity<UserDTO> createUser(@RequestBody UserCredentialsDTO userCredentialsDTO) {

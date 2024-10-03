@@ -3,6 +3,7 @@ package org.example.controllers;
 import org.example.dtos.PostDTO;
 import org.example.services.PostService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -28,6 +29,7 @@ class PostControllerTest {
     }
 
     @Test
+    @DisplayName("Create a Post")
     void createPost() {
         String text = "hello there";
         int likes = 0;
@@ -48,6 +50,7 @@ class PostControllerTest {
     }
 
     @Test
+    @DisplayName("Get a Post by ID")
     void getPostById() {
         int postId = 1;
         String text = "hello there";
@@ -65,6 +68,7 @@ class PostControllerTest {
     }
 
     @Test
+    @DisplayName("Update a Post by ID")
     void updatePostById() {
         int postId = 1;
         String text = "hello there";
@@ -87,6 +91,7 @@ class PostControllerTest {
     }
 
     @Test
+    @DisplayName("Delete a Post by ID")
     void deletePostById() {
         int postId = 1;
         ResponseEntity<Void> response = postController.deletePostById(postId);

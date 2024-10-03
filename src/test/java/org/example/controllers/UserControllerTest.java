@@ -2,10 +2,9 @@ package org.example.controllers;
 
 import org.example.dtos.UserCredentialsDTO;
 import org.example.dtos.UserDTO;
-import org.example.entities.User;
-import org.example.mappers.UserMapper;
 import org.example.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -31,6 +30,7 @@ class UserControllerTest {
     }
 
     @Test
+    @DisplayName("Create a User")
     void createUser() {
         String login = "admin4";
         String password = "password";
@@ -53,6 +53,7 @@ class UserControllerTest {
     }
 
     @Test
+    @DisplayName("Get a User by ID")
     void getUserById() {
         int userId = 1;
         String login = "admin4";
@@ -71,6 +72,7 @@ class UserControllerTest {
     }
 
     @Test
+    @DisplayName("Update a User by ID")
     void updateUserById() {
         int userId = 1;
         String newLogin = "newLogin";
@@ -94,6 +96,7 @@ class UserControllerTest {
     }
 
     @Test
+    @DisplayName("Delete a User by ID")
     void deleteUserById() {
         int userId = 1;
         String login = "admin4";

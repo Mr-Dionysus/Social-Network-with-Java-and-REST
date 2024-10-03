@@ -37,10 +37,6 @@ public class Post {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getText() {
         return text;
     }
@@ -71,11 +67,6 @@ public class Post {
 
     public void setAuthor(User author) {
         this.author = author;
-    }
-
-    @Override
-    public String toString() {
-        return "Post{" + "id=" + id + ", text='" + text + '\'' + ", likes=" + likes + ", dislikes" + "=" + dislikes + ", author=" + author + '}';
     }
 
     @Override

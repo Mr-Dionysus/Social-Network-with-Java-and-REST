@@ -46,10 +46,7 @@ class UserMapperTest {
         ArrayList<Post> expectedListPosts = this.createExpectedListPosts();
         ArrayList<Role> expectedListRoles = this.createExpectedListRoles();
 
-        User userBeforeUserDTO = new User();
-        userBeforeUserDTO.setId(expectedUserId);
-        userBeforeUserDTO.setLogin(expectedLogin);
-        userBeforeUserDTO.setPassword(expectedPassword);
+        User userBeforeUserDTO = new User(expectedUserId, expectedLogin, expectedPassword);
         userBeforeUserDTO.setRoles(expectedListRoles);
         userBeforeUserDTO.setPosts(expectedListPosts);
 
@@ -94,10 +91,7 @@ class UserMapperTest {
         ArrayList<Post> expectedListPosts = this.createExpectedListPosts();
         ArrayList<Role> expectedListRoles = this.createExpectedListRoles();
 
-        User userBeforeUserCredentialsDTO = new User();
-        userBeforeUserCredentialsDTO.setId(expectedUserId);
-        userBeforeUserCredentialsDTO.setLogin(expectedLogin);
-        userBeforeUserCredentialsDTO.setPassword(expectedPassword);
+        User userBeforeUserCredentialsDTO = new User(expectedUserId, expectedLogin, expectedPassword);
         userBeforeUserCredentialsDTO.setRoles(expectedListRoles);
         userBeforeUserCredentialsDTO.setPosts(expectedListPosts);
 
