@@ -10,13 +10,13 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 
-public class DataSource {
+public class HikariCP {
     private static final HikariConfig config = new HikariConfig();
     private static HikariDataSource ds;
 
     private void initializeDataSource(String propertiesPath) {
-        try (InputStream inputStream = DataSource.class.getClassLoader()
-                                                       .getResourceAsStream(propertiesPath)
+        try (InputStream inputStream = HikariCP.class.getClassLoader()
+                                                     .getResourceAsStream(propertiesPath)
         ) {
             Properties props = new Properties();
             props.load(inputStream);
@@ -53,14 +53,14 @@ public class DataSource {
         }
     }
 
-    public DataSource(String jdbcURL, String username, String password) {
+    public HikariCP(String jdbcURL, String username, String password) {
         config.setJdbcUrl(jdbcURL);
         config.setUsername(username);
         config.setPassword(password);
         ds = new HikariDataSource(config);
     }
 
-    public DataSource() {
+    public HikariCP() {
         String propertiesPath = "/config.properties";
         initializeDataSource(propertiesPath);
     }

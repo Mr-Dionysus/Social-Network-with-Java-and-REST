@@ -12,7 +12,7 @@ class PostMapperTest {
     private final PostMapperImpl postMapper = new PostMapperImpl();
 
     @Test
-    @DisplayName("Post to PostDTO")
+    @DisplayName("Post to a Post DTO")
     void postToPostDTO() {
         String expectedText = "test text";
         int expectedLikes = 0;
@@ -33,6 +33,7 @@ class PostMapperTest {
         expectedPost.setText(expectedText);
         expectedPost.setLikes(expectedLikes);
         expectedPost.setDislikes(expectedDislikes);
+        expectedPost.setAuthor(expectedUser);
 
         PostDTO actualPost = postMapper.postToPostDTO(beforeDTOpost);
 

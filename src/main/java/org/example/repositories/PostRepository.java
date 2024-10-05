@@ -1,17 +1,16 @@
 package org.example.repositories;
 
 import org.example.entities.Post;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
 
-public interface PostRepository {
-    Post createPost(String text, int userId) throws SQLException;
+@Repository
+public interface PostRepository extends JpaRepository<Post, Integer> {
 
-    Post getPostById(int postId) throws SQLException;
+    @Query("SELECT * FROM Post p WHERE p.id = :postId")
+    Post findByIdWithoutUser(int postId);
 
-    Post getPostByIdWithoutItsUser(int postId) throws SQLException;
-
-    Post updatePostById(int postId, String newText) throws SQLException;
-
-    void deletePostById(int postId) throws SQLException;
 }

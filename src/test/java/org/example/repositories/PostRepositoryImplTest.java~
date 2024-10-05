@@ -1,7 +1,7 @@
 package org.example.repositories;
 
 import org.example.connection.TestSQL;
-import org.example.db.DataSource;
+import org.example.db.HikariCP;
 import org.example.db.PostsSQL;
 import org.example.db.UsersSQL;
 import org.example.entities.Post;
@@ -25,14 +25,14 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 class PostRepositoryImplTest {
     private static MySQLContainer<?> mySQLcontainer;
-    private static DataSource dataSource;
+    private static HikariCP dataSource;
     public final PostRepository postRepositoryImpl = new PostRepositoryImpl(dataSource);
 
     @BeforeAll
     static void setUpContainer() throws SQLException {
         mySQLcontainer = new MySQLContainer<>("mysql:8.0");
         mySQLcontainer.start();
-        dataSource = new DataSource(mySQLcontainer.getJdbcUrl(), mySQLcontainer.getUsername(), mySQLcontainer.getPassword());
+        dataSource = new HikariCP(mySQLcontainer.getJdbcUrl(), mySQLcontainer.getUsername(), mySQLcontainer.getPassword());
 
         try (Connection connection = dataSource.connect()) {
             TestSQL.createAllTablesWithTestEntities(connection, dataSource);
@@ -113,32 +113,32 @@ class PostRepositoryImplTest {
 
     @Test
     @DisplayName("Find a Post by ID")
-    void getPostById() throws SQLException {
+    void findById() throws SQLException {
         User expectedUser = this.findTestUser();
         Post testPost = this.createExpectedPost(1);
         expectedUser.setPosts(new ArrayList<>(List.of(testPost)));
         Post expectedPost = this.createExpectedPost(1);
         expectedPost.setAuthor(expectedUser);
 
-        Post actualPost = postRepositoryImpl.getPostById(1);
+        Post actualPost = postRepositoryImpl.findById(1);
 
         assertEquals(expectedPost, actualPost);
     }
 
     @Test
     @DisplayName("Find a Post by ID without its Users")
-    void getPostByIdWithoutItsUser() throws SQLException {
+    void findByIdWithoutUser() throws SQLException {
         Post expectedPost = this.createExpectedPost(1);
         int expectedPostId = expectedPost.getId();
 
-        Post actualPost = postRepositoryImpl.getPostByIdWithoutItsUser(expectedPostId);
+        Post actualPost = postRepositoryImpl.findByIdWithoutUser(expectedPostId);
 
         assertEquals(expectedPost, actualPost);
     }
 
     @Test
     @DisplayName("Update a Post by ID")
-    void updatePostById() throws SQLException {
+    void save() throws SQLException {
         User expectedUser = this.findTestUser();
         Post testPost1 = this.createExpectedPost(1);
         String expectedText = "test updated test";
@@ -148,7 +148,7 @@ class PostRepositoryImplTest {
         expectedUser.setPosts(new ArrayList<>(Arrays.asList(testPost1, testPost2)));
         Post expectedPost = new Post(2, expectedText, expectedLikes, expectedDislikes, expectedUser);
 
-        Post actualPost = postRepositoryImpl.updatePostById(2, expectedText);
+        Post actualPost = postRepositoryImpl.save(2, expectedText);
 
         assertEquals(expectedPost, actualPost);
     }
@@ -181,8 +181,8 @@ class PostRepositoryImplTest {
 
     @Test
     @DisplayName("Delete a Post by ID")
-    void deletePostById() throws SQLException {
-        postRepositoryImpl.deletePostById(2);
+    void deleteById() throws SQLException {
+        postRepositoryImpl.deleteById(2);
         Post actualPost = this.checkIfPostDeleted();
 
         assertNull(actualPost);

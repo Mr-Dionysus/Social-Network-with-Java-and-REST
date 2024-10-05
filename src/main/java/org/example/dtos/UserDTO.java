@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+
 public class UserDTO {
     private String login;
     private List<Role> roles = new ArrayList<>();

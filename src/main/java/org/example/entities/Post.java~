@@ -29,6 +29,12 @@ public class Post {
     public Post() {
     }
 
+    public Post(int id, String text, User author) {
+        this.id = id;
+        this.text = text;
+        this.author = author;
+    }
+
     public Post(int id, String text, int likes, int dislikes) {
         this.id = id;
         this.text = text;

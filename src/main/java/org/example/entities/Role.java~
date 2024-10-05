@@ -75,11 +75,6 @@ public class Role {
     }
 
     @Override
-    public String toString() {
-        return "Role{" + "id=" + id + ", roleName='" + roleName + '\'' + ", description='" + description + '\'' + ", users=" + users + '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o)
             return true;

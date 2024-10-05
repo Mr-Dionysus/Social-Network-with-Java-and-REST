@@ -133,29 +133,4 @@ class RoleControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         verify(roleService).deleteRoleById(roleId);
     }
-
-    //    @Test
-    //    @DisplayName("Assign a Role to a User")
-    //    void assignRoleToUser() {
-    //        int userId = 1;
-    //        String login = "admin";
-    //        String password = "password";
-    //        User mockUser = new User(userId, login, password);
-    //
-    //        int roleId = 1;
-    //        String roleName = "admin";
-    //        String description = "manage stuff";
-    //        RoleDTO mockRoleDTO = new RoleDTO();
-    //        mockRoleDTO.setRoleName(roleName);
-    //        mockRoleDTO.setDescription(description);
-    //        mockRoleDTO.setUsers(new ArrayList<>(List.of(mockUser)));
-    //
-    //        when(roleService.getRoleById(roleId)).thenReturn(mockRoleDTO);
-    //
-    //        ResponseEntity<RoleDTO> response = usersRolesController.assignRoleToUser(userId, roleId);
-    //
-    //        assertEquals(HttpStatus.OK, response.getStatusCode());
-    //        assertEquals(mockRoleDTO, response.getBody());
-    //    }
-    //}
 }

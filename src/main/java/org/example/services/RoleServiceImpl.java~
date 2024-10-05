@@ -13,6 +13,7 @@ import org.example.validators.RoleValidator;
 import org.example.validators.UserValidator;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,11 +58,15 @@ public class RoleServiceImpl implements RoleService {
     public RoleDTO getRoleByIdWithoutItsUsers(int roleId) {
         RoleValidator.roleId(roleId);
 
-        Role foundRole = roleRepository.findByIdWithoutItsUsers(roleId);
-        RoleValidator.foundRole(foundRole, roleId);
-        RoleDTO foundRoleDTO = roleMapper.roleToRoleDTO(foundRole);
+        try {
+            Role foundRole = roleRepository.findByIdWithoutItsUsers(roleId);
+            RoleValidator.foundRole(foundRole, roleId);
+            RoleDTO foundRoleDTO = roleMapper.roleToRoleDTO(foundRole);
 
-        return foundRoleDTO;
+            return foundRoleDTO;
+        } catch (SQLException e) {
+            throw new RoleException("Error while getting a Role by ID without Users array", e);
+        }
     }
 
     @Override

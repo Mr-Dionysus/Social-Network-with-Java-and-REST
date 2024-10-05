@@ -33,6 +33,7 @@ class RoleMapperTest {
         RoleDTO expectedRoleDTO = new RoleDTO();
         expectedRoleDTO.setRoleName(expectedRoleName);
         expectedRoleDTO.setDescription(expectedDescription);
+        expectedRoleDTO.setUsers(expectedListUsers);
 
         assertEquals(expectedRoleDTO, actualRoleDTO);
     }

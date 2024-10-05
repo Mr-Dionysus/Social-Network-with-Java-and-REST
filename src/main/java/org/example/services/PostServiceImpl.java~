@@ -12,6 +12,7 @@ import org.example.validators.PostValidator;
 import org.example.validators.UserValidator;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -30,8 +31,7 @@ public class PostServiceImpl implements PostService {
         PostValidator.text(text);
         UserValidator.userId(userId);
 
-        User user = userRepository.findById(userId)
-                                  .get();
+        User user = userRepository.findById(userId).get();
         Post post = new Post(text, user);
         Post createdPost = postRepository.save(post);
         PostValidator.createdPost(createdPost, text);
@@ -56,11 +56,15 @@ public class PostServiceImpl implements PostService {
     public PostDTO getPostByIdWithoutItsUser(int postId) {
         PostValidator.postId(postId);
 
-        Post foundPost = postRepository.findByIdWithoutUser(postId);
-        PostValidator.foundPost(foundPost, postId);
-        PostDTO foundPostDTO = postMapper.postToPostDTO(foundPost);
+        try {
+            Post foundPost = postRepository.findByIdWithoutUser(postId);
+            PostValidator.foundPost(foundPost, postId);
+            PostDTO foundPostDTO = postMapper.postToPostDTO(foundPost);
 
-        return foundPostDTO;
+            return foundPostDTO;
+        } catch (SQLException e) {
+            throw new PostException("Error while getting a post without user", e);
+        }
     }
 
     @Override

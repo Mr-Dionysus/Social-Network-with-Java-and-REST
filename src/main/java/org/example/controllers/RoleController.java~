@@ -58,17 +58,17 @@ public class RoleController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    @PutMapping("/{roleId}/users/{userId}")
-    public ResponseEntity<Void> assignUserToRole(@PathVariable("roleId") int roleId,
-                                                     @PathVariable("userId") int userId) {
-        try {
-            roleService.assignRoleToUser(userId, roleId);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+//
+//    @PutMapping("/{roleId}/users/{userId}")
+//    public ResponseEntity<Void> assignUserToRole(@PathVariable("roleId") int roleId,
+//                                                     @PathVariable("userId") int userId) {
+//        try {
+//            roleService.assignRoleToUser(userId, roleId);
+//            return new ResponseEntity<>(HttpStatus.OK);
+//        } catch (Exception e) {
+//            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteRoleById(@PathVariable("id") int id) {

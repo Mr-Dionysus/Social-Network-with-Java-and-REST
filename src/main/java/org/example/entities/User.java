@@ -1,14 +1,34 @@
 package org.example.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Entity
+@Table(name = "users")
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @Column(name = "login")
     private String login;
+
+    @Column(name = "password")
     private String password;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE,
+            CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @JsonManagedReference
     private List<Role> roles = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    @JsonManagedReference
     private List<Post> posts = new ArrayList<>();
 
     public User() {
@@ -20,12 +40,11 @@ public class User {
         this.password = password;
     }
 
-    public User(int id, String login, String password, List<Role> roles, List<Post> posts) {
-        this.id = id;
+
+
+    public User(String login, String password) {
         this.login = login;
         this.password = password;
-        this.roles = roles;
-        this.posts = posts;
     }
 
     public int getId() {
@@ -62,6 +81,11 @@ public class User {
 
     public void setPosts(List<Post> posts) {
         this.posts = posts;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" + "id=" + id + ", login='" + login + '\'' + ", password='" + password + '\'' + ", roles=" + roles + ", posts=" + posts + '}';
     }
 
     @Override

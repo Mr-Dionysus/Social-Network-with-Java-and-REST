@@ -5,6 +5,7 @@ import org.example.entities.Post;
 import org.example.entities.User;
 import org.example.exceptions.PostNotFoundException;
 import org.example.repositories.PostRepository;
+import org.example.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,16 +14,20 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.sql.SQLException;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class PostServiceImplTest {
     @Mock
-    private PostRepository postRepositoryImpl;
+    private PostRepository postRepository;
 
     @InjectMocks
     private PostServiceImpl postService;
+
+    @Mock
+    private UserRepository userRepository;
 
     @BeforeEach
     void setup() {
@@ -31,8 +36,7 @@ class PostServiceImplTest {
 
     @Test
     @DisplayName("Create a Post")
-    void createPost() throws SQLException {
-        int postId = 1;
+    void createPost() {
         String text = "Hello there";
         int likes = 0;
         int dislikes = 0;
@@ -40,27 +44,29 @@ class PostServiceImplTest {
         int userId = 1;
         String login = "root";
         String password = "password";
-        User user = new User(userId, login, password);
-        Post mockPost = new Post(postId, text, likes, dislikes, user);
-        when(postRepositoryImpl.createPost(text, userId)).thenReturn(mockPost);
+        User mockUser = new User(userId, login, password);
+        Post mockPost = new Post(text, mockUser);
+        when(userRepository.findById(userId)).thenReturn(Optional.of(mockUser));
+        when(postRepository.save(mockPost)).thenReturn(mockPost);
 
         PostDTO mockPostDTO = new PostDTO();
         mockPostDTO.setText(text);
         mockPostDTO.setLikes(likes);
         mockPostDTO.setDislikes(dislikes);
-        mockPostDTO.setAuthor(user);
 
         PostDTO actualPost = postService.createPost(text, userId);
 
+        System.out.println(mockPostDTO);
+        System.out.println(actualPost);
         assertNotNull(actualPost);
         assertEquals(mockPostDTO, actualPost);
 
-        verify(postRepositoryImpl, times(1)).createPost(text, userId);
+        verify(postRepository, times(1)).save(mockPost);
     }
 
     @Test
     @DisplayName("Get a Post by ID")
-    void getPostById() throws SQLException {
+    void getPostById() {
         int postId = 1;
         String text = "Hello there";
         int likes = 0;
@@ -71,20 +77,19 @@ class PostServiceImplTest {
         String password = "password";
         User user = new User(userId, login, password);
         Post mockPost = new Post(postId, text, likes, dislikes, user);
-        when(postRepositoryImpl.getPostById(postId)).thenReturn(mockPost);
+        when(postRepository.findById(postId)).thenReturn(Optional.of(mockPost));
 
         PostDTO mockPostDTO = new PostDTO();
         mockPostDTO.setText(text);
         mockPostDTO.setLikes(likes);
         mockPostDTO.setDislikes(dislikes);
-        mockPostDTO.setAuthor(user);
 
         PostDTO actualPost = postService.getPostById(postId);
 
         assertNotNull(actualPost);
         assertEquals(mockPostDTO, actualPost);
 
-        verify(postRepositoryImpl, times(1)).getPostById(postId);
+        verify(postRepository, times(1)).findById(postId);
     }
 
     @Test
@@ -96,7 +101,7 @@ class PostServiceImplTest {
         int dislikes = 0;
 
         Post mockPost = new Post(postId, text, likes, dislikes);
-        when(postRepositoryImpl.getPostByIdWithoutItsUser(postId)).thenReturn(mockPost);
+        when(postRepository.findByIdWithoutUser(postId)).thenReturn(mockPost);
 
         PostDTO mockPostDTO = new PostDTO();
         mockPostDTO.setText(text);
@@ -108,12 +113,12 @@ class PostServiceImplTest {
         assertNotNull(actualPost);
         assertEquals(mockPostDTO, actualPost);
 
-        verify(postRepositoryImpl, times(1)).getPostByIdWithoutItsUser(postId);
+        verify(postRepository, times(1)).findByIdWithoutUser(postId);
     }
 
     @Test
     @DisplayName("Update a Post by ID")
-    void updatePostById() throws SQLException {
+    void updatePostById() {
         int postId = 1;
         String text = "Hello there";
         int likes = 0;
@@ -122,7 +127,8 @@ class PostServiceImplTest {
 
         String newText = "new text";
         mockPost.setText(newText);
-        when(postRepositoryImpl.updatePostById(postId, newText)).thenReturn(mockPost);
+        when(postRepository.save(mockPost)).thenReturn(mockPost);
+        when(postRepository.findById(postId)).thenReturn(Optional.of(mockPost));
 
         PostDTO mockPostDTO = new PostDTO();
         mockPostDTO.setText(newText);
@@ -134,17 +140,19 @@ class PostServiceImplTest {
         assertNotNull(actualPost);
         assertEquals(mockPostDTO, actualPost);
 
-        verify(postRepositoryImpl, times(1)).updatePostById(postId, newText);
+        verify(postRepository, times(1)).save(mockPost);
     }
 
     @Test
     @DisplayName("Delete a Post by ID")
-    void deletePostById() throws SQLException {
+    void deletePostById() {
         int postId = 1;
 
+        Post mockPost = new Post();
+        when(postRepository.findById(postId)).thenReturn(Optional.of(mockPost));
         String expectedMessage = "Post with ID '1' can't be found";
-        doThrow(new PostNotFoundException(expectedMessage)).when(postRepositoryImpl)
-                                                           .deletePostById(postId);
+        doThrow(new PostNotFoundException(expectedMessage)).when(postRepository)
+                                                           .deleteById(postId);
 
         PostNotFoundException exception = assertThrows(PostNotFoundException.class, () -> postService.deletePostById(postId));
 

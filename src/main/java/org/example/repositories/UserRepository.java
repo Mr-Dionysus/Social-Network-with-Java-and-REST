@@ -1,17 +1,13 @@
 package org.example.repositories;
 
 import org.example.entities.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
-import java.sql.SQLException;
+@Repository
+public interface UserRepository extends JpaRepository<User, Integer> {
 
-public interface UserRepository {
-    User createUser(String login, String password) throws SQLException;
-
-    User getUserById(int userId) throws SQLException;
-
-    User getUserWithoutHisRoles(int userId) throws SQLException;
-
-    User updateUserById(int userId, String newLogin, String newPassword) throws SQLException;
-
-    void deleteUserById(int userId) throws SQLException;
+    @Query("SELECT u FROM User u WHERE u.id = :userId")
+    User findByIdWithoutRoles(int userId);
 }

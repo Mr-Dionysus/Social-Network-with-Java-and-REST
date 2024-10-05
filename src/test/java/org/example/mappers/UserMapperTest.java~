@@ -5,7 +5,6 @@ import org.example.dtos.UserDTO;
 import org.example.entities.Post;
 import org.example.entities.Role;
 import org.example.entities.User;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -39,7 +38,6 @@ class UserMapperTest {
     }
 
     @Test
-    @DisplayName("User to UserDTO")
     void userToUserDTO() {
         int expectedUserId = 1;
         String expectedLogin = "login";
@@ -54,7 +52,7 @@ class UserMapperTest {
 
         UserDTO expectedUser = new UserDTO();
         expectedUser.setLogin(expectedLogin);
-
+    
 
         UserDTO actualUser = userMapper.userToUserDTO(userBeforeUserDTO);
 
@@ -62,7 +60,6 @@ class UserMapperTest {
     }
 
     @Test
-    @DisplayName("UserDTO to User")
     void userDTOtoUser() {
         String expectedLogin = "login";
 
@@ -85,7 +82,6 @@ class UserMapperTest {
     }
 
     @Test
-    @DisplayName("User to UserCredentialsDTO")
     void userToUserCredentialsDTO() {
         int expectedUserId = 1;
         String expectedLogin = "login";
@@ -108,7 +104,6 @@ class UserMapperTest {
     }
 
     @Test
-    @DisplayName("UserCredentialsDTO to User")
     void userCredentialsDTOtoUser() {
         String expectedLogin = "login";
         String expectedPassword = "password";
