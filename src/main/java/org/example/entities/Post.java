@@ -44,10 +44,6 @@ public class Post {
         this.author = author;
     }
 
-    public Post(String text) {
-        this.text = text;
-    }
-
     public Post(String text, User author) {
         this.text = text;
         this.author = author;
@@ -103,7 +99,6 @@ public class Post {
         Post post = (Post) o;
         return id == post.id && likes == post.likes && dislikes == post.dislikes && Objects.equals(text, post.text) && Objects.equals(author, post.author);
     }
-
 
     @Override
     public int hashCode() {

@@ -30,7 +30,8 @@ public class PostServiceImpl implements PostService {
         UserValidator.userId(userId);
 
         User user = userRepository.findById(userId)
-                                  .get();
+                                  .isPresent() ? userRepository.findById(userId)
+                                                               .get() : null;
         Post post = new Post(text, user);
         Post createdPost = postRepository.save(post);
         PostValidator.createdPost(createdPost, text);
@@ -44,7 +45,8 @@ public class PostServiceImpl implements PostService {
         PostValidator.postId(postId);
 
         Post foundPost = postRepository.findById(postId)
-                                       .get();
+                                       .isPresent() ? postRepository.findById(postId)
+                                                                    .get() : null;
         PostValidator.foundPost(foundPost, postId);
         PostDTO foundPostDTO = postMapper.postToPostDTO(foundPost);
 
@@ -57,7 +59,9 @@ public class PostServiceImpl implements PostService {
         PostValidator.text(newText);
 
         Post post = postRepository.findById(postId)
-                                  .get();
+                                  .isPresent() ? postRepository.findById(postId)
+                                                               .get() : null;
+        PostValidator.foundPost(post, postId);
         post.setText(newText);
         Post updatedPost = postRepository.save(post);
         PostValidator.foundPost(updatedPost, postId);
@@ -74,8 +78,9 @@ public class PostServiceImpl implements PostService {
             throw new PostNotFoundException("Error while deleting post. Post with ID '" + postId + "' can't be found");
         }
         Post post = postRepository.findById(postId)
-                                  .get();
-
+                                  .isPresent() ? postRepository.findById(postId)
+                                                               .get() : null;
+        PostValidator.foundPost(post, postId);
         User user = post.getAuthor();
 
         if (user != null) {

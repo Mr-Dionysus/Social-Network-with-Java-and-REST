@@ -12,8 +12,6 @@ import org.example.validators.PostValidator;
 import org.example.validators.UserValidator;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
@@ -86,6 +84,6 @@ public class PostServiceImpl implements PostService {
             userRepository.save(user);
         }
 
-        postRepository.delete(post);
+        postRepository.deleteById(postId);
     }
 }

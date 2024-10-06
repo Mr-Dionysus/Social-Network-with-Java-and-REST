@@ -1,6 +1,6 @@
 package org.example.repositories;
 
-import org.example.connection.TestConfig;
+import org.example.config.TestConfig;
 import org.example.entities.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,8 +10,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.testcontainers.containers.MySQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,11 +20,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @EnableJpaRepositories(basePackages = "org.example.repositories")
 @ActiveProfiles("test")
 class UserRepositoryTest {
-    @Container
-    public static MySQLContainer<?> mysqlContainer = new MySQLContainer<>("mysql:8.0").withDatabaseName("testdb")
-                                                                                      .withUsername("user")
-                                                                                      .withPassword("password");
-
     private final UserRepository userRepository;
 
     @Autowired
@@ -52,8 +45,8 @@ class UserRepositoryTest {
         String password = "password";
         User user = new User(userId, login, password);
         userRepository.save(user);
-        User foundUser = userRepository.findById(userId)
-                                       .get();
+        User foundUser = userRepository.findById(userId).get();
+
         assertEquals(user, foundUser);
     }
 

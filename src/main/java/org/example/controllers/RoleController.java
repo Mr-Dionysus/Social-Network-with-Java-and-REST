@@ -60,8 +60,8 @@ public class RoleController {
     }
 
     @PutMapping("/{roleId}/users/{userId}")
-    public ResponseEntity<Void> assignUserToRole(@PathVariable("roleId") int roleId,
-                                                     @PathVariable("userId") int userId) {
+    public ResponseEntity<Void> assignRoleToUser(@PathVariable("roleId") int roleId,
+                                                 @PathVariable("userId") int userId) {
         try {
             roleService.assignRoleToUser(userId, roleId);
             return new ResponseEntity<>(HttpStatus.OK);

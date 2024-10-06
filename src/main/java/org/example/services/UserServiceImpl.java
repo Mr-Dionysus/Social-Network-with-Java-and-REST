@@ -43,7 +43,8 @@ public class UserServiceImpl implements UserService {
         UserValidator.userId(userId);
 
         User foundUser = userRepository.findById(userId)
-                                       .get();
+                                       .isPresent() ? userRepository.findById(userId)
+                                                                    .get() : null;
         UserValidator.foundUser(foundUser, userId);
         UserDTO foundUserDTO = userMapper.userToUserDTO(foundUser);
 
@@ -57,7 +58,9 @@ public class UserServiceImpl implements UserService {
         UserValidator.password(newPassword);
 
         User user = userRepository.findById(userId)
-                                  .get();
+                                  .isPresent() ? userRepository.findById(userId)
+                                                               .get() : null;
+        UserValidator.foundUser(user, userId);
         user.setLogin(newLogin);
         user.setPassword(newPassword);
         User updatedUser = userRepository.save(user);
@@ -75,7 +78,10 @@ public class UserServiceImpl implements UserService {
             throw new UserNotFoundException("Error while deleting the User. User with ID '" + userId + "' can't be found");
         }
 
-        User user = userRepository.findById(userId).get();
+        User user = userRepository.findById(userId)
+                                  .isPresent() ? userRepository.findById(userId)
+                                                               .get() : null;
+        UserValidator.foundUser(user,userId);
         List<Role> roles = user.getRoles();
 
         for (Role role : roles) {

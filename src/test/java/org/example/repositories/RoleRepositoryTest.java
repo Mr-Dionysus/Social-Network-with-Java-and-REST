@@ -1,6 +1,6 @@
 package org.example.repositories;
 
-import org.example.connection.TestConfig;
+import org.example.config.TestConfig;
 import org.example.entities.Role;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,11 +10,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.testcontainers.containers.MySQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-
-import javax.accessibility.AccessibleTable;
 
 import java.util.ArrayList;
 
@@ -26,11 +22,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @EnableJpaRepositories(basePackages = "org.example.repositories")
 @ActiveProfiles("test")
 class RoleRepositoryTest {
-    @Container
-    public static MySQLContainer<?> mysqlContainer = new MySQLContainer<>("mysql:8.0").withDatabaseName("testdb")
-                                                                                      .withUsername("user")
-                                                                                      .withPassword("password");
-
     private final RoleRepository roleRepository;
 
     @Autowired
@@ -71,7 +62,7 @@ class RoleRepositoryTest {
         testRole.setDescription("manage stuff");
         Role actualRole = roleRepository.save(testRole);
         Role expectedRole = roleRepository.findAll()
-                                        .get(1);
+                                          .get(1);
         assertEquals(expectedRole.getId(), actualRole.getId());
         assertEquals(expectedRole.getRoleName(), actualRole.getRoleName());
         assertEquals(expectedRole.getDescription(), actualRole.getDescription());

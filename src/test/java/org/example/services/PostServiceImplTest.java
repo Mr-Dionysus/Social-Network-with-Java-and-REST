@@ -13,7 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.sql.SQLException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -87,32 +86,8 @@ class PostServiceImplTest {
         assertNotNull(actualPost);
         assertEquals(mockPostDTO, actualPost);
 
-        verify(postRepository, times(1)).findById(postId);
+        verify(postRepository, times(2)).findById(postId);
     }
-
-//    @Test
-//    @DisplayName("Get a Post by ID without its Users")
-//    void getPostByIdWithoutItsUser() throws SQLException {
-//        int postId = 1;
-//        String text = "Hello there";
-//        int likes = 0;
-//        int dislikes = 0;
-//
-//        Post mockPost = new Post(postId, text, likes, dislikes);
-//        when(postRepository.findByIdWithoutUser(postId)).thenReturn(mockPost);
-//
-//        PostDTO mockPostDTO = new PostDTO();
-//        mockPostDTO.setText(text);
-//        mockPostDTO.setLikes(likes);
-//        mockPostDTO.setDislikes(dislikes);
-//
-//        PostDTO actualPost = postService.getPostByIdWithoutItsUser(postId);
-//
-//        assertNotNull(actualPost);
-//        assertEquals(mockPostDTO, actualPost);
-//
-//        verify(postRepository, times(1)).findByIdWithoutUser(postId);
-//    }
 
     @Test
     @DisplayName("Update a Post by ID")

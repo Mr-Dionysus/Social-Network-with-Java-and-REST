@@ -45,8 +45,7 @@ public class RoleServiceImpl implements RoleService {
         RoleValidator.roleId(roleId);
 
         Role foundRole = roleRepository.findById(roleId)
-                                       .isPresent() ? roleRepository.findById(roleId)
-                                                                    .get() : null;
+                                       .get();
         RoleValidator.foundRole(foundRole, roleId);
         RoleDTO foundRoleDTO = roleMapper.roleToRoleDTO(foundRole);
 
@@ -74,10 +73,7 @@ public class RoleServiceImpl implements RoleService {
         RoleValidator.description(newDescription);
 
         Role role = roleRepository.findById(roleId)
-                                  .isPresent() ? roleRepository.findById(roleId)
-                                                               .get() : null;
-
-        RoleValidator.foundRole(role, roleId);
+                                  .get();
         role.setRoleName(newRoleName);
         role.setDescription(newDescription);
         Role updatedRole = roleRepository.save(role);
@@ -96,11 +92,9 @@ public class RoleServiceImpl implements RoleService {
         }
 
         Role role = roleRepository.findById(roleId)
-                                  .isPresent() ? roleRepository.findById(roleId)
-                                                               .get() : null;
-        RoleValidator.foundRole(role, roleId);
-        List<User> users = role.getUsers();
+                                  .get();
 
+        List<User> users = role.getUsers();
         for (User user : users) {
             user.getRoles()
                 .remove(role);
@@ -118,12 +112,9 @@ public class RoleServiceImpl implements RoleService {
         RoleValidator.roleId(roleId);
 
         User user = userRepository.findById(userId)
-                                  .isPresent() ? userRepository.findById(userId).get() : null;
+                                  .get();
         Role role = roleRepository.findById(roleId)
-                                  .isPresent() ? roleRepository.findById(roleId)
-                                                               .get() : null;
-        UserValidator.foundUser(user, userId);
-        RoleValidator.foundRole(role, roleId);
+                                  .get();
 
         List<Role> updatedRoles = new ArrayList<>(user.getRoles());
         updatedRoles.add(role);

@@ -63,7 +63,7 @@ class UserServiceImplTest {
         assertNotNull(actualUser);
         assertEquals(mockUserDTO, actualUser);
 
-        verify(userRepository, times(1)).findById(userId);
+        verify(userRepository, times(2)).findById(userId);
     }
 
     @Test

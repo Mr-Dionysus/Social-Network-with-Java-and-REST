@@ -1,4 +1,4 @@
-package org.example.connection;
+package org.example.config;
 
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +14,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
+
 import java.util.Properties;
 
 import javax.sql.DataSource;
@@ -25,25 +26,21 @@ import javax.sql.DataSource;
 @Profile("test")
 public class TestConfig {
     @Container
-    private static final MySQLContainer<?> mysqlContainer = new MySQLContainer<>("mysql:8.0.28").withDatabaseName("mydb")
-                                                                                                .withUsername("myuser")
-                                                                                                .withPassword("mypassword")
+    private static final MySQLContainer<?> mysqlContainer = new MySQLContainer<>("mysql:8.0.28").withDatabaseName("test_db")
+                                                                                                .withUsername("test_user")
+                                                                                                .withPassword("test_password")
                                                                                                 .withReuse(true);
-
-    static {
-        mysqlContainer.start();
-    }
 
     @Bean
     public DataSource dataSource() {
+        mysqlContainer.start();
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
         dataSource.setUrl(mysqlContainer.getJdbcUrl());
-
         dataSource.setUsername(mysqlContainer.getUsername());
         dataSource.setPassword(mysqlContainer.getPassword());
-        return dataSource;
 
+        return dataSource;
     }
 
     @Bean
@@ -53,6 +50,7 @@ public class TestConfig {
         em.setPackagesToScan("org.example.entities");
         em.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
         em.setJpaProperties(additionalProperties());
+
         return em;
     }
 
@@ -60,6 +58,7 @@ public class TestConfig {
     public PlatformTransactionManager transactionManager(EntityManagerFactory emf) {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(emf);
+
         return transactionManager;
     }
 
@@ -69,6 +68,7 @@ public class TestConfig {
         properties.setProperty("hibernate.show_sql", "true");
         properties.setProperty("hibernate.format_sql", "true");
         properties.setProperty("hibernate.use_sql_comments", "true");
+
         return properties;
     }
 }

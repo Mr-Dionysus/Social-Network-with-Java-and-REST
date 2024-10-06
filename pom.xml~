@@ -72,12 +72,6 @@
             <version>6.1.0</version>
             <scope>provided</scope>
         </dependency>
-        <!-- https://github.com/brettwooldridge/HikariCP -->
-        <dependency>
-            <groupId>com.zaxxer</groupId>
-            <artifactId>HikariCP</artifactId>
-            <version>5.1.0</version>
-        </dependency>
         <!-- https://mapstruct.org/documentation/installation -->
         <dependency>
             <groupId>org.mapstruct</groupId>

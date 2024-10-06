@@ -12,7 +12,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -77,7 +76,7 @@ class RoleServiceImplTest {
         assertNotNull(actualRole);
         assertEquals(mockRoleDTO, actualRole);
 
-        verify(roleRepository, times(1)).findById(roleId);
+        verify(roleRepository, times(2)).findById(roleId);
     }
 
 

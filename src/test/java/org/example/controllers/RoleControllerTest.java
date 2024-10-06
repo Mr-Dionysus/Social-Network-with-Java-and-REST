@@ -1,6 +1,7 @@
 package org.example.controllers;
 
 import org.example.dtos.RoleDTO;
+import org.example.entities.User;
 import org.example.services.RoleService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -134,28 +135,26 @@ class RoleControllerTest {
         verify(roleService).deleteRoleById(roleId);
     }
 
-    //    @Test
-    //    @DisplayName("Assign a Role to a User")
-    //    void assignRoleToUser() {
-    //        int userId = 1;
-    //        String login = "admin";
-    //        String password = "password";
-    //        User mockUser = new User(userId, login, password);
-    //
-    //        int roleId = 1;
-    //        String roleName = "admin";
-    //        String description = "manage stuff";
-    //        RoleDTO mockRoleDTO = new RoleDTO();
-    //        mockRoleDTO.setRoleName(roleName);
-    //        mockRoleDTO.setDescription(description);
-    //        mockRoleDTO.setUsers(new ArrayList<>(List.of(mockUser)));
-    //
-    //        when(roleService.getRoleById(roleId)).thenReturn(mockRoleDTO);
-    //
-    //        ResponseEntity<RoleDTO> response = usersRolesController.assignRoleToUser(userId, roleId);
-    //
-    //        assertEquals(HttpStatus.OK, response.getStatusCode());
-    //        assertEquals(mockRoleDTO, response.getBody());
-    //    }
-    //}
+    @Test
+    @DisplayName("Assign a Role to a User")
+    void assignRoleToUser() {
+        int userId = 1;
+        String login = "admin";
+        String password = "password";
+        User mockUser = new User(userId, login, password);
+
+        int roleId = 1;
+        String roleName = "admin";
+        String description = "manage stuff";
+        RoleDTO mockRoleDTO = new RoleDTO();
+        mockRoleDTO.setRoleName(roleName);
+        mockRoleDTO.setDescription(description);
+        mockRoleDTO.setUsers(new ArrayList<>(List.of(mockUser)));
+
+        when(roleService.getRoleById(roleId)).thenReturn(mockRoleDTO);
+
+        ResponseEntity<Void> response = roleController.assignRoleToUser(userId, roleId);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
 }
