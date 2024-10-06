@@ -131,4 +131,13 @@ class PostServiceImplTest {
 
         assertEquals(expectedMessage, exception.getMessage());
     }
-}
+    @Test
+    @DisplayName("Get a Post by ID that does not exist")
+    void getPostByIdThatDoesNotExist() {
+        int postId = 1;
+        when(postRepository.findById(postId)).thenReturn(Optional.empty());
+
+        PostNotFoundException exception = assertThrows(PostNotFoundException.class, () -> postService.getPostById(postId));
+
+        assertEquals("Post with ID '1' not found", exception.getMessage());
+    }
