@@ -9,8 +9,6 @@ public interface RoleService {
 
     RoleDTO getRoleById(int id);
 
-    RoleDTO getRoleByIdWithoutItsUsers(int id);
-
     List<RoleDTO> getAllRoles();
 
     RoleDTO updateRoleById(int id, String newRoleName, String newDescription);

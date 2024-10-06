@@ -22,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @EnableJpaRepositories(basePackages = "org.example.repositories")
 @ActiveProfiles("test")
 class PostRepositoryTest {
-
     @Container
     public static MySQLContainer<?> mysqlContainer = new MySQLContainer<>("mysql:8.0").withDatabaseName("testdb")
                                                                                       .withUsername("user")
@@ -47,7 +46,7 @@ class PostRepositoryTest {
     }
 
     @Test
-    @DisplayName("Find a Post by ID")
+    @DisplayName("Get a Post by ID")
     public void findById() {
         Post testPost = new Post();
         testPost.setText("First Post");
@@ -69,6 +68,7 @@ class PostRepositoryTest {
         Post actualPost = postRepository.save(testPost);
         actualPost.setText("Second Post");
         Post expectedPost = postRepository.save(actualPost);
+
         assertEquals(expectedPost, actualPost);
     }
 

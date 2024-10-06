@@ -56,8 +56,6 @@ class PostServiceImplTest {
 
         PostDTO actualPost = postService.createPost(text, userId);
 
-        System.out.println(mockPostDTO);
-        System.out.println(actualPost);
         assertNotNull(actualPost);
         assertEquals(mockPostDTO, actualPost);
 

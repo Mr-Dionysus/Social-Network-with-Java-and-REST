@@ -13,6 +13,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.sql.DataSource;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 @Configuration
@@ -23,12 +25,28 @@ import java.util.Properties;
 public class AppConfig {
     @Bean
     public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://db:3306/testdb");
-        dataSource.setUsername("root");
-        dataSource.setPassword("password");
-        return dataSource;
+        String propertiesPath = "/config.properties";
+        try (InputStream inputStream = AppConfig.class.getClassLoader()
+                                                      .getResourceAsStream(propertiesPath)
+        ) {
+            DriverManagerDataSource dataSource = new DriverManagerDataSource();
+
+            Properties props = new Properties();
+            props.load(inputStream);
+            String dbUser = props.getProperty("dbUser");
+            String dbPassword = props.getProperty("dbPassword");
+            String jdbcUrl = props.getProperty("jdbcUrl");
+            String driverClassName = props.getProperty("driverClassName");
+
+            dataSource.setDriverClassName(driverClassName);
+            dataSource.setUrl(jdbcUrl);
+            dataSource.setUsername(dbUser);
+            dataSource.setPassword(dbPassword);
+
+            return dataSource;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Bean
@@ -52,7 +70,6 @@ public class AppConfig {
         Properties properties = new Properties();
         properties.setProperty("hibernate.hbm2ddl.auto", "update");
         properties.setProperty("hibernate.show_sql", "true");
-        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
         properties.setProperty("hibernate.format_sql", "true");
         properties.setProperty("hibernate.use_sql_comments", "true");
         return properties;

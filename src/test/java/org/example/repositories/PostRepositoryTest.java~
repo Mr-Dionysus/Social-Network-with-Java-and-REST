@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -49,7 +47,7 @@ class PostRepositoryTest {
     }
 
     @Test
-    @DisplayName("Find a Post by ID")
+    @DisplayName("Get a Post by ID")
     public void findById() {
         Post testPost = new Post();
         testPost.setText("First Post");
@@ -71,6 +69,7 @@ class PostRepositoryTest {
         Post actualPost = postRepository.save(testPost);
         actualPost.setText("Second Post");
         Post expectedPost = postRepository.save(actualPost);
+
         assertEquals(expectedPost, actualPost);
     }
 

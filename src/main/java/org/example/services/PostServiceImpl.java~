@@ -83,9 +83,6 @@ public class PostServiceImpl implements PostService {
         if (user != null) {
             user.getPosts()
                 .remove(post);
-            System.out.println("-".repeat(50));
-            System.out.println(user.getId());
-            System.out.println("-".repeat(50));
             userRepository.save(user);
         }
 

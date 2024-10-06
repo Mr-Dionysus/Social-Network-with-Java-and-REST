@@ -80,26 +80,6 @@ class RoleServiceImplTest {
         verify(roleRepository, times(1)).findById(roleId);
     }
 
-    @Test
-    @DisplayName("Get a Role by ID without its Users")
-    void getRoleByIdWithoutItsUsers() throws SQLException {
-        int roleId = 1;
-        String roleName = "admin";
-        String description = "manage stuff";
-
-        Role mockRole = new Role(roleId, roleName, description);
-        when(roleRepository.findByIdWithoutItsUsers(roleId)).thenReturn(mockRole);
-        RoleDTO mockRoleDTO = new RoleDTO();
-        mockRoleDTO.setRoleName(roleName);
-        mockRoleDTO.setDescription(description);
-
-        RoleDTO actualRole = roleService.getRoleByIdWithoutItsUsers(roleId);
-
-        assertNotNull(actualRole);
-        assertEquals(mockRoleDTO, actualRole);
-
-        verify(roleRepository, times(1)).findByIdWithoutItsUsers(roleId);
-    }
 
     @Test
     @DisplayName("Get all Roles")

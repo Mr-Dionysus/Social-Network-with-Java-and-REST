@@ -34,7 +34,6 @@ public class RoleServiceImpl implements RoleService {
 
         Role role = new Role(roleName, description);
         Role createdRole = roleRepository.save(role);
-        System.out.println(createdRole);
         RoleValidator.createdRole(createdRole, roleName);
         RoleDTO createdRoleDTO = roleMapper.roleToRoleDTO(createdRole);
 
@@ -47,17 +46,6 @@ public class RoleServiceImpl implements RoleService {
 
         Role foundRole = roleRepository.findById(roleId)
                                        .get();
-        RoleValidator.foundRole(foundRole, roleId);
-        RoleDTO foundRoleDTO = roleMapper.roleToRoleDTO(foundRole);
-
-        return foundRoleDTO;
-    }
-
-    @Override
-    public RoleDTO getRoleByIdWithoutItsUsers(int roleId) {
-        RoleValidator.roleId(roleId);
-
-        Role foundRole = roleRepository.findByIdWithoutItsUsers(roleId);
         RoleValidator.foundRole(foundRole, roleId);
         RoleDTO foundRoleDTO = roleMapper.roleToRoleDTO(foundRole);
 

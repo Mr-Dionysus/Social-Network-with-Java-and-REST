@@ -173,7 +173,7 @@ class RoleServiceImplTest {
         doThrow(new RoleNotFoundException(expectedMessage)).when(roleRepository)
                                                            .deleteById(roleId);
 
-        when(roleRepository.findById(roleId)).thenReturn(Optional.empty());
+        when(roleRepository.findById(roleId)).thenReturn(Optional.of(new Role()));
         RoleNotFoundException exception = assertThrows(RoleNotFoundException.class, () -> roleService.deleteRoleById(roleId));
 
         assertEquals(expectedMessage, exception.getMessage());

@@ -104,7 +104,6 @@ public class Post {
         return id == post.id && likes == post.likes && dislikes == post.dislikes && Objects.equals(text, post.text) && Objects.equals(author, post.author);
     }
 
-
     @Override
     public int hashCode() {
         return Objects.hash(id, text, likes, dislikes, author);
