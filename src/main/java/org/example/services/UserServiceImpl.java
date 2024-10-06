@@ -9,7 +9,6 @@ import org.example.repositories.UserRepository;
 import org.example.validators.UserValidator;
 import org.springframework.stereotype.Service;
 
-
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
@@ -38,7 +37,7 @@ public class UserServiceImpl implements UserService {
 
         User foundUser = userRepository.findById(userId)
                                        .get();
-                UserValidator.foundUser(foundUser, userId);
+        UserValidator.foundUser(foundUser, userId);
         UserDTO foundUserDTO = userMapper.userToUserDTO(foundUser);
 
         return foundUserDTO;

@@ -52,16 +52,16 @@ public class PostServiceImpl implements PostService {
         return foundPostDTO;
     }
 
-    @Override
-    public PostDTO getPostByIdWithoutItsUser(int postId) {
-        PostValidator.postId(postId);
-
-        Post foundPost = postRepository.findByIdWithoutUser(postId);
-        PostValidator.foundPost(foundPost, postId);
-        PostDTO foundPostDTO = postMapper.postToPostDTO(foundPost);
-
-        return foundPostDTO;
-    }
+//    @Override
+//    public PostDTO getPostByIdWithoutItsUser(int postId) {
+//        PostValidator.postId(postId);
+//
+//        Post foundPost = postRepository.findByIdWithoutUser(postId);
+//        PostValidator.foundPost(foundPost, postId);
+//        PostDTO foundPostDTO = postMapper.postToPostDTO(foundPost);
+//
+//        return foundPostDTO;
+//    }
 
     @Override
     public PostDTO updatePostById(int postId, String newText) {
