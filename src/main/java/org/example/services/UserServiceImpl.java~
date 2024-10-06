@@ -1,22 +1,28 @@
 package org.example.services;
 
 import org.example.dtos.UserDTO;
+import org.example.entities.Role;
 import org.example.entities.User;
 import org.example.exceptions.*;
 import org.example.mappers.UserMapper;
 import org.example.mappers.UserMapperImpl;
+import org.example.repositories.RoleRepository;
 import org.example.repositories.UserRepository;
 import org.example.validators.UserValidator;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper = new UserMapperImpl();
 
-    public UserServiceImpl(UserRepository userRepository) {
+    private final RoleRepository roleRepository;
+
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository) {
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
     }
 
     @Override
@@ -38,17 +44,6 @@ public class UserServiceImpl implements UserService {
 
         User foundUser = userRepository.findById(userId)
                                        .get();
-                UserValidator.foundUser(foundUser, userId);
-        UserDTO foundUserDTO = userMapper.userToUserDTO(foundUser);
-
-        return foundUserDTO;
-    }
-
-    @Override
-    public UserDTO getUserByIdWithoutHisRoles(int userId) {
-        UserValidator.userId(userId);
-
-        User foundUser = userRepository.findByIdWithoutRoles(userId);
         UserValidator.foundUser(foundUser, userId);
         UserDTO foundUserDTO = userMapper.userToUserDTO(foundUser);
 
@@ -78,6 +73,15 @@ public class UserServiceImpl implements UserService {
 
         if (this.getUserById(userId) == null) {
             throw new UserNotFoundException("Error while deleting the User. User with ID '" + userId + "' can't be found");
+        }
+
+        User user = userRepository.findById(userId).get();
+
+        List<Role> roles = user.getRoles();
+        for (Role role : roles) {
+            role.getUsers()
+                .remove(user);
+            roleRepository.save(role);
         }
 
         userRepository.deleteById(userId);

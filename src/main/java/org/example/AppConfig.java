@@ -19,6 +19,7 @@ import java.util.Properties;
 @EnableWebMvc
 @ComponentScan(basePackages = "org.example")
 @EnableJpaRepositories(basePackages = "org.example.repositories")
+@Profile("default")
 public class AppConfig {
     @Bean
     public DataSource dataSource() {
@@ -52,6 +53,8 @@ public class AppConfig {
         properties.setProperty("hibernate.hbm2ddl.auto", "update");
         properties.setProperty("hibernate.show_sql", "true");
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
+        properties.setProperty("hibernate.format_sql", "true");
+        properties.setProperty("hibernate.use_sql_comments", "true");
         return properties;
     }
 

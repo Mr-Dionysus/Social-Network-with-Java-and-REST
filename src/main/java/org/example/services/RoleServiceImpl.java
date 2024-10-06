@@ -103,7 +103,18 @@ public class RoleServiceImpl implements RoleService {
             throw new RoleNotFoundException("Error while deleting the Role. Role with ID '" + roleId + "' " + "can't be found");
         }
 
+        Role role = roleRepository.findById(roleId)
+                                  .get();
+
+        List<User> users = role.getUsers();
+        for (User user : users) {
+            user.getRoles()
+                .remove(role);
+            userRepository.save(user);
+        }
+
         roleRepository.deleteById(roleId);
+
     }
 
     @Override

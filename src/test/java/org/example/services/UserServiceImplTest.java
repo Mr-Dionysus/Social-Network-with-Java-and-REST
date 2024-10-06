@@ -67,25 +67,6 @@ class UserServiceImplTest {
     }
 
     @Test
-    @DisplayName("Get a User by ID without his roles")
-    void getUserByIdWithoutHisRoles() {
-        int userId = 1;
-        String login = "root";
-        String password = "password";
-        User mockUser = new User(userId, login, password);
-        when(userRepository.findByIdWithoutRoles(userId)).thenReturn(mockUser);
-        UserDTO mockUserDTO = new UserDTO();
-        mockUserDTO.setLogin(login);
-
-        UserDTO actualUser = userService.getUserByIdWithoutHisRoles(userId);
-
-        assertNotNull(actualUser);
-        assertEquals(mockUserDTO, actualUser);
-
-        verify(userRepository, times(1)).findByIdWithoutRoles(userId);
-    }
-
-    @Test
     @DisplayName("Update a User by ID")
     void updateUserById() {
         int userId = 1;

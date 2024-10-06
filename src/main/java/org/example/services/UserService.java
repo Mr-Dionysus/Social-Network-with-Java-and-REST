@@ -7,8 +7,6 @@ public interface UserService {
 
     UserDTO getUserById(int id);
 
-    UserDTO getUserByIdWithoutHisRoles(int id);
-
     UserDTO updateUserById(int id, String newLogin, String newPassword);
 
     void deleteUserById(int id);

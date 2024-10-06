@@ -19,7 +19,7 @@ import java.util.Properties;
 @EnableWebMvc
 @ComponentScan(basePackages = "org.example")
 @EnableJpaRepositories(basePackages = "org.example.repositories")
-@Profile("dev")
+@Profile("default")
 public class AppConfig {
     @Bean
     public DataSource dataSource() {

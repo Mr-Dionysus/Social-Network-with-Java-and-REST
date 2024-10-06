@@ -6,8 +6,6 @@ public interface PostService {
     PostDTO createPost(String text, int user_id);
 
     PostDTO getPostById(int postId);
-//
-//    PostDTO getPostByIdWithoutItsUser(int postId);
 
     PostDTO updatePostById(int postId, String newText);
 

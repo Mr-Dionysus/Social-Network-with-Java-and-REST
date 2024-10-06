@@ -12,6 +12,7 @@ import org.example.validators.PostValidator;
 import org.example.validators.UserValidator;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -52,17 +53,6 @@ public class PostServiceImpl implements PostService {
         return foundPostDTO;
     }
 
-//    @Override
-//    public PostDTO getPostByIdWithoutItsUser(int postId) {
-//        PostValidator.postId(postId);
-//
-//        Post foundPost = postRepository.findByIdWithoutUser(postId);
-//        PostValidator.foundPost(foundPost, postId);
-//        PostDTO foundPostDTO = postMapper.postToPostDTO(foundPost);
-//
-//        return foundPostDTO;
-//    }
-
     @Override
     public PostDTO updatePostById(int postId, String newText) {
         PostValidator.postId(postId);
@@ -85,7 +75,17 @@ public class PostServiceImpl implements PostService {
         if (this.getPostById(postId) == null) {
             throw new PostNotFoundException("Error while deleting post. Post with ID '" + postId + "' can't be found");
         }
+        Post post = postRepository.findById(postId)
+                                  .get();
 
-        postRepository.deleteById(postId);
+        User user = post.getAuthor();
+
+        if (user != null) {
+            user.getPosts()
+                .remove(post);
+            userRepository.save(user);
+        }
+
+        postRepository.delete(post);
     }
 }
