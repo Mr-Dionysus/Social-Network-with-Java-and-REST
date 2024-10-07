@@ -4,6 +4,7 @@ import org.example.dtos.RoleDTO;
 import org.example.entities.Role;
 import org.example.entities.User;
 import org.example.exceptions.RoleNotFoundException;
+import org.example.mappers.RoleMapper;
 import org.example.repositories.RoleRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -23,6 +24,9 @@ import static org.mockito.Mockito.*;
 class RoleServiceImplTest {
     @Mock
     private RoleRepository roleRepository;
+
+    @Mock
+    private RoleMapper roleMapper;
 
     @InjectMocks
     private RoleServiceImpl roleService;
@@ -44,6 +48,7 @@ class RoleServiceImplTest {
         mockRoleDTO.setRoleName(roleName);
         mockRoleDTO.setDescription(description);
 
+        when(roleMapper.roleToRoleDTO(any(Role.class))).thenReturn(mockRoleDTO);
         RoleDTO actualRole = roleService.createRole(roleName, description);
 
         assertNotNull(actualRole);
@@ -71,6 +76,7 @@ class RoleServiceImplTest {
         mockRoleDTO.setRoleName(roleName);
         mockRoleDTO.setDescription(description);
 
+        when(roleMapper.roleToRoleDTO(any(Role.class))).thenReturn(mockRoleDTO);
         RoleDTO actualRole = roleService.getRoleById(roleId);
 
         assertNotNull(actualRole);
@@ -109,6 +115,7 @@ class RoleServiceImplTest {
         mockListRoleDTOs.add(mockRoleDTO1);
         mockListRoleDTOs.add(mockRoleDTO2);
 
+        when(roleMapper.roleToRoleDTO(any(Role.class))).thenReturn(mockRoleDTO1).thenReturn(mockRoleDTO2);
         List<RoleDTO> actualListRoles = roleService.getAllRoles();
 
         assertNotNull(actualListRoles);
@@ -136,6 +143,7 @@ class RoleServiceImplTest {
         mockRoleDTO.setRoleName(newRoleName);
         mockRoleDTO.setDescription(newDescription);
 
+        when(roleMapper.roleToRoleDTO(any(Role.class))).thenReturn(mockRoleDTO);
         RoleDTO actualRole = roleService.updateRoleById(roleId, newRoleName, newDescription);
 
         assertNotNull(actualRole);
@@ -148,7 +156,7 @@ class RoleServiceImplTest {
     @DisplayName("Delete a Role by ID with RoleNotFoundException")
     void deleteRoleByIdWithExcepction() {
         int roleId = 1;
-        String expectedMessage = "Role with ID '1' can't be found";
+        String expectedMessage = "Error while deleting the Role. Role with ID '1' can't be found";
         doThrow(new RoleNotFoundException(expectedMessage)).when(roleRepository)
                                                            .deleteById(roleId);
 

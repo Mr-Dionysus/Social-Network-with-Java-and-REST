@@ -45,8 +45,8 @@ class UserRepositoryTest {
         String password = "password";
         User user = new User(userId, login, password);
         userRepository.save(user);
-        User foundUser = userRepository.findById(userId).get();
-
+        User foundUser = userRepository.findById(userId)
+                                       .get();
         assertEquals(user, foundUser);
     }
 
@@ -73,6 +73,7 @@ class UserRepositoryTest {
         testUser.setPassword("password");
         User actualUser = userRepository.save(testUser);
         userRepository.deleteById(actualUser.getId());
+
         assertTrue(userRepository.findById(actualUser.getId())
                                  .isEmpty());
     }

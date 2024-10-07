@@ -3,6 +3,7 @@ package org.example.services;
 import org.example.dtos.UserDTO;
 import org.example.entities.User;
 import org.example.exceptions.UserNotFoundException;
+import org.example.mappers.UserMapper;
 import org.example.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,6 +20,9 @@ import static org.mockito.Mockito.*;
 class UserServiceImplTest {
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private UserMapper userMapper;
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -39,6 +43,7 @@ class UserServiceImplTest {
         UserDTO mockUserDTO = new UserDTO();
         mockUserDTO.setLogin(login);
 
+        when(userMapper.userToUserDTO(any(User.class))).thenReturn(mockUserDTO);
         UserDTO actualUser = userService.createUser(login, password);
 
         assertNotNull(actualUser);
@@ -58,6 +63,7 @@ class UserServiceImplTest {
         UserDTO mockUserDTO = new UserDTO();
         mockUserDTO.setLogin(login);
 
+        when(userMapper.userToUserDTO(any(User.class))).thenReturn(mockUserDTO);
         UserDTO actualUser = userService.getUserById(userId);
 
         assertNotNull(actualUser);
@@ -82,6 +88,7 @@ class UserServiceImplTest {
         UserDTO mockUserDTO = new UserDTO();
         mockUserDTO.setLogin(newLogin);
 
+        when(userMapper.userToUserDTO(any(User.class))).thenReturn(mockUserDTO);
         when(userRepository.findById(userId)).thenReturn(Optional.of(mockUser));
         when(userRepository.save(mockUser)).thenReturn(mockUser);
 
@@ -97,7 +104,7 @@ class UserServiceImplTest {
     @DisplayName("Delete a User by ID")
     void deleteUserById() {
         int userId = 1;
-        String expectedMessage = "User with ID '1' can't be found";
+        String expectedMessage = "Error while deleting the User. User with ID '1' can't be found";
         doThrow(new UserNotFoundException(expectedMessage)).when(userRepository)
                                                            .deleteById(userId);
 

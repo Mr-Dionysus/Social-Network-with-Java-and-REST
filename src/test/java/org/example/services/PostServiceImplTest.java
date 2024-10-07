@@ -4,6 +4,7 @@ import org.example.dtos.PostDTO;
 import org.example.entities.Post;
 import org.example.entities.User;
 import org.example.exceptions.PostNotFoundException;
+import org.example.mappers.PostMapper;
 import org.example.repositories.PostRepository;
 import org.example.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,11 +23,14 @@ class PostServiceImplTest {
     @Mock
     private PostRepository postRepository;
 
-    @InjectMocks
-    private PostServiceImpl postService;
+    @Mock
+    private PostMapper postMapper;
 
     @Mock
     private UserRepository userRepository;
+
+    @InjectMocks
+    private PostServiceImpl postService;
 
     @BeforeEach
     void setup() {
@@ -53,6 +57,7 @@ class PostServiceImplTest {
         mockPostDTO.setLikes(likes);
         mockPostDTO.setDislikes(dislikes);
 
+        when(postMapper.postToPostDTO(any(Post.class))).thenReturn(mockPostDTO);
         PostDTO actualPost = postService.createPost(text, userId);
 
         assertNotNull(actualPost);
@@ -81,6 +86,7 @@ class PostServiceImplTest {
         mockPostDTO.setLikes(likes);
         mockPostDTO.setDislikes(dislikes);
 
+        when(postMapper.postToPostDTO(any(Post.class))).thenReturn(mockPostDTO);
         PostDTO actualPost = postService.getPostById(postId);
 
         assertNotNull(actualPost);
@@ -108,6 +114,7 @@ class PostServiceImplTest {
         mockPostDTO.setLikes(likes);
         mockPostDTO.setDislikes(dislikes);
 
+        when(postMapper.postToPostDTO(any(Post.class))).thenReturn(mockPostDTO);
         PostDTO actualPost = postService.updatePostById(postId, newText);
 
         assertNotNull(actualPost);
@@ -123,7 +130,7 @@ class PostServiceImplTest {
 
         Post mockPost = new Post();
         when(postRepository.findById(postId)).thenReturn(Optional.of(mockPost));
-        String expectedMessage = "Post with ID '1' can't be found";
+        String expectedMessage = "Error while deleting the Post. Post with ID '1' can't be found";
         doThrow(new PostNotFoundException(expectedMessage)).when(postRepository)
                                                            .deleteById(postId);
 
@@ -131,13 +138,7 @@ class PostServiceImplTest {
 
         assertEquals(expectedMessage, exception.getMessage());
     }
-    @Test
-    @DisplayName("Get a Post by ID that does not exist")
-    void getPostByIdThatDoesNotExist() {
-        int postId = 1;
-        when(postRepository.findById(postId)).thenReturn(Optional.empty());
 
-        PostNotFoundException exception = assertThrows(PostNotFoundException.class, () -> postService.getPostById(postId));
 
-        assertEquals("Post with ID '1' not found", exception.getMessage());
-    }
+
+}

@@ -19,12 +19,13 @@ import java.util.List;
 @Service
 public class RoleServiceImpl implements RoleService {
     private final RoleRepository roleRepository;
-    private final RoleMapper roleMapper = new RoleMapperImpl();
+    private final RoleMapper roleMapper;
     private final UserRepository userRepository;
 
-    public RoleServiceImpl(RoleRepository roleRepository, UserRepository userRepository) {
+    public RoleServiceImpl(RoleRepository roleRepository, UserRepository userRepository, RoleMapper roleMapper) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
+        this.roleMapper = roleMapper;
     }
 
     @Override
@@ -118,7 +119,8 @@ public class RoleServiceImpl implements RoleService {
         RoleValidator.roleId(roleId);
 
         User user = userRepository.findById(userId)
-                                  .isPresent() ? userRepository.findById(userId).get() : null;
+                                  .isPresent() ? userRepository.findById(userId)
+                                                               .get() : null;
         Role role = roleRepository.findById(roleId)
                                   .isPresent() ? roleRepository.findById(roleId)
                                                                .get() : null;

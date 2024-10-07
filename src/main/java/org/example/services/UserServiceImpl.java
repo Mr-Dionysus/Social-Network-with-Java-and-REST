@@ -9,6 +9,7 @@ import org.example.mappers.UserMapperImpl;
 import org.example.repositories.RoleRepository;
 import org.example.repositories.UserRepository;
 import org.example.validators.UserValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,13 +17,14 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final UserMapper userMapper = new UserMapperImpl();
+    private final UserMapper userMapper;
 
     private final RoleRepository roleRepository;
 
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, UserMapper userMapper) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.userMapper = userMapper;
     }
 
     @Override
@@ -81,7 +83,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId)
                                   .isPresent() ? userRepository.findById(userId)
                                                                .get() : null;
-        UserValidator.foundUser(user,userId);
+        UserValidator.foundUser(user, userId);
         List<Role> roles = user.getRoles();
 
         for (Role role : roles) {

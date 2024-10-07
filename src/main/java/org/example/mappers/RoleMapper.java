@@ -5,7 +5,7 @@ import org.example.entities.Role;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface RoleMapper {
     @Mapping(target = "users", ignore = true)
     RoleDTO roleToRoleDTO(Role role);

@@ -15,13 +15,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
-    private final PostMapper postMapper = new PostMapperImpl();
+    private final PostMapper postMapper;
 
     private final UserRepository userRepository;
 
-    public PostServiceImpl(PostRepository postRepository, UserRepository userRepository) {
+    public PostServiceImpl(PostRepository postRepository, UserRepository userRepository, PostMapper postMapper) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
+        this.postMapper = postMapper;
     }
 
     @Override
@@ -75,7 +76,7 @@ public class PostServiceImpl implements PostService {
         PostValidator.postId(postId);
 
         if (this.getPostById(postId) == null) {
-            throw new PostNotFoundException("Error while deleting post. Post with ID '" + postId + "' can't be found");
+            throw new PostNotFoundException("Error while deleting the Post. Post with ID '" + postId + "' can't be found");
         }
         Post post = postRepository.findById(postId)
                                   .isPresent() ? postRepository.findById(postId)
@@ -90,5 +91,6 @@ public class PostServiceImpl implements PostService {
         }
 
         postRepository.deleteById(postId);
+
     }
 }
