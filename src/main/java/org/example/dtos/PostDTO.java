@@ -1,13 +1,20 @@
 package org.example.dtos;
 
+import jakarta.persistence.Column;
+import jakarta.validation.constraints.NotNull;
 import org.example.entities.User;
 
 import java.util.Objects;
 
 public class PostDTO {
+    @NotNull(message = "Text can't be null")
+    @Column(name = "text")
     private String text;
+
     private int likes;
     private int dislikes;
+
+    @NotNull(message = "Author can't be null")
     private User author;
 
     public PostDTO() {

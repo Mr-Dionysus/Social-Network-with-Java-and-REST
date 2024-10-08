@@ -1,11 +1,14 @@
 package org.example.controllers;
 
+import jakarta.validation.Valid;
 import org.example.dtos.PostDTO;
 import org.example.services.PostService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+@Validated
 @RestController
 @RequestMapping("/posts")
 public class PostController {
@@ -16,7 +19,8 @@ public class PostController {
     }
 
     @PostMapping("/{id}")
-    public ResponseEntity<PostDTO> createPost(@PathVariable("id") int userId, @RequestBody PostDTO postDTO) {
+    public ResponseEntity<PostDTO> createPost(@PathVariable("id") int userId,
+                                              @Valid @RequestBody PostDTO postDTO) {
         try {
             PostDTO createdPostDTO = postService.createPost(postDTO.getText(), userId);
 
@@ -38,7 +42,8 @@ public class PostController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PostDTO> updatePostById(@PathVariable("id") int postId, @RequestBody PostDTO postDTO) {
+    public ResponseEntity<PostDTO> updatePostById(@PathVariable("id") int postId,
+                                                  @Valid @RequestBody PostDTO postDTO) {
         try {
             PostDTO updatedPostDTO = postService.updatePostById(postId, postDTO.getText());
 

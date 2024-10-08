@@ -1,12 +1,15 @@
 package org.example.controllers;
 
+import jakarta.validation.Valid;
 import org.example.dtos.UserCredentialsDTO;
 import org.example.dtos.UserDTO;
 import org.example.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+@Validated
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -18,7 +21,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserCredentialsDTO userCredentialsDTO) {
+    public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserCredentialsDTO userCredentialsDTO) {
         try {
             UserDTO createdUserDTO = userService.createUser(userCredentialsDTO.getLogin(), userCredentialsDTO.getPassword());
 
@@ -40,7 +43,8 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserDTO> updateUserById(@PathVariable("id") int id, @RequestBody UserCredentialsDTO userCredentialsDTO) {
+    public ResponseEntity<UserDTO> updateUserById(@PathVariable("id") int id,
+                                                  @Valid @RequestBody UserCredentialsDTO userCredentialsDTO) {
         try {
             UserDTO updatedUserDTO = userService.updateUserById(id, userCredentialsDTO.getLogin(), userCredentialsDTO.getPassword());
 

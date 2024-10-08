@@ -1,13 +1,16 @@
 package org.example.controllers;
 
+import jakarta.validation.Valid;
 import org.example.dtos.RoleDTO;
 import org.example.services.RoleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
+@Validated
 @RestController
 @RequestMapping("/roles")
 public class RoleController {
@@ -19,7 +22,7 @@ public class RoleController {
     }
 
     @PostMapping
-    public ResponseEntity<RoleDTO> createRole(@RequestBody RoleDTO roleDTO) {
+    public ResponseEntity<RoleDTO> createRole(@Valid @RequestBody RoleDTO roleDTO) {
         try {
             RoleDTO createdRoleDTO = roleService.createRole(roleDTO.getRoleName(), roleDTO.getDescription());
             return new ResponseEntity<>(createdRoleDTO, HttpStatus.CREATED);
@@ -50,7 +53,7 @@ public class RoleController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<RoleDTO> updateRoleById(@PathVariable("id") int id, @RequestBody RoleDTO roleDTO) {
+    public ResponseEntity<RoleDTO> updateRoleById(@PathVariable("id") int id, @Valid @RequestBody RoleDTO roleDTO) {
         try {
             RoleDTO updatedRoleDTO = roleService.updateRoleById(id, roleDTO.getRoleName(), roleDTO.getDescription());
             return new ResponseEntity<>(updatedRoleDTO, HttpStatus.OK);
@@ -60,8 +63,7 @@ public class RoleController {
     }
 
     @PutMapping("/{roleId}/users/{userId}")
-    public ResponseEntity<Void> assignRoleToUser(@PathVariable("roleId") int roleId,
-                                                 @PathVariable("userId") int userId) {
+    public ResponseEntity<Void> assignRoleToUser(@PathVariable("roleId") int roleId, @PathVariable("userId") int userId) {
         try {
             roleService.assignRoleToUser(userId, roleId);
             return new ResponseEntity<>(HttpStatus.OK);

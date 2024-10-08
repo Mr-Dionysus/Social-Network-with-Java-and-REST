@@ -35,6 +35,9 @@ class RoleRepositoryTest {
         Role expectedRole = new Role();
         expectedRole.setRoleName("admin");
         expectedRole.setDescription("manage stuff");
+        expectedRole.getUsers();
+        expectedRole.toString();
+        expectedRole.hashCode();
         Role actualRole = roleRepository.save(expectedRole);
         assertEquals(expectedRole, actualRole);
     }

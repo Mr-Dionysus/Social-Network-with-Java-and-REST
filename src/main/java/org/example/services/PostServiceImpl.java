@@ -5,11 +5,8 @@ import org.example.entities.Post;
 import org.example.entities.User;
 import org.example.exceptions.*;
 import org.example.mappers.PostMapper;
-import org.example.mappers.PostMapperImpl;
 import org.example.repositories.PostRepository;
 import org.example.repositories.UserRepository;
-import org.example.validators.PostValidator;
-import org.example.validators.UserValidator;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,15 +24,12 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostDTO createPost(String text, int userId) {
-        PostValidator.text(text);
-        UserValidator.userId(userId);
 
         User user = userRepository.findById(userId)
                                   .isPresent() ? userRepository.findById(userId)
                                                                .get() : null;
         Post post = new Post(text, user);
         Post createdPost = postRepository.save(post);
-        PostValidator.createdPost(createdPost, text);
         PostDTO createdPostDTO = postMapper.postToPostDTO(createdPost);
 
         return createdPostDTO;
@@ -43,12 +37,10 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostDTO getPostById(int postId) {
-        PostValidator.postId(postId);
 
         Post foundPost = postRepository.findById(postId)
                                        .isPresent() ? postRepository.findById(postId)
                                                                     .get() : null;
-        PostValidator.foundPost(foundPost, postId);
         PostDTO foundPostDTO = postMapper.postToPostDTO(foundPost);
 
         return foundPostDTO;
@@ -56,16 +48,12 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostDTO updatePostById(int postId, String newText) {
-        PostValidator.postId(postId);
-        PostValidator.text(newText);
 
         Post post = postRepository.findById(postId)
                                   .isPresent() ? postRepository.findById(postId)
                                                                .get() : null;
-        PostValidator.foundPost(post, postId);
         post.setText(newText);
         Post updatedPost = postRepository.save(post);
-        PostValidator.foundPost(updatedPost, postId);
         PostDTO updatedPostDTO = postMapper.postToPostDTO(updatedPost);
 
         return updatedPostDTO;
@@ -73,7 +61,6 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void deletePostById(int postId) {
-        PostValidator.postId(postId);
 
         if (this.getPostById(postId) == null) {
             throw new PostNotFoundException("Error while deleting the Post. Post with ID '" + postId + "' can't be found");
@@ -81,7 +68,6 @@ public class PostServiceImpl implements PostService {
         Post post = postRepository.findById(postId)
                                   .isPresent() ? postRepository.findById(postId)
                                                                .get() : null;
-        PostValidator.foundPost(post, postId);
         User user = post.getAuthor();
 
         if (user != null) {

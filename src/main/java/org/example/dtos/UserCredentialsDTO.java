@@ -1,9 +1,15 @@
 package org.example.dtos;
 
+import jakarta.validation.constraints.NotNull;
+
 import java.util.Objects;
 
 public class UserCredentialsDTO {
+
+    @NotNull(message = "Login can't be null")
     private String login;
+
+    @NotNull(message = "Password can't be null")
     private String password;
 
     public String getLogin() {

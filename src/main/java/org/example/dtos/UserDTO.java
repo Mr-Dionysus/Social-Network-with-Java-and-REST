@@ -1,5 +1,6 @@
 package org.example.dtos;
 
+import jakarta.validation.constraints.NotNull;
 import org.example.entities.Post;
 import org.example.entities.Role;
 
@@ -9,7 +10,9 @@ import java.util.Objects;
 
 
 public class UserDTO {
+    @NotNull(message = "Login can't be null")
     private String login;
+
     private List<Role> roles = new ArrayList<>();
     private List<Post> posts = new ArrayList<>();
 

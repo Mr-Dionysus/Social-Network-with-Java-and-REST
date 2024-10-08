@@ -47,6 +47,7 @@ class RoleServiceImplTest {
         RoleDTO mockRoleDTO = new RoleDTO();
         mockRoleDTO.setRoleName(roleName);
         mockRoleDTO.setDescription(description);
+        mockRoleDTO.hashCode();
 
         when(roleMapper.roleToRoleDTO(any(Role.class))).thenReturn(mockRoleDTO);
         RoleDTO actualRole = roleService.createRole(roleName, description);
@@ -85,7 +86,6 @@ class RoleServiceImplTest {
         verify(roleRepository, times(2)).findById(roleId);
     }
 
-
     @Test
     @DisplayName("Get all Roles")
     void getAllRoles() {
@@ -115,7 +115,8 @@ class RoleServiceImplTest {
         mockListRoleDTOs.add(mockRoleDTO1);
         mockListRoleDTOs.add(mockRoleDTO2);
 
-        when(roleMapper.roleToRoleDTO(any(Role.class))).thenReturn(mockRoleDTO1).thenReturn(mockRoleDTO2);
+        when(roleMapper.roleToRoleDTO(any(Role.class))).thenReturn(mockRoleDTO1)
+                                                       .thenReturn(mockRoleDTO2);
         List<RoleDTO> actualListRoles = roleService.getAllRoles();
 
         assertNotNull(actualListRoles);

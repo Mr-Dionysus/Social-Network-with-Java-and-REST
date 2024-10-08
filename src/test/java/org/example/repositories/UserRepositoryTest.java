@@ -33,6 +33,10 @@ class UserRepositoryTest {
         String login = "root";
         String password = "password";
         User user = new User(login, password);
+        user.getRoles();
+        user.getPosts();
+        user.toString();
+        user.hashCode();
         User createdUser = userRepository.save(user);
         assertEquals(user, createdUser);
     }

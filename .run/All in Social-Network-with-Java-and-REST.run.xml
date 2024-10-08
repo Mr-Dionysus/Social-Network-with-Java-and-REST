@@ -1,0 +1,19 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="All in Social-Network-with-Java-and-REST" type="JUnit" factoryName="JUnit" nameIsGenerated="true">
+    <module name="Social-Network-with-Java-and-REST" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="org.example.configs.*" />
+        <option name="ENABLED" value="true" />
+        <option name="INCLUDE" value="false" />
+      </pattern>
+    </extension>
+    <option name="PACKAGE_NAME" value="" />
+    <option name="MAIN_CLASS_NAME" value="" />
+    <option name="METHOD_NAME" value="" />
+    <option name="TEST_OBJECT" value="package" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

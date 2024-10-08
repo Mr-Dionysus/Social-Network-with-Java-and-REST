@@ -38,6 +38,7 @@ class UserControllerTest {
         UserCredentialsDTO userCredentialsDTO = new UserCredentialsDTO();
         userCredentialsDTO.setLogin(login);
         userCredentialsDTO.setPassword(password);
+        userCredentialsDTO.hashCode();
 
         UserDTO mockUserDTO = new UserDTO();
         mockUserDTO.setLogin(login);

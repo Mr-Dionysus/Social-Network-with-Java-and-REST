@@ -1,5 +1,6 @@
 package org.example.dtos;
 
+import jakarta.validation.constraints.NotNull;
 import org.example.entities.User;
 
 import java.util.ArrayList;
@@ -7,8 +8,13 @@ import java.util.List;
 import java.util.Objects;
 
 public class RoleDTO {
+
+    @NotNull(message = "Role's name can't be null")
     private String roleName;
+
+    @NotNull(message = "Description can't be null")
     private String description;
+
     private List<User> users = new ArrayList<>();
 
     public String getRoleName() {

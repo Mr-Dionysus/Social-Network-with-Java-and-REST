@@ -42,6 +42,7 @@ class UserServiceImplTest {
 
         UserDTO mockUserDTO = new UserDTO();
         mockUserDTO.setLogin(login);
+        mockUserDTO.hashCode();
 
         when(userMapper.userToUserDTO(any(User.class))).thenReturn(mockUserDTO);
         UserDTO actualUser = userService.createUser(login, password);

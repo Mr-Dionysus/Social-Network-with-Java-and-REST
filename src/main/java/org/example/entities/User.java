@@ -2,6 +2,8 @@ package org.example.entities;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,13 +12,17 @@ import java.util.Objects;
 @Entity
 @Table(name = "users")
 public class User {
+    @NotNull(message = "ID can't be null")
+    @Positive(message = "ID can't be less than 1")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @NotNull(message = "Login can't be null")
     @Column(name = "login")
     private String login;
 
+    @NotNull(message = "Password can' be null")
     @Column(name = "password")
     private String password;
 

@@ -2,16 +2,21 @@ package org.example.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 import java.util.Objects;
 
 @Entity
 @Table(name = "posts")
 public class Post {
+    @NotNull(message = "ID can't be null")
+    @Positive(message = "ID can't be less than 1")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @NotNull(message = "Text can't be null")
     @Column(name = "text")
     private String text;
 
@@ -21,6 +26,7 @@ public class Post {
     @Column(name = "dislikes")
     private int dislikes;
 
+    @NotNull(message = "Author can't be null")
     @ManyToOne
     @JoinColumn(name = "user_id")
     @JsonBackReference

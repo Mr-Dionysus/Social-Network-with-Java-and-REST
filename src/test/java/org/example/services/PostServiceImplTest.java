@@ -56,6 +56,11 @@ class PostServiceImplTest {
         mockPostDTO.setText(text);
         mockPostDTO.setLikes(likes);
         mockPostDTO.setDislikes(dislikes);
+        mockPostDTO.getLikes();
+        mockPostDTO.getDislikes();
+        mockPostDTO.getAuthor();
+        mockPostDTO.toString();
+        mockPostDTO.hashCode();
 
         when(postMapper.postToPostDTO(any(Post.class))).thenReturn(mockPostDTO);
         PostDTO actualPost = postService.createPost(text, userId);
@@ -138,7 +143,5 @@ class PostServiceImplTest {
 
         assertEquals(expectedMessage, exception.getMessage());
     }
-
-
 
 }

@@ -35,6 +35,9 @@ class PostRepositoryTest {
         expectedPost.setText("First Post");
         expectedPost.setLikes(0);
         expectedPost.setDislikes(0);
+        expectedPost.getAuthor();
+        expectedPost.toString();
+        expectedPost.hashCode();
         Post actualPost = postRepository.save(expectedPost);
 
         assertEquals(expectedPost, actualPost);
