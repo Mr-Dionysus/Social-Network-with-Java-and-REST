@@ -3,13 +3,23 @@ package org.example.mappers;
 import org.example.dtos.PostDTO;
 import org.example.entities.Post;
 import org.example.entities.User;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class PostMapperTest {
-    private final PostMapperImpl postMapper = new PostMapperImpl();
+    private PostMapper postMapper;
+
+    @BeforeEach
+    void setUp() {
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+        context.register(PostMapperImpl.class);
+        context.refresh();
+        postMapper = context.getBean(PostMapper.class);
+    }
 
     @Test
     @DisplayName("Post to PostDTO")

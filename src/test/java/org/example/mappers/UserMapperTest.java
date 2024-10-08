@@ -5,15 +5,26 @@ import org.example.dtos.UserDTO;
 import org.example.entities.Post;
 import org.example.entities.Role;
 import org.example.entities.User;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserMapperTest {
-    private final UserMapper userMapper = new UserMapperImpl();
+    private UserMapper userMapper;
+
+    @BeforeEach
+    void setUp() {
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+        context.register(UserMapperImpl.class);
+        context.refresh();
+        userMapper = context.getBean(UserMapper.class);
+    }
 
     private ArrayList<Post> createExpectedListPosts() {
         int expectedPostId = 1;
@@ -54,7 +65,6 @@ class UserMapperTest {
 
         UserDTO expectedUser = new UserDTO();
         expectedUser.setLogin(expectedLogin);
-
 
         UserDTO actualUser = userMapper.userToUserDTO(userBeforeUserDTO);
 

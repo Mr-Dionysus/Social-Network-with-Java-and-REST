@@ -3,15 +3,25 @@ package org.example.mappers;
 import org.example.dtos.RoleDTO;
 import org.example.entities.Role;
 import org.example.entities.User;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class RoleMapperTest {
-    private final RoleMapper roleMapper = new RoleMapperImpl();
+    private  RoleMapper roleMapper;
+
+    @BeforeEach
+    void setUp() {
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+        context.register(RoleMapperImpl.class);
+        context.refresh();
+        roleMapper = context.getBean(RoleMapper.class);
+    }
 
     @Test
     @DisplayName("Role to a Role DTO")
